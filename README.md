@@ -48,7 +48,7 @@ Students will be able to create a profile, add their current courses, and find o
 - PostgreSQL
 - Supabase Authentication
 - Supabase Storage
-- Supabase Realtime (planned for messaging)
+
 
 ### Development Tools
 - Git
