@@ -15,8 +15,6 @@ The React Compiler is not enabled on this template because of its impact on dev 
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
 
-
-
 # Study Buddy
 
 Study Buddy is a web application that helps university students find compatible study partners.
@@ -38,19 +36,21 @@ Students will be able to create a profile, add their current courses, and find o
 ## Tech Stack
 
 ### Frontend
+
 - React
 - JavaScript
 - Bootstrap
 - Vite
 
 ### Backend / Database
+
 - Supabase
 - PostgreSQL
 - Supabase Authentication
 - Supabase Storage
 
-
 ### Development Tools
+
 - Git
 - GitHub
 - VS Code
@@ -106,3 +106,5 @@ The next development milestone is implementing user authentication with Supabase
 ## Team Project
 
 Study Buddy is being developed as a semester project for COMP 380 - Software Engineering.
+
+iahdgsoids
