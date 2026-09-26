@@ -12,6 +12,7 @@ const Signup = () => {
   const {session, singUpNewUser} = UserAuth();
   const navigate = useNavigate();
 
+
   const handleSignUp = async(e) =>{
     e.preventDefault();
     setLoading(true);
@@ -31,14 +32,15 @@ const Signup = () => {
   return (
     <div className={classes.localbody}>
     <div className={classes.main}>
-    <form className={classes.form} >
+    <form className={classes.form} onSubmit={handleSignUp}>
       <h2>Sign Up</h2>
       <p>Already have an account? <Link to= "/Signin">Sign in </Link>
       </p>
       <div className={classes.input}>
-        <input type="email" name="Email" placeholder="Email"/>
-        <input type="password" placeholder = "Password"/>
+        <input onChange={(e)=>setEmail(e.target.value)} type="email" name="Email" placeholder="Email"/>
+        <input onChange={(e)=>setPassword(e.target.value)}type="password" placeholder = "Password"/>
         <button type="submit" disabled={loading}>Sign Up</button>
+        {error && <p>{error}</p>}
       </div>
     </form>
     </div>

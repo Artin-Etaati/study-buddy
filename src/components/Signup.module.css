@@ -75,8 +75,6 @@ body {
     background-color: #f7fafc;
     margin-top: 20px;
   }
-  input::placeholder {
-  text-indent: 15px;
 }
-}
+
 
