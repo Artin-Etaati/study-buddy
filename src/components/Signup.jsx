@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import classes from './Signup.module.css'
 import { UserAuth } from '../AuthContext';
 
@@ -9,8 +9,24 @@ const Signup = () => {
   const[error, setError] = useState('');
   const[loading, setLoading] = useState('');
 
-  const {session} = UserAuth();
- //console.log(session);
+  const {session, singUpNewUser} = UserAuth();
+  const navigate = useNavigate();
+
+  const handleSignUp = async(e) =>{
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const result = await singUpNewUser(email,password);
+
+      if(result.success) {
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      setError("an error occured");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className={classes.localbody}>
