@@ -7,7 +7,7 @@ export const AuthContextProvider = ({children}) => {
 
 
     //Sign up
-    const singUpNewUser = async (email, password)=>{
+    const signUpNewUser = async (email, password)=>{
         const{data, error} = await supabase.auth.signUp({
             email: email,
             password: password,
@@ -62,7 +62,7 @@ export const AuthContextProvider = ({children}) => {
     
  
     return (
-       <AuthContext.Provider value={{session, singUpNewUser, signInUser, signOut}}>
+       <AuthContext.Provider value={{session, signUpNewUser, signInUser, signOut}}>
         {children}
        </AuthContext.Provider>
     )

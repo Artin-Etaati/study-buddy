@@ -9,7 +9,7 @@ const Signup = () => {
   const[error, setError] = useState('');
   const[loading, setLoading] = useState('');
 
-  const {session, singUpNewUser} = UserAuth();
+  const {session, signUpNewUser} = UserAuth();
   const navigate = useNavigate();
 
 
@@ -17,8 +17,7 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const result = await singUpNewUser(email,password);
-
+      const result = await signUpNewUser(email,password);
       if(result.success) {
         navigate('/dashboard');
       }
