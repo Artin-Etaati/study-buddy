@@ -19,14 +19,37 @@ const Dashboard = () => {
   }
 
   return (
-    <div className={classes.main}>
-      <h1>Dashboard</h1>
-      <h2>Welcome, {session?.user?.email} </h2>
-        <div>
-          <p onClick={handleSignout}>Sign out</p>
-        </div>
+    <div className={classes.localbody}>
+      <div className={classes.main}>
+        <header className={classes.header}>
+          <div className={classes.userBadge}>
+            <span className={classes.avatar}>
+              {session?.user?.email?.charAt(0).toUpperCase() || 'U'}
+            </span>
+            <div className={classes.userInfo}>
+              <p className={classes.welcomeText}>Welcome back,</p>
+              <h2 className={classes.userEmail}>{session?.user?.email}</h2>
+            </div>
+          </div>
+          <button onClick={handleSignout} className={classes.signOutBtn}>
+            Sign out
+          </button>
+        </header>
+
+        <section className={classes.contentGrid}>
+          <div className={classes.card}>
+            <h3>Account Overview</h3>
+            <p>Status: <span className={classes.activeBadge}>Active</span></p>
+          </div>
+
+          <div className={classes.card}>
+            <h3>Recent Activity</h3>
+            <p>No recent activity recorded.</p>
+          </div>
+        </section>
+      </div>
     </div>
-  )
-}
+  );
+};
 
 export default Dashboard
