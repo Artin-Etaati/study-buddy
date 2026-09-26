@@ -1,5 +1,11 @@
+import "../styles/homeStyle.css";
+
 export default function Home () {
     return (
-        <p>test</p>
+        <div className="sign-container">
+            <a href="/signup" className="sign-btn">Create an account</a>
+            <a href="/signin" className="sign-btn">Signin</a>
+        </div>
+
     );
 }
