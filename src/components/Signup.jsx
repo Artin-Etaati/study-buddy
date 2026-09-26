@@ -9,7 +9,7 @@ const Signup = () => {
   const[error, setError] = useState('');
   const[loading, setLoading] = useState('');
 
-  const {session, signUpNewUser} = UserAuth();
+  const {signUpNewUser} = UserAuth();
   const navigate = useNavigate();
 
 
