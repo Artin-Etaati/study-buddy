@@ -9,23 +9,22 @@ const Signin = () => {
   const[error, setError] = useState('');
   const[loading, setLoading] = useState('');
 
-  const {session, signInUser} = UserAuth();
+  const {signInUser} = UserAuth();
   const navigate = useNavigate();
 
 
   const handleSignin = async(e) =>{
     e.preventDefault();
     setLoading(true);
-    try {
-      const result = await signInUser(email,password);
-      if(result.success) {
+    
+    const result = await signInUser(email,password);
+
+    if(result.success) {
         navigate('/dashboard');
-      }
-    } catch (err) {
-        setError("an error occured");
-    } finally {
-        setLoading(false);
+    } else {
+        setError(result.error);
     }
+    setLoading(false);
   }
 
   return (

@@ -16,16 +16,15 @@ const Signup = () => {
   const handleSignUp = async(e) =>{
     e.preventDefault();
     setLoading(true);
-    try {
-      const result = await signUpNewUser(email,password);
-      if(result.success) {
+    
+    const result = await signUpNewUser(email,password);
+
+    if(result.success) {
         navigate('/dashboard');
-      }
-    } catch (err) {
-      setError("an error occured");
-    } finally {
-      setLoading(false);
+    } else {
+        setError(result.error);
     }
+    setLoading(false);
   }
 
   return (
