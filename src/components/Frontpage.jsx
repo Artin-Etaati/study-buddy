@@ -27,7 +27,6 @@ const Frontpage = ({isSignup}) => {
   }
 
   useEffect (()=>{
-    setEmail("");
     setPassword("");
   }, [isSignup]);
 
