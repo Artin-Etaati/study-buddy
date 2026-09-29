@@ -22,7 +22,7 @@ const Setup = () => {
     const getUniversities = async () => {
 
       const { data, error } = await supabase.from('universities').select('*');
-      
+
       if (error) {
         console.error('Error getting universities:', error);
         return;
@@ -70,6 +70,22 @@ const Setup = () => {
           <option value="">Select Gender</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
+        </select>
+
+        <label>School</label>
+
+        <select
+          value={university}
+          onChange={(e) => setUniversity(e.target.value)}
+        >
+          <option value="">Select School</option>
+
+          {universities.map((school) => (
+            <option key={school.id} value={school.id}>
+              {school.name}
+            </option>
+          ))}
+
         </select>
 
         <label>Major</label>
