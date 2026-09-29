@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import classes from './Setup.module.css'
 import { supabase } from '../services/supabase'
+import { UserAuth } from '../AuthContext'
 
 
 const Setup = () => {
@@ -11,14 +12,16 @@ const Setup = () => {
   const [gender, setGender] = useState('');
   const [major, setMajor] = useState('');
   const [studyStyle, setStudyStyle] = useState('');
-  const [studyLocation, setStudyLocation] = useState('');
   const [universities, setUniversities] = useState([]);
   const [university, setUniversity] = useState('');
   const [courseInput, setCourseInput] = useState('');
   const [courses, setCourses] = useState([]);
+  const { session } = UserAuth();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
 
-
+///////
   useEffect(() => {
 
     const getUniversities = async () => {
@@ -38,7 +41,7 @@ const Setup = () => {
   }, []);
 
 
-
+//////
   const handleAddCourse = () => {
   if (courseInput.trim() === '') {
     return;
@@ -49,7 +52,7 @@ const Setup = () => {
   };
 
 
-
+///////
   const handleRemoveCourse = (indexToRemove) => {
 
   const updatedCourses = courses.filter(
@@ -59,6 +62,38 @@ const Setup = () => {
   setCourses(updatedCourses);
   };
 
+//////
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  setLoading(true);
+  setError('');
+
+  const { error } = await supabase
+    .from('profiles')
+    .insert({
+      id: session.user.id,
+      university_id: university,
+      first_name: firstName,
+      last_name: lastName,
+      birthday: birthday,
+      gender: gender,
+      major: major,
+      study_style: studyStyle,
+    });
+
+  if (error) {
+    console.error('Error creating profile:', error);
+    setError(error.message);
+    setLoading(false);
+    return;
+  }
+
+  console.log('Profile created successfully');
+
+  setLoading(false);
+  };
+//////
 
 
 
@@ -68,7 +103,7 @@ const Setup = () => {
 
       <h1>Set Up Your Profile</h1>
 
-      <form>
+      <form onSubmit = {handleSubmit}>
 
         <label>First Name</label>
         <input
@@ -163,12 +198,15 @@ const Setup = () => {
           <option value="Either">Either</option>
         </select>
 
-        <label>Study Location</label>
-        <input
-          type="text"
-          value={studyLocation}
-          onChange={(e) => setStudyLocation(e.target.value)}
-        />
+      
+
+      <button type="submit" disabled={loading}>
+        {loading ? 'Saving...' : 'Submit'}
+      </button>
+
+      {error && <p>{error}</p>}
+
+
 
       </form>
 
