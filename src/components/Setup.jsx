@@ -99,26 +99,61 @@ const Setup = () => {
     }));
 
     // Insert courses and get the new rows back
-    const { data: insertedCourses, error: courseError } = await supabase
-      .from('courses')
-      .insert(courseRows)
-      .select();
+    // const { data: insertedCourses, error: courseError } = await supabase
+    //   .from('courses')
+    //   .insert(courseRows)
+    //   .select();
 
-    if (courseError) {
-      console.error('Error creating courses:', courseError);
-      setError(courseError.message);
+  const savedCourses = [];
+
+  for (const course of courseRows) {
+
+    const { data: existingCourse, error: findError } = await supabase
+      .from('courses')
+      .select('*')
+      .eq('university_id', course.university_id)
+      .eq('course_code', course.course_code)
+      .maybeSingle();
+
+    if (findError) {
+      console.error('Error finding course:', findError);
+      setError(findError.message);
       setLoading(false);
       return;
     }
 
-    console.log('Courses created:', insertedCourses);
+    if (existingCourse) {
 
-    const userCourseRows = insertedCourses.map((course) => ({
-      user_id: session.user.id,
-      course_id: course.id
-    }));
+      savedCourses.push(existingCourse);
 
-    console.log('User course rows:', userCourseRows);
+    } else {
+
+      const { data: newCourse, error: insertError } = await supabase
+        .from('courses')
+        .insert(course)
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('Error creating course:', insertError);
+        setError(insertError.message);
+        setLoading(false);
+        return;
+      }
+
+      savedCourses.push(newCourse);
+    }
+  }
+
+  // Now ALL courses have been processed
+  console.log('Saved courses:', savedCourses);
+
+  const userCourseRows = savedCourses.map((course) => ({
+    user_id: session.user.id,
+    course_id: course.id
+  }));
+
+  console.log('User course rows:', userCourseRows);
 
   const { error: userCourseError } = await supabase
     .from('user_courses')
@@ -133,7 +168,7 @@ const Setup = () => {
 
   console.log('Courses connected to user successfully');
 
-    setLoading(false);
+  setLoading(false);
   };
 //////
 
