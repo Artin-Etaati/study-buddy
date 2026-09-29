@@ -1,8 +1,8 @@
-import Front from './components/front'
+import Frontpage from './components/Frontpage'
 
 function App() {
   return (
-    <Front/>
+    <Frontpage/>
 )};
 
 export default App

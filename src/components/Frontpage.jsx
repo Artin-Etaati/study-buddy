@@ -1,9 +1,9 @@
 import {useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import classes from './front.module.css'
+import classes from './Frontpage.module.css'
 import { UserAuth } from '../AuthContext';
 
-const Front = ({isSignup}) => {
+const Frontpage = ({isSignup}) => {
   const[email, setEmail] = useState('');
   const[password, setPassword] = useState('');
   const[error, setError] = useState('');
@@ -48,4 +48,4 @@ const Front = ({isSignup}) => {
   )
 }
 
-export default Front
+export default Frontpage
