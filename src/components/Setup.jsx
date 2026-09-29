@@ -14,6 +14,8 @@ const Setup = () => {
   const [studyLocation, setStudyLocation] = useState('');
   const [universities, setUniversities] = useState([]);
   const [university, setUniversity] = useState('');
+  const [courseInput, setCourseInput] = useState('');
+  const [courses, setCourses] = useState([]);
 
 
 
@@ -34,6 +36,32 @@ const Setup = () => {
     getUniversities();
 
   }, []);
+
+
+
+  const handleAddCourse = () => {
+  if (courseInput.trim() === '') {
+    return;
+  }
+
+  setCourses([...courses, courseInput.trim()]);
+  setCourseInput('');
+  };
+
+
+
+  const handleRemoveCourse = (indexToRemove) => {
+
+  const updatedCourses = courses.filter(
+    (_, index) => index !== indexToRemove
+  );
+
+  setCourses(updatedCourses);
+  };
+
+
+
+
 
   return (
     <div className={classes.localbody}>
@@ -94,6 +122,25 @@ const Setup = () => {
           value={major}
           onChange={(e) => setMajor(e.target.value)}
         />
+        <label>Current Courses</label>
+
+        <input
+          type="text"
+          value={courseInput}
+          onChange={(e) => setCourseInput(e.target.value)}
+          placeholder="Example: COMP 380"
+        />
+
+        <button type="button" onClick = {handleAddCourse}>
+          Add Course
+        </button>
+                  <div>
+          {courses.map((course, index) => (
+            <div key={index}>
+              <span>{course}</span>
+            </div>
+          ))}
+        </div>
 
         <label>Study Style</label>
         <select
