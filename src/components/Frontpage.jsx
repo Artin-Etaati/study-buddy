@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import classes from './Frontpage.module.css'
 import { UserAuth } from '../AuthContext';
@@ -26,6 +26,11 @@ const Frontpage = ({isSignup}) => {
     setLoading(false);
   }
 
+  useEffect (()=>{
+    setEmail("");
+    setPassword("");
+  }, [isSignup]);
+
 
 
   return (
@@ -36,8 +41,8 @@ const Frontpage = ({isSignup}) => {
       <p>{isSignup ? 'Already have an account?' : "Dont have an account?"} <Link to={isSignup ? "/Signin" : "/Signup"}>{isSignup ? "Sign in" : "Sign up"} </Link>
       </p>
       <div className={classes.input}>
-        <input onChange={(e)=>setEmail(e.target.value)} type="email" name="Email" placeholder="Email"/>
-        <input onChange={(e)=>setPassword(e.target.value)}type="password" placeholder = "Password"/>
+        <input onChange={(e)=>setEmail(e.target.value)} value ={email} type="email" name="Email" placeholder="Email"/>
+        <input onChange={(e)=>setPassword(e.target.value)} value={password} type="password" placeholder = "Password"/>
         <button type="submit" disabled={loading}>{isSignup ? "Sign up" : "Sign in"}</button>
         {error && <p>{error}</p>}
       </div>
