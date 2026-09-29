@@ -12,10 +12,10 @@ const Frontpage = ({isSignup}) => {
   const {signUpNewUser, signInUser} = UserAuth();
   const navigate = useNavigate();
 
-  const handleForm = async(e,callback) =>{
+  const handleForm = async(e) =>{
     e.preventDefault();
     setLoading(true);
-    
+    const callback = isSignup ? signUpNewUser : signInUser;
     const result = await callback(email,password);
 
     if(result.success) {
@@ -31,7 +31,7 @@ const Frontpage = ({isSignup}) => {
   return (
     <div className={classes.localbody}>
     <div className={classes.main}>
-    <form className={classes.form} onSubmit={(e) => handleForm(e, isSignup ? signUpNewUser : signInUser)}>
+    <form className={classes.form} onSubmit={handleForm}>
       <h2>{isSignup ? 'Sign Up': 'Sign in'}</h2>
       <p>{isSignup ? 'Already have an account?' : "Dont have an account?"} <Link to={isSignup ? "/Signin" : "/Signup"}>{isSignup ? "Sign in" : "Sign up"} </Link>
       </p>
