@@ -134,10 +134,20 @@ const Setup = () => {
         <button type="button" onClick = {handleAddCourse}>
           Add Course
         </button>
-                  <div>
+
+        <div>
           {courses.map((course, index) => (
             <div key={index}>
+
               <span>{course}</span>
+
+              <button
+                type="button"
+                onClick={() => handleRemoveCourse(index)}
+              >
+                ×
+              </button>
+
             </div>
           ))}
         </div>
