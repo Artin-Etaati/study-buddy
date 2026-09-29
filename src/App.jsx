@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react'
-import Signup from './components/Signup'
-
+import Frontpage from './components/Frontpage'
 
 function App() {
   return (
-    <Signup/>
+    <Frontpage/>
 )};
 
 export default App
