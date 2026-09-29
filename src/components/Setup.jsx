@@ -64,34 +64,76 @@ const Setup = () => {
 
 //////
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  setLoading(true);
-  setError('');
+    setLoading(true);
+    setError('');
 
-  const { error } = await supabase
-    .from('profiles')
-    .insert({
-      id: session.user.id,
+    // Save/update profile
+    const { error } = await supabase
+      .from('profiles')
+      .upsert({
+        id: session.user.id,
+        university_id: university,
+        first_name: firstName,
+        last_name: lastName,
+        birthday: birthday,
+        gender: gender,
+        major: major,
+        study_style: studyStyle,
+      });
+
+    if (error) {
+      console.error('Error creating profile:', error);
+      setError(error.message);
+      setLoading(false);
+      return;
+    }
+
+    console.log('Profile created successfully');
+
+    // Convert React courses array into database rows
+    const courseRows = courses.map((course) => ({
       university_id: university,
-      first_name: firstName,
-      last_name: lastName,
-      birthday: birthday,
-      gender: gender,
-      major: major,
-      study_style: studyStyle,
-    });
+      course_code: course.trim().toUpperCase()
+    }));
 
-  if (error) {
-    console.error('Error creating profile:', error);
-    setError(error.message);
+    // Insert courses and get the new rows back
+    const { data: insertedCourses, error: courseError } = await supabase
+      .from('courses')
+      .insert(courseRows)
+      .select();
+
+    if (courseError) {
+      console.error('Error creating courses:', courseError);
+      setError(courseError.message);
+      setLoading(false);
+      return;
+    }
+
+    console.log('Courses created:', insertedCourses);
+
+    const userCourseRows = insertedCourses.map((course) => ({
+      user_id: session.user.id,
+      course_id: course.id
+    }));
+
+    console.log('User course rows:', userCourseRows);
+
+  const { error: userCourseError } = await supabase
+    .from('user_courses')
+    .insert(userCourseRows);
+
+  if (userCourseError) {
+    console.error('Error connecting courses to user:', userCourseError);
+    setError(userCourseError.message);
     setLoading(false);
     return;
   }
 
-  console.log('Profile created successfully');
+  console.log('Courses connected to user successfully');
 
-  setLoading(false);
+    setLoading(false);
   };
 //////
 
