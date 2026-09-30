@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react'
-import { supabase } from './services/supabase'
+import Signup from './components/Signup'
+
 
 function App() {
   return (
-    <div className="container mt-5">
-      <h1>Study Buddy</h1>
-      <p>Find the right study partner.</p>
-    </div>
-  )
-}
+    <Signup/>
+)};
 
 export default App

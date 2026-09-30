@@ -1,0 +1,42 @@
+.matchCard {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+.matchCard h2 {
+    margin: 0 0 5px 0;
+    font-size: 18px;
+    color: #333;
+}
+.matchCard p {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #666;
+}
+.matchesList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.matchCard button {
+    margin-right: 10px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #667eea;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+.header {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
