@@ -16,22 +16,34 @@ const Matches = () => {
         name: "Bob Jones",
         Major: "Computer Science",
     },
+    {
+    id: 4,
+    name: "Charlie Brown",
+    Major: "Biology",
+    }
     ]
-    return(
-        <div>
-            <h1>My Matches</h1>
-            <p>Here you can view your study buddy matches and connect with them for collaborative learning.</p>
-
-        <div className={classes.matchesList}></div>
+    return(  
+        <div className={classes.localbody}>
+        <div className={classes.header}>
+         <h1>Matches</h1>
+        </div>
+        <div className={classes.matchesList}>
          {matches.map((match) => (
-                <div className={classes.matchCard} key={match.id}>
+                <div className={classes.matchCard} key={match.id}> 
+                 <div className={classes.avatar}>
+            <img src="https://via.placeholder.com/150" alt="User Avatar" />
+             </div>
+                <div className={classes.matchinfo}>
                     <h2>{match.name}</h2>
                     <p>Major: {match.Major}</p>
                     <button>View Profile</button>
                     <button>Message</button>
+               
+                </div>
                 </div>
             ))}
-        </div>
+             </div>
+            </div>
     );
 }
 export default Matches;
