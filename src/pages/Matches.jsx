@@ -31,7 +31,8 @@ const Matches = () => {
          {matches.map((match) => (
                 <div className={classes.matchCard} key={match.id}> 
                  <div className={classes.avatar}>
-            <img src="https://via.placeholder.com/150" alt="User Avatar" />
+            <img src="/images.png"
+             alt="User Avatar" />
              </div>
                 <div className={classes.matchinfo}>
                     <h2>{match.name}</h2>
