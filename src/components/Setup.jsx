@@ -157,12 +157,6 @@ const Setup = () => {
       course_code: course.trim().toUpperCase()
     }));
 
-    // Insert courses and get the new rows back
-    // const { data: insertedCourses, error: courseError } = await supabase
-    //   .from('courses')
-    //   .insert(courseRows)
-    //   .select();
-
   const savedCourses = [];
 
   for (const course of courseRows) {
@@ -207,6 +201,19 @@ const Setup = () => {
   // Now ALL courses have been processed
   console.log('Saved courses:', savedCourses);
 
+  const { error: deleteError } = await supabase
+    .from('user_courses')
+    .delete()
+    .eq('user_id', session.user.id);
+
+  if (deleteError) {
+    console.error('Error removing old user courses:', deleteError);
+    setError(deleteError.message);
+    setLoading(false);
+    return;
+  }
+
+
   const userCourseRows = savedCourses.map((course) => ({
     user_id: session.user.id,
     course_id: course.id
@@ -214,18 +221,21 @@ const Setup = () => {
 
   console.log('User course rows:', userCourseRows);
 
-  const { error: userCourseError } = await supabase
-    .from('user_courses')
-    .insert(userCourseRows);
+  if (userCourseRows.length > 0) {
 
-  if (userCourseError) {
-    console.error('Error connecting courses to user:', userCourseError);
-    setError(userCourseError.message);
-    setLoading(false);
-    return;
+    const { error: userCourseError } = await supabase
+      .from('user_courses')
+      .insert(userCourseRows);
+
+    if (userCourseError) {
+      console.error('Error connecting courses to user:', userCourseError);
+      setError(userCourseError.message);
+      setLoading(false);
+      return;
+    }
+
+    console.log('Courses connected to user successfully');
   }
-
-  console.log('Courses connected to user successfully');
 
   setLoading(false);
   };
