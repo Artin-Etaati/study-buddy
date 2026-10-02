@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styles from "./Navbar.module.css"
+import classes from "./Navbar.module.css"
 import Frontpage from "../Login/Login";
 import Features from "./features";
 import About from "./about";
@@ -13,23 +13,22 @@ const Landingpage = () => {
 
   return (
     <div>
-    <header className={styles.navbar}>
-      <div className={styles.brand} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-        <span className={styles.logoIcon}>🔥</span>
-        <span className={styles.brandName}>StuddyBuddy</span>
+    <header className={classes.navbar}>
+      <div className={classes.brand} onClick={() => {window.scrollTo({ top: 0, behavior: 'smooth'});setview("About")}}>
+        <span className={classes.brandName}>StuddyBuddy</span>
       </div>
 
-      <nav className={styles.navLinks}>
-        <button className={styles.navButton} onClick={()=>setview('About')}>
+      <nav className={classes.navLinks}>
+        <button className={classes.navButton} onClick={()=>setview('About')}>
           About Us
         </button>
-        <button className={styles.navButton} onClick={()=>setview('Features')}>
+        <button className={classes.navButton} onClick={()=>setview('Features')}>
           Features
         </button>
-        <button className={styles.navButton} onClick={()=>setview('Login')}>
+        <button className={classes.navButton} onClick={()=>setview('Login')}>
           Log In
         </button>
-        <button className={`${styles.navButton} ${styles.primaryButton}`} onClick={()=>setview('Signup')}>
+        <button className={`${classes.navButton} ${classes.primaryButton}`} onClick={()=>setview('Signup')}>
           Get Started
         </button>
       </nav>

@@ -3,7 +3,7 @@ body {
 }
 
 .localbody {
-  background: linear-gradient(135deg, #e9aa2d 0%, #da0505 100%);
+  background: linear-gradient(135deg, #0527ea 0%, #09cdeb 100%);
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -51,7 +51,7 @@ body {
   margin-top: 10px;
   width: 100%;
   padding: 12px;
-  background: #eb671a;
+  background: #087715;
   color: #ffffff;
   font-size: 15px;
   font-weight: 600;
@@ -63,7 +63,7 @@ body {
   }
 
   button:hover {
-    background: #5a67d8;
+    background: #114804;
   } 
 
 }

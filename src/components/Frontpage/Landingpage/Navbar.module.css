@@ -18,12 +18,6 @@
   cursor: pointer;
 }
 
-.logoIcon {
-  font-size: 1.75rem;
-  background: linear-gradient(135deg, #ff4b4b, #ff7676);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
 
 .brandName {
   font-size: 1.5rem;
@@ -56,16 +50,16 @@
 }
 
 .primaryButton {
-  background: linear-gradient(135deg, #ff4b4b, #ff6b6b);
+  background: linear-gradient(135deg, #0c7006, #30e810);
   color: #ffffff;
-  box-shadow: 0 4px 14px rgba(255, 75, 75, 0.35);
+  box-shadow: 0 4px 14px rgba(38, 230, 12, 0.35);
 }
 
 .primaryButton:hover {
-  background: linear-gradient(135deg, #e03e3e, #ff5252);
+  background: linear-gradient(135deg, #0c7006, #30e810);
   color: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(255, 75, 75, 0.45);
+  box-shadow: 0 6px 20px rgba(43, 198, 8, 0.45);
 }
 
 /*adjust for screen size */
