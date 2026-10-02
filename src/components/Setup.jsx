@@ -267,123 +267,190 @@ const Setup = () => {
   };
 //////
 
-
-
-
   return (
     <div className={classes.localbody}>
 
-      <h1>Set Up Your Profile</h1>
+      <div className={classes.main}>
 
-      <form onSubmit = {handleSubmit}>
+        <form className={classes.form} onSubmit={handleSubmit}>
 
-        <label>First Name</label>
-        <input
-          type="text"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-        />
+          <h1>Set Up Your Profile</h1>
 
-        <label>Last Name</label>
-        <input
-          type="text"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        />
-        <label>Birthday</label>
-        <input
-          type="date"
-          value={birthday}
-          onChange={(e) => setBirthday(e.target.value)}
-        />
+          {/* First Name + Last Name */}
+          <div className={classes.row}>
 
-        <label>Gender</label>
-        <select
-          value={gender}
-          onChange={(e) => setGender(e.target.value)}
-        >
-          <option value="">Select Gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-        </select>
+            <div className={classes.formGroup}>
+              <label>First Name</label>
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
 
-        <label>School</label>
+            <div className={classes.formGroup}>
+              <label>Last Name</label>
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
 
-        <select
-          value={university}
-          onChange={(e) => setUniversity(e.target.value)}
-        >
-          <option value="">Select School</option>
+          </div>
 
-          {universities.map((school) => (
-            <option key={school.id} value={school.id}>
-              {school.name}
-            </option>
-          ))}
 
-        </select>
+          {/* Birthday + Gender */}
+          <div className={classes.row}>
 
-        <label>Major</label>
-        <input
-          type="text"
-          value={major}
-          onChange={(e) => setMajor(e.target.value)}
-        />
-        <label>Current Courses</label>
+            <div className={classes.formGroup}>
+              <label>Birthday</label>
+              <input
+                type="date"
+                value={birthday}
+                onChange={(e) => setBirthday(e.target.value)}
+              />
+            </div>
 
-        <input
-          type="text"
-          value={courseInput}
-          onChange={(e) => setCourseInput(e.target.value)}
-          placeholder="Example: COMP 380"
-        />
+            <div className={classes.formGroup}>
+              <label>Gender</label>
+              <select
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+              >
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
 
-        <button type="button" onClick = {handleAddCourse}>
-          Add Course
-        </button>
+          </div>
 
-        <div>
-          {courses.map((course, index) => (
-            <div key={index}>
 
-              <span>{course}</span>
+          {/* School + Major */}
+          <div className={classes.row}>
+
+            <div className={classes.formGroup}>
+              <label>School</label>
+
+              <select
+                value={university}
+                onChange={(e) => setUniversity(e.target.value)}
+              >
+                <option value="">Select School</option>
+
+                {universities.map((school) => (
+                  <option key={school.id} value={school.id}>
+                    {school.name}
+                  </option>
+                ))}
+
+              </select>
+            </div>
+
+
+            <div className={classes.formGroup}>
+              <label>Major</label>
+              <input
+                type="text"
+                value={major}
+                onChange={(e) => setMajor(e.target.value)}
+              />
+            </div>
+
+          </div>
+
+
+          {/* Courses */}
+          <div className={classes.formGroup}>
+
+            <label>Current Courses</label>
+
+            <div className={classes.courseInput}>
+
+              <input
+                type="text"
+                value={courseInput}
+                onChange={(e) => setCourseInput(e.target.value)}
+                placeholder="Example: COMP 380"
+              />
 
               <button
                 type="button"
-                onClick={() => handleRemoveCourse(index)}
+                className={classes.addButton}
+                onClick={handleAddCourse}
               >
-                ×
+                Add Course
               </button>
 
             </div>
-          ))}
-        </div>
-
-        <label>Study Style</label>
-        <select
-          value={studyStyle}
-          onChange={(e) => setStudyStyle(e.target.value)}
-        >
-          <option value="">Select Study Style</option>
-          <option value="In Person">In Person</option>
-          <option value="Online">Online</option>
-          <option value="Either">Either</option>
-        </select>
-
-      
-
-      <button type="submit" disabled={loading}>
-        {loading ? 'Saving...' : 'Submit'}
-      </button>
-
-      {error && <p>{error}</p>}
 
 
+            <div className={classes.courseList}>
 
-      </form>
+              {courses.map((course, index) => (
+                <div className={classes.courseTag} key={index}>
+
+                  <span>{course}</span>
+
+                  <button
+                    type="button"
+                    className={classes.removeButton}
+                    onClick={() => handleRemoveCourse(index)}
+                  >
+                    ×
+                  </button>
+
+                </div>
+              ))}
+
+            </div>
+
+          </div>
+
+
+          {/* Study Style */}
+          <div className={classes.formGroup}>
+
+            <label>Study Style</label>
+
+            <select
+              value={studyStyle}
+              onChange={(e) => setStudyStyle(e.target.value)}
+            >
+              <option value="">Select Study Style</option>
+              <option value="In Person">In Person</option>
+              <option value="Online">Online</option>
+              <option value="Either">Either</option>
+            </select>
+
+          </div>
+
+
+          <button
+            className={classes.submitButton}
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? 'Saving...' : 'Submit'}
+          </button>
+
+
+          {error && (
+            <p className={classes.error}>
+              {error}
+            </p>
+          )}
+
+        </form>
+
+      </div>
 
     </div>
   )
+
+
+
 }
 
 export default Setup
