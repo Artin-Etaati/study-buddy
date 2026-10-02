@@ -18,8 +18,14 @@ const Frontpage = ({isSignup}) => {
     const callback = isSignup ? signUpNewUser : signInUser;
     const result = await callback(email,password);
 
-    if(result.success) {
-        navigate('/dashboard');
+    if (result.success) {
+
+        if (isSignup) {
+            navigate('/Setup');
+        } else {
+            navigate('/dashboard');
+        }
+
     } else {
         setError(result.error);
     }
