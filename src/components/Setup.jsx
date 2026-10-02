@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import classes from './Setup.module.css'
 import { supabase } from '../services/supabase'
 import { UserAuth } from '../AuthContext'
+import { useNavigate } from 'react-router-dom';
 
 
 const Setup = () => {
@@ -19,6 +20,7 @@ const Setup = () => {
   const { session } = UserAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
 
 ///////
@@ -124,6 +126,29 @@ const Setup = () => {
 //////
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // a validation proccess where it make sures that the set up profile hass been filled out completely
+  
+    setError('');
+
+      if (
+        !firstName.trim() ||
+        !lastName.trim() ||
+        !birthday ||
+        !gender ||
+        !university ||
+        !major.trim() ||
+        !studyStyle
+      ) {
+        setError('Please fill out all required fields.');
+        return;
+      }
+
+      if (courses.length === 0) {
+        setError('Please add at least one course.');
+        return;
+      }
+
 
     setLoading(true);
     setError('');
@@ -238,6 +263,7 @@ const Setup = () => {
   }
 
   setLoading(false);
+  navigate('/dashboard');
   };
 //////
 
