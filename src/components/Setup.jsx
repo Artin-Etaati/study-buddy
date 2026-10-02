@@ -39,9 +39,68 @@ const Setup = () => {
     getUniversities();
 
   }, []);
-
-
 //////
+  useEffect(() => {
+    const loadProfile = async () => {
+
+      if (!session?.user) {
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', session.user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error loading profile:', error);
+        return;
+      }
+
+      console.log('Loaded profile:', data);
+
+      if (data) {
+        setFirstName(data.first_name || '');
+        setLastName(data.last_name || '');
+        setBirthday(data.birthday || '');
+        setGender(data.gender || '');
+        setUniversity(data.university_id || '');
+        setMajor(data.major || '');
+        setStudyStyle(data.study_style || '');
+      }
+
+      const { data: userCourses, error: coursesError } = await supabase
+        .from('user_courses')
+        .select(`
+          course_id,
+          courses (
+            course_code
+          )
+        `)
+        .eq('user_id', session.user.id);
+
+      if (coursesError) {
+        console.error('Error loading courses:', coursesError);
+        return;
+      }
+
+      console.log('Loaded user courses:', userCourses);
+
+      const courseCodes = userCourses.map((item) => (
+        item.courses.course_code
+      ));
+
+      setCourses(courseCodes);
+
+    };
+
+    loadProfile();
+
+  }, [session]);
+  /////
+
+
   const handleAddCourse = () => {
   if (courseInput.trim() === '') {
     return;
