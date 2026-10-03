@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { UserAuth } from '../AuthContext'
 import { useNavigate, Navigate} from 'react-router-dom';
-import classes from './Dashboard.module.css'
 import Card from "../components/Card.jsx"
 import home from "../css/Home.module.css"
 const Home = () => {
