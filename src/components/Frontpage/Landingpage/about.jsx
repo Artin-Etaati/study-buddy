@@ -1,4 +1,5 @@
 import classes from "./about.module.css"
+import y from '../../../assets/y.png'
 
 const About = () => {
   return (
@@ -27,7 +28,7 @@ const About = () => {
               <span className={classes.statLabel}>Reliable</span>
             </div>
             <div className={classes.statItem}>
-              <span className={classes.statNumber}>0</span>
+              <span className={classes.statNumber}>Zero</span>
               <span className={classes.statLabel}>Awkward Icebreakers</span>
             </div>
             <div className={classes.statItem}>
@@ -43,6 +44,24 @@ const About = () => {
             Built by students, for students. We created StuddyBuddy to solve the exact networking 
             challenges we faced on campus.
           </p>
+          <div className={classes.meet}>
+            <div>
+                <img src={y} alt="" />
+                <p>This is Yoni</p>
+            </div>
+            <div>
+                <img src="" alt="" />
+                <p>This is Artin</p>
+            </div>
+            <div>
+                <img src="" alt="" />
+                <p>This is Erik</p>
+            </div>
+            <div>
+                <img src="" alt="" />
+                <p>This is Angel</p>
+            </div>
+            </div>
           </div>
       </div>
     </section>
