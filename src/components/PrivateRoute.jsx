@@ -1,6 +1,7 @@
 import React from 'react'
 import { UserAuth } from '../AuthContext'
 import { Navigate } from 'react-router-dom';
+import Navbar from "../components/Navbar";
 
 const PrivateRoute = ({children}) => {
     const {session} = UserAuth();
@@ -10,7 +11,7 @@ const PrivateRoute = ({children}) => {
     }
 
     return (
-    <>{session ? <>{children}</> : <Navigate to ="/signup"/>}</>
+    <>{session ? <div className='main'><Navbar/>{children}</div> : <Navigate to ="/signup"/>}</>
   )
 };
 

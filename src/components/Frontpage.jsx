@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import classes from './Frontpage.module.css'
+import classes from '../css/Frontpage.module.css'
 import { UserAuth } from '../AuthContext';
 
 const Frontpage = ({isSignup}) => {
@@ -19,7 +19,7 @@ const Frontpage = ({isSignup}) => {
     const result = await callback(email,password);
 
     if(result.success) {
-        navigate('/dashboard');
+        navigate('/home');
     } else {
         setError(result.error);
     }
