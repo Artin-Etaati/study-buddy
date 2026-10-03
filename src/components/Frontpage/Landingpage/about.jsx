@@ -31,8 +31,8 @@ const About = () => {
               <span className={classes.statLabel}>Awkward Icebreakers</span>
             </div>
             <div className={classes.statItem}>
-              <span className={classes.statNumber}>$0</span>
-              <span className={classes.statLabel}>Dollars</span>
+              <span className={classes.statNumber}>100%</span>
+              <span className={classes.statLabel}>Free</span>
             </div>
           </div>
         </div>
