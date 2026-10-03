@@ -25,3 +25,7 @@
 .icon {
     width: 25px;
 }
+
+.active > .text {
+    color: blue;
+}
