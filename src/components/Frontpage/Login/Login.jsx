@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import classes from './Login.module.css'
 import { UserAuth } from '../../../AuthContext';
 
-const Frontpage = ({isSignup, change}) => {
+const Frontpage = ({isSignup}) => {
   const[email, setEmail] = useState('');
   const[password, setPassword] = useState('');
   const[error, setError] = useState('');
@@ -38,9 +38,9 @@ const Frontpage = ({isSignup, change}) => {
     <form className={classes.form} onSubmit={handleForm}>
       <h2>{isSignup ? 'Sign Up': 'Sign in'}</h2>
       <p>{isSignup ? 'Already have an account? ' : "Dont have an account? "} 
-        <a className={classes.link} onClick={isSignup ? ()=> change('Login') : ()=>change("Signup")}>
+        <Link to = {isSignup ? "/signin" : "/signup"}> 
           {isSignup? 'Sign in' : 'Sign up'}
-          </a>
+          </Link>
       </p>
       <div className={classes.input}>
         <input onChange={(e)=>setEmail(e.target.value)} value ={email} type="email" name="Email" placeholder="Email"/>
