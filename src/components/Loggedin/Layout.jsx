@@ -1,12 +1,13 @@
 import { Outlet } from "react-router-dom"
 import Navbar from './Navbar'
 import PrivateRoute from '../PrivateRoute'
+import layout from './Layout.module.css'
 
 
 const Layout = () => {
     return(
     <PrivateRoute>
-    <div>
+    <div className={layout.main}>
         <Navbar/>
         <Outlet/>
     </div>
