@@ -18,7 +18,7 @@ const Navbar = () => {
         <button className={classes.navButton} onClick={()=>navigate("/features")}>
           Features
         </button>
-        <button className={classes.navButton} onClick={()=>navigate("/signin")}>
+        <button className={classes.navButton} onClick={()=>navigate("/login")}>
           Log In
         </button>
         <button className={classes.primaryButton + " " + classes.navButton} onClick={()=>navigate("/signup")}>

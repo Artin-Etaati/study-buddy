@@ -12,7 +12,7 @@ export const Router = createBrowserRouter ([
             {path: "/about", element: <About/>},
             {path: "/features", element: <Features/>},
             {path: "/signup", element: <Login isSignup={true}/>},
-            {path: "/signin", element: <Login isSignup={false}/>}
+            {path: "/login", element: <Login isSignup={false}/>}
     ]},
     {path: "/dashboard", element: <PrivateRoute> <Dashboard /> </PrivateRoute>},
     {path: "*", element: <Navigate to ="/about"/>}

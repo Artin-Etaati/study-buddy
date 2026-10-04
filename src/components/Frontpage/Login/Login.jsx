@@ -36,16 +36,16 @@ const Frontpage = ({isSignup}) => {
     <div className={classes.localbody}>
     <div className={classes.main}>
     <form className={classes.form} onSubmit={handleForm}>
-      <h2>{isSignup ? 'Sign Up': 'Sign in'}</h2>
+      <h2>{isSignup ? 'Sign Up': 'Log in'}</h2>
       <p>{isSignup ? 'Already have an account? ' : "Dont have an account? "} 
-        <Link to = {isSignup ? "/signin" : "/signup"}> 
-          {isSignup? 'Sign in' : 'Sign up'}
+        <Link to = {isSignup ? "/login" : "/signup"}> 
+          {isSignup? 'Log in' : 'Sign up'}
           </Link>
       </p>
       <div className={classes.input}>
         <input onChange={(e)=>setEmail(e.target.value)} value ={email} type="email" name="Email" placeholder="Email"/>
         <input onChange={(e)=>setPassword(e.target.value)} value={password} type="password" placeholder = "Password"/>
-        <button type="submit" disabled={loading}>{isSignup ? "Sign up" : "Sign in"}</button>
+        <button type="submit" disabled={loading}>{isSignup ? "Sign up" : "Log in"}</button>
         {error && <p>{error}</p>}
       </div>
     </form>
