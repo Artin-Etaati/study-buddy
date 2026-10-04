@@ -6,7 +6,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   return (
     <header className={classes.navbar}>
-      <div className={classes.logo} onClick={() => window.scrollTo({top: 0})}>
+      <div className={classes.logo} onClick={() => navigate('/about')}>
         <span className={classes.logoimg}>logo</span>
         StuddyBuddy
       </div>
