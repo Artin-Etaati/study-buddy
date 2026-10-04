@@ -1,9 +1,0 @@
-html, body {
-  margin:0px;
-  font-family: sans-serif;
-}
-
-.main {
-    display: flex;
-    min-height: 100vh;
-}

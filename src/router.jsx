@@ -1,11 +1,10 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import Home from './components/Home';
-import PrivateRoute from "./components/PrivateRoute";
-import Setup from "./components/Setup";
-import Profile from "./components/Profile";
-import Matches from "./components/Matches";
-import Messages from "./components/Messages";
-import Layout from "./components/Layout";
+import Home from "./components/Loggedin/Home/Home";
+import Setup from "./components/Frontpage/Setup/Setup";
+import Profile from "./components/Loggedin/Profile/Profile";
+import Matches from "./components/Loggedin/Matches/Matches";
+import Messages from "./components/Loggedin/Messages/Messages";
+import Layout from "./components/Loggedin/Layout";
 import About from "./components/Frontpage/Landingpage/about";
 import Landingpage from "./components/Frontpage/Landingpage/Landingpage";
 import Features from "./components/Frontpage/Landingpage/features";
@@ -14,7 +13,7 @@ import Login from "./components/Frontpage/Login/Login";
 
 export const Router = createBrowserRouter ([
     {path: "/", element: <Navigate to = "/about"/>},
-    {path: "/Setup", element: (<PrivateRoute> <Setup /> </PrivateRoute>)},
+    {path: "/Setup", element: (/*add priv route */ <Setup />)},
     {element:<Layout/>, children: [
         {path: "/home", element: <Home />},
         {path: "/profile", element:<Profile />},

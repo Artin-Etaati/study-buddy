@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import classes from './Setup.module.css'
-import { supabase } from '../services/supabase'
-import { UserAuth } from '../AuthContext'
+import { supabase } from '@/services/supabase'
+import { UserAuth } from '@/AuthContext'
 import { useNavigate } from 'react-router-dom';
 
 

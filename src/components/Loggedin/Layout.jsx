@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom"
 import Navbar from './Navbar'
-import classes from "../css/main.module.css"
-import PrivateRoute from './PrivateRoute'
+import PrivateRoute from '../PrivateRoute'
 
 
 const Layout = () => {

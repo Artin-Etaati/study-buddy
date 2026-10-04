@@ -1,5 +1,4 @@
-
-import Btn from "../css/Buttons.module.css"
+import Btn from "./Buttons.module.css"
 
 function LikeRejectButtons({profile}) {
 

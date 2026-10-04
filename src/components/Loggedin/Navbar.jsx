@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom"
-import navbar from "../css/Navbar.module.css"
-import {UserAuth} from "../AuthContext"
+import navbar from "./Navbar.module.css"
+import { UserAuth } from "@/AuthContext"
 function Navbar() {
     const {signOut} = UserAuth()
     return (

@@ -1,9 +1,6 @@
-import React, { useState } from 'react'
-import { UserAuth } from '../AuthContext'
-import { useNavigate, Navigate} from 'react-router-dom';
-import Card from "../components/Card.jsx"
-import home from "../css/Home.module.css"
-import LikeRejectBtns from "../components/LikeRejectButtons.jsx"
+import Card from "./Card.jsx"
+import home from "./Home.module.css"
+import LikeRejectBtns from "./LikeRejectButtons.jsx"
 const Home = () => {
   
   const profile = {name: "Gordon Ramsay", age: 20, major: "computer science", studyStyle: "in-person", url: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Gordon_Ramsay_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled'}

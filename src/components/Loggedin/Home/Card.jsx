@@ -1,4 +1,4 @@
-import card from "../css/Card.module.css"
+import card from "./Card.module.css"
 
 // name
 // age
