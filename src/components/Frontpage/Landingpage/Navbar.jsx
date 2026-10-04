@@ -6,8 +6,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   return (
     <header className={classes.navbar}>
-      <div className={classes.brand} onClick={() => window.scrollTo({top: 0})}>
-        <span className={classes.brandName}>StuddyBuddy</span>
+      <div className={classes.logo} onClick={() => window.scrollTo({top: 0})}>
+        StuddyBuddy
       </div>
 
       <nav className={classes.navLinks}>
@@ -20,7 +20,7 @@ const Navbar = () => {
         <button className={classes.navButton} onClick={()=>navigate("/signin")}>
           Log In
         </button>
-        <button className={`${classes.navButton} ${classes.primaryButton}`} onClick={()=>navigate("/signup")}>
+        <button className={classes.primaryButton + " " + classes.navButton} onClick={()=>navigate("/signup")}>
           Get Started
         </button>
       </nav>

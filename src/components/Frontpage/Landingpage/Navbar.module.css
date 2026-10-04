@@ -2,24 +2,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem 5%;
+  padding: 1.25rem 2rem;
   background-color: #ffffff;
   border-bottom: 1px solid #eaeaea;
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 100;
   font-family: sans-serif;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.brand {
+.logo {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
-}
-
-
-.brandName {
   font-size: 1.5rem;
   font-weight: 800;
   color: #1a1a1a;
@@ -46,7 +43,7 @@
 
 .navButton:hover {
   color: #1a1a1a;
-  background-color: #f7f7f7;
+  background-color: #d4d2d2;
 }
 
 .primaryButton {
@@ -56,16 +53,15 @@
 }
 
 .primaryButton:hover {
-  background: linear-gradient(135deg, #0c7006, #30e810);
+  background: linear-gradient(135deg, #17a10f, #30e810);
   color: #ffffff;
-  transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(43, 198, 8, 0.45);
 }
 
-/*adjust for screen size */
+
 @media (max-width: 768px) {
   .navbar {
-    padding: 1rem 4%;
+    padding: 1rem 20px;
   }
 
   .navLinks {
