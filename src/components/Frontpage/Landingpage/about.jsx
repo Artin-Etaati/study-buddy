@@ -39,19 +39,19 @@ const About = () => {
           </p>
           <div className={classes.matchmakers}>
             <div>
-                <img src={y} alt="" />
+                <img src={y} alt="test" />
                 <p>This is Yoni</p>
             </div>
             <div>
-                <img src="" alt="" />
+                <img src={y} alt="" />
                 <p>This is Artin</p>
             </div>
             <div>
-                <img src="" alt="" />
+                <img src={y} alt="" />
                 <p>This is Erik</p>
             </div>
             <div>
-                <img src="" alt="" />
+                <img src={y} alt="" />
                 <p>This is Angel</p>
             </div>
             </div>

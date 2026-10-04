@@ -14,8 +14,6 @@ import Login from "./components/Frontpage/Login/Login";
 
 export const Router = createBrowserRouter ([
     {path: "/", element: <Navigate to = "/about"/>},
-    {path: "/signin", element: <Frontpage isSignup={false}/>},
-    {path: "/signup", element: <Frontpage isSignup={true}/>},
     {path: "/Setup", element: (<PrivateRoute> <Setup /> </PrivateRoute>)},
     {element:<Layout/>, children: [
         {path: "/home", element: <Home />},
