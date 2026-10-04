@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import classes from '../css/Frontpage.module.css'
-import { UserAuth } from '../AuthContext';
+import classes from './Login.module.css'
+import { UserAuth } from '../../../AuthContext';
 
 const Frontpage = ({isSignup}) => {
   const[email, setEmail] = useState('');
@@ -42,13 +42,16 @@ const Frontpage = ({isSignup}) => {
     <div className={classes.localbody}>
     <div className={classes.main}>
     <form className={classes.form} onSubmit={handleForm}>
-      <h2>{isSignup ? 'Sign Up': 'Sign in'}</h2>
-      <p>{isSignup ? 'Already have an account?' : "Dont have an account?"} <Link to={isSignup ? "/Signin" : "/Signup"}>{isSignup ? "Sign in" : "Sign up"} </Link>
+      <h2>{isSignup ? 'Sign Up': 'Log in'}</h2>
+      <p>{isSignup ? 'Already have an account? ' : "Dont have an account? "} 
+        <Link to = {isSignup ? "/login" : "/signup"}> 
+          {isSignup? 'Log in' : 'Sign up'}
+          </Link>
       </p>
       <div className={classes.input}>
         <input onChange={(e)=>setEmail(e.target.value)} value ={email} type="email" name="Email" placeholder="Email"/>
         <input onChange={(e)=>setPassword(e.target.value)} value={password} type="password" placeholder = "Password"/>
-        <button type="submit" disabled={loading}>{isSignup ? "Sign up" : "Sign in"}</button>
+        <button type="submit" disabled={loading}>{isSignup ? "Sign up" : "Log in"}</button>
         {error && <p>{error}</p>}
       </div>
     </form>
