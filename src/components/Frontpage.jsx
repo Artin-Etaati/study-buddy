@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import classes from './Frontpage.module.css'
+import classes from '../css/Frontpage.module.css'
 import { UserAuth } from '../AuthContext';
 
 const Frontpage = ({isSignup}) => {
@@ -23,7 +23,7 @@ const Frontpage = ({isSignup}) => {
         if (isSignup) {
             navigate('/Setup');
         } else {
-            navigate('/dashboard');
+            navigate('/home');
         }
 
     } else {
