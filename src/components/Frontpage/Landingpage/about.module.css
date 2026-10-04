@@ -5,25 +5,12 @@
   padding: 4.5rem 1.5rem;
 }
 
-.badge {
-  display: inline-block;
-  padding: 0.35rem 0.85rem;
-  background-color: #e0e7ff;
-  color: #4338ca;
-  font-size: 0.875rem;
-  font-weight: 600;
-  border-radius: 9999px;
-  margin-bottom: 1.25rem;
-  margin-top: 10px;
-}
-
 .title {
   font-size: 2.25rem;
   font-weight: 800;
   color: #111827;
   margin-bottom: 1.25rem;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
+  margin-top: 5rem;
 }
 
 .description {
@@ -35,9 +22,9 @@
 
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
-  margin-top: 2.5rem;
+  margin: 2.5rem 0;
 }
 
 .statItem {
@@ -46,23 +33,24 @@
   border-radius: 12px;
   border: 1px solid #e5e7eb;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
 }
 
 .statNumber {
-  display: block;
-  font-size: 2rem;
+  font-size: 3rem;
   font-weight: 700;
-  color: #2563eb;
+  color: #020202;
 }
 
 .statLabel {
-  font-size: 0.875rem;
-  color: #6b7280;
-  font-weight: 500;
-  margin-top: 0.25rem;
+  font-size: 2rem;
+  color: #020202;
+  font-weight: 600;
+  margin-top: 10px;
 }
 
-.meet {
+.matchmakers {
   margin-top: 4rem;
   display: flex;
   flex-direction: row;
