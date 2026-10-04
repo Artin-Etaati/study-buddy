@@ -17,13 +17,12 @@ body {
   width: 100%;
   max-width: 400px;
   padding: 20px;
-  color: red;
 }
 
 
 .form {
   background: #ffffff;
-  padding: 40px 40px;
+  padding: 40px;
   border-radius: 16px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   display: flex;
