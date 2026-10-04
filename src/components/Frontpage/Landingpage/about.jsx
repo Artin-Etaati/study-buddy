@@ -4,6 +4,7 @@ import y from '../../../assets/y.png'
 const About = () => {
   return (
       <div className={classes.container}>
+            <h1>Logo space</h1>
             <h2 className={classes.title}>Finding Study Partners Shouldn't Be Hard</h2>
             
             <p className={classes.description}>

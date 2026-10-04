@@ -7,6 +7,7 @@ const Navbar = () => {
   return (
     <header className={classes.navbar}>
       <div className={classes.logo} onClick={() => window.scrollTo({top: 0})}>
+        <span className={classes.logoimg}>logo</span>
         StuddyBuddy
       </div>
 

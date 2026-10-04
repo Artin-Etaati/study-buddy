@@ -23,6 +23,10 @@
   letter-spacing: -0.5px;
 }
 
+.logoimg {
+  font-size: 15px;
+}
+
 .navLinks {
   display: flex;
   align-items: center;
