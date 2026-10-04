@@ -6,7 +6,7 @@ import PrivateRoute from '../PrivateRoute'
 const Layout = () => {
     return(
     <PrivateRoute>
-    <div className={classes.main}>
+    <div>
         <Navbar/>
         <Outlet/>
     </div>
