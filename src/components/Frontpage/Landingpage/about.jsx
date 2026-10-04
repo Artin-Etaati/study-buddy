@@ -3,7 +3,6 @@ import y from '../../../assets/y.png'
 
 const About = () => {
   return (
-    <section className={classes.section}>
       <div className={classes.container}>
         <div className={classes.textContent}>
           <span className={classes.badge}>Our Mission</span>
@@ -64,7 +63,6 @@ const About = () => {
             </div>
           </div>
       </div>
-    </section>
   )
 }
 
