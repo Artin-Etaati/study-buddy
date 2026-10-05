@@ -1,0 +1,30 @@
+
+.container {
+    box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.1);
+    padding: 1rem 3rem;
+    border-radius: 15px;
+    width: 400px;
+}
+
+.description {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+}
+
+.info_container {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1rem;
+}
+.text {
+    margin: 0;
+}
+.img {
+    max-width: 100%;
+}
+
+.info {
+    color: rgb(160, 160, 160);
+    font-style: italic;
+}

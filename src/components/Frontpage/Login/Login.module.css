@@ -1,9 +1,6 @@
-body {
-  margin:0px;
-}
 
 .localbody {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0527ea 0%, #09cdeb 100%);
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -17,13 +14,12 @@ body {
   width: 100%;
   max-width: 400px;
   padding: 20px;
-  color: red;
 }
 
 
 .form {
   background: #ffffff;
-  padding: 40px 40px;
+  padding: 40px;
   border-radius: 16px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -45,7 +41,7 @@ body {
   margin-top: 10px;
   width: 100%;
   padding: 12px;
-  background: #667eea;
+  background: #087715;
   color: #ffffff;
   font-size: 15px;
   font-weight: 600;
@@ -57,7 +53,7 @@ body {
   }
 
   button:hover {
-    background: #5a67d8;
+    background: #114804;
   } 
 
 }
