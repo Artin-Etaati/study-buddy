@@ -14,14 +14,14 @@ import PrivateRoute from "./components/PrivateRoute";
 
 export const Router = createBrowserRouter ([
     {path: "/", element: <Navigate to = "/about"/>},
-    {path: "/Setup", element: (/*add priv route */ <Setup />)},
     {element:<PrivateRoute/>, children: [
         {element:<Layout/>, children: [
             {path: "/home", element: <Home />},
             {path: "/profile", element:<Profile />},
             {path: "/matches", element:<Matches />},
             {path: "/messages", element:<Messages />},
-        ]}
+        ]},
+            {path: "/Setup", element: (<Setup />)}
     ]},
     {element: <Landingpage/>, children: [
             {path: "/about", element: <About/>},
