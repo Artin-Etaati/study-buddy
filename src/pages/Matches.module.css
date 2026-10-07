@@ -97,11 +97,14 @@
   width: 300px;
   text-align: center;
 }
+.matchProfile {
+  display: flex;
+  margin: 0 auto;
+}
 .modalAvatar {
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  overflow: hidden;
-  display: block;
-  margin: 0 auto;
+  display: flex;
+  margin: 0 auto 10px auto;
 }

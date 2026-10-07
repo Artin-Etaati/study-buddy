@@ -1,10 +1,34 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../services/supabase";
+import { useNavigate } from "react-router-dom";
 import classes from "./Matches.module.css";
 const Matches = () => {
   const [matches, setMatches] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [removeMatchId, setRemoveMatchId] = useState(null);
+  const navigate = useNavigate();
+  const sendMessage = (matchId) => {
+    navigate(`/messages/${matchId}`);
+  };
+  const removeMatch = async (matchId) => {
+    const windowConfirm = window.confirm(
+      "Are you sure you want to remove this match?",
+    );
+    if (!windowConfirm) {
+      return;
+    }
+    /*const { data: removeData, error: removeError } = await supabase
+      .from("matches")
+      .delete()
+      .eq("id", matchId);
+    if (removeError) {
+      console.error("Error removing match:", removeError);
+      return;
+    }
+    console.log("Match removed:", removeData);
+    setMatches((prevMatches) =>
+      prevMatches.filter((match) => match.id !== matchId),
+    );*/
+  };
   useEffect(() => {
     const fetchMatches = async () => {
       const { data: sessionData, error: sessionError } =
@@ -85,15 +109,17 @@ const Matches = () => {
                         </h2>
                         <p>Major: {match.major}</p>
                         <p>Bio: {match.bio}</p>
+                        <button onClick={() => setIsOpen(false)}>Close</button>
                       </div>
                     </div>
                   )}
+                  <button onClick={() => sendMessage(match.id)}>Message</button>
+                  <div className={classes.removeMatch}>
+                    <button onClick={() => removeMatch(match.id)}>
+                      Remove Match
+                    </button>
+                  </div>
                 </div>
-
-                <button onClick={() => handleMessage(match.id)}>Message</button>
-                <button onClick={() => handleRemoveMatch(match.id)}>
-                  Remove Match
-                </button>
               </div>
             </div>
           ))
