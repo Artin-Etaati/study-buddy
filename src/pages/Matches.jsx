@@ -3,6 +3,8 @@ import { supabase } from "../services/supabase";
 import classes from "./Matches.module.css";
 const Matches = () => {
   const [matches, setMatches] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [removeMatchId, setRemoveMatchId] = useState(null);
   useEffect(() => {
     const fetchMatches = async () => {
       const { data: sessionData, error: sessionError } =
@@ -70,9 +72,28 @@ const Matches = () => {
                   {match.first_name} {match.last_name}
                 </h2>
                 <p>Major: {match.major}</p>
-                <button>View Profile</button>
-                <button>Message</button>
-                <button>Remove Match</button>
+                <div className={classes.matchProfile}>
+                  <button onClick={() => setIsOpen(true)}>View Profile</button>
+                  {isOpen && (
+                    <div className={classes.profileModal}>
+                      <div className={classes.profileContent}>
+                        <div className={classes.modalAvatar}>
+                          <img src="/images.png" alt="User Avatar" />
+                        </div>
+                        <h2>
+                          {match.first_name} {match.last_name}
+                        </h2>
+                        <p>Major: {match.major}</p>
+                        <p>Bio: {match.bio}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <button onClick={() => handleMessage(match.id)}>Message</button>
+                <button onClick={() => handleRemoveMatch(match.id)}>
+                  Remove Match
+                </button>
               </div>
             </div>
           ))
