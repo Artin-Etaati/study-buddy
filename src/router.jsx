@@ -9,16 +9,19 @@ import About from "./components/Frontpage/Landingpage/about";
 import Landingpage from "./components/Frontpage/Landingpage/Landingpage";
 import Features from "./components/Frontpage/Landingpage/features";
 import Login from "./components/Frontpage/Login/Login";
+import PrivateRoute from "./components/PrivateRoute";
 
 
 export const Router = createBrowserRouter ([
     {path: "/", element: <Navigate to = "/about"/>},
-    {path: "/Setup", element: (/*add priv route */ <Setup />)},
-    {element:<Layout/>, children: [
-        {path: "/home", element: <Home />},
-        {path: "/profile", element:<Profile />},
-        {path: "/matches", element:<Matches />},
-        {path: "/messages", element:<Messages />},
+    {element:<PrivateRoute/>, children: [
+        {element:<Layout/>, children: [
+            {path: "/home", element: <Home />},
+            {path: "/profile", element:<Profile />},
+            {path: "/matches", element:<Matches />},
+            {path: "/messages", element:<Messages />},
+        ]},
+            {path: "/Setup", element: (<Setup />)}
     ]},
     {element: <Landingpage/>, children: [
             {path: "/about", element: <About/>},
