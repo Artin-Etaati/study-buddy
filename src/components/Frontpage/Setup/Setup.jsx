@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import classes from './Setup.module.css'
-import { supabase } from '@/services/supabase'
 import { UserAuth } from '@/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import ProfileFields from './ProfileFields';
 import CourseSelector from './CourseSelector';
 import StudyPreferences from './StudyPreferences';
+import { getUniversities, saveProfile } from '@/services/profileService';
 
 const Setup = () => {
 
@@ -38,23 +38,20 @@ const Setup = () => {
 };
 
 ///////
+
   useEffect(() => {
-
-    const getUniversities = async () => {
-
-      const { data, error } = await supabase.from('universities').select('*');
-
-      if (error) {
-        console.error('Error getting universities:', error);
-        return;
+    const fetchUniversities = async () => {
+      try {
+        const data = await getUniversities();
+        setUniversities(data);
+      } catch (error) {
+        console.error('Error fetching universities:', error);
       }
-
-      setUniversities(data);
     };
 
-    getUniversities();
-
+    fetchUniversities();
   }, []);
+
 //////
   
 
@@ -90,126 +87,53 @@ const Setup = () => {
   };
 
 //////
-const handleSubmit = async (e) => {
-  e.preventDefault();
 
-  setError('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  // Validate profile fields
-  if (
-    !formData.firstName.trim() ||
-    !formData.lastName.trim() ||
-    !formData.birthday ||
-    !formData.gender ||
-    !formData.university ||
-    !formData.major.trim() ||
-    !formData.studyStyle
-  ) {
-    setError('Please fill out all required fields.');
-    return;
-  }
+    setError('');
 
-  // Make sure at least one course was added
-  if (courses.length === 0) {
-    setError('Please add at least one course.');
-    return;
-  }
+    // Validate profile fields
+    if (
+      !formData.firstName.trim() ||
+      !formData.lastName.trim() ||
+      !formData.birthday ||
+      !formData.gender ||
+      !formData.university ||
+      !formData.major.trim() ||
+      !formData.studyStyle
+    ) {
+      setError('Please fill out all required fields.');
+      return;
+    }
 
-  // Make sure user is signed in
-  if (!session?.user) {
-    setError('User is not signed in.');
-    return;
-  }
+    // Make sure at least one course was added
+    if (courses.length === 0) {
+      setError('Please add at least one course.');
+      return;
+    }
 
-  setLoading(true);
+    // Make sure user is signed in
+    if (!session?.user) {
+      setError('User is not signed in.');
+      return;
+    }
 
+    setLoading(true);
 
-  //  Create profile
-  const { error: profileError } = await supabase
-    .from('profiles')
-    .insert({
-      id: session.user.id,
-      university_id: formData.university,
-      first_name: formData.firstName.trim(),
-      last_name: formData.lastName.trim(),
-      birthday: formData.birthday,
-      gender: formData.gender,
-      major: formData.major.trim(),
-      study_style: formData.studyStyle,
-    });
+    try {
+      await saveProfile(formData, courses, session.user.id);
+      navigate('/dashboard');
 
-  if (profileError) {
-    console.error('Error creating profile:', profileError);
-    setError(profileError.message);
-    setLoading(false);
-    return;
-  }
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      setError(error.message);
 
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // Prepare courses
-  const courseRows = courses.map((course) => ({
-    university_id: formData.university,
-    course_code: course
-  }));
-
-
-  // Add all courses in ONE request
-  const { error: courseError } = await supabase
-    .from('courses')
-    .upsert(courseRows, {
-      onConflict: 'university_id,course_code',
-      ignoreDuplicates: true
-    });
-
-  if (courseError) {
-    console.error('Error saving courses:', courseError);
-    setError(courseError.message);
-    setLoading(false);
-    return;
-  }
-
-
-  // Get IDs of selected courses
-  const courseCodes = courseRows.map(
-    (course) => course.course_code
-  );
-
-  const { data: savedCourses, error: fetchError } = await supabase
-    .from('courses')
-    .select('id')
-    .eq('university_id', formData.university)
-    .in('course_code', courseCodes);
-
-  if (fetchError) {
-    console.error('Error getting courses:', fetchError);
-    setError(fetchError.message);
-    setLoading(false);
-    return;
-  }
-
-
-
-  const userCourseRows = savedCourses.map((course) => ({
-    user_id: session.user.id,
-    course_id: course.id
-  }));
-
-  const { error: userCourseError } = await supabase
-    .from('user_courses')
-    .insert(userCourseRows);
-
-  if (userCourseError) {
-    console.error('Error connecting courses:', userCourseError);
-    setError(userCourseError.message);
-    setLoading(false);
-    return;
-  }
-
-
-
-  setLoading(false);
-  navigate('/dashboard');
-};
 //////
 
 
