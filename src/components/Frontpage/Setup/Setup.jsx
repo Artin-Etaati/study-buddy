@@ -123,7 +123,7 @@ const Setup = () => {
 
     try {
       await saveProfile(formData, courses, session.user.id);
-      navigate('/dashboard');
+      navigate('/home');
 
     } catch (error) {
       console.error('Error saving profile:', error);
