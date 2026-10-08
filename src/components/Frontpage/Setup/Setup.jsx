@@ -55,7 +55,6 @@ const Setup = () => {
 //////
   
 
-
   const handleAddCourse = () => {
     const newCourse = courseInput.trim().toUpperCase();
 
