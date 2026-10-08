@@ -4,6 +4,7 @@ import { supabase } from '@/services/supabase'
 import { UserAuth } from '@/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import ProfileFields from './ProfileFields';
+import CourseSelector from './CourseSelector';
 
 const Setup = () => {
 
@@ -211,6 +212,7 @@ const handleSubmit = async (e) => {
 //////
 
 
+
 return (
   <div className={classes.localbody}>
     <div className={classes.main}>
@@ -227,50 +229,16 @@ return (
         />
 
         {/* Courses */}
-        <div className={classes.formGroup}>
-
-          <label>Current Courses</label>
-
-          <div className={classes.courseInput}>
-            <input
-              type="text"
-              value={courseInput}
-              onChange={(e) => setCourseInput(e.target.value)}
-              placeholder="Example: COMP 380"
-            />
-
-            <button
-              type="button"
-              className={classes.addButton}
-              onClick={handleAddCourse}
-            >
-              Add Course
-            </button>
-          </div>
-
-          <div className={classes.courseList}>
-            {courses.map((course, index) => (
-              <div className={classes.courseTag} key={index}>
-
-                <span>{course}</span>
-
-                <button
-                  type="button"
-                  className={classes.removeButton}
-                  onClick={() => handleRemoveCourse(index)}
-                >
-                  ×
-                </button>
-
-              </div>
-            ))}
-          </div>
-
-        </div>
+        <CourseSelector
+          courseInput={courseInput}
+          setCourseInput={setCourseInput}
+          courses={courses}
+          handleAddCourse={handleAddCourse}
+          handleRemoveCourse={handleRemoveCourse}
+        />
 
         {/* Study Style */}
         <div className={classes.formGroup}>
-
           <label>Study Style</label>
 
           <select
@@ -283,7 +251,6 @@ return (
             <option value="Online">Online</option>
             <option value="Either">Either</option>
           </select>
-
         </div>
 
         {/* Submit Button */}
@@ -307,6 +274,7 @@ return (
     </div>
   </div>
 );
+
 
 
 
