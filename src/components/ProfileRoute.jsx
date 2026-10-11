@@ -16,6 +16,8 @@ const ProfileRoute = ({ requireProfile = true }) => {
     const checkProfile = async () => {
       try {
         const exists = await hasProfile(session.user.id);
+        console.log('Profile exists:', exists);
+        console.log('Current route requires profile:', requireProfile);
 
         if (!cancelled) {
           setProfileExists(exists);
@@ -31,18 +33,20 @@ const ProfileRoute = ({ requireProfile = true }) => {
     return () => {
       cancelled = true;
     };
-  }, [session?.user?.id]);
+  }, [session?.user?.id, requireProfile]);
 
   if (profileExists === null) {
     return <p>Checking profile...</p>;
   }
 
   if (requireProfile && !profileExists) {
-    return <Navigate to="/setup" replace />;
+      console.log('Redirecting to setup because profile does not exist');
+      return <Navigate to="/setup" replace />;
   }
 
   if (!requireProfile && profileExists) {
-    return <Navigate to="/home" replace />;
+      console.log('Redirecting to home because profile exists');
+      return <Navigate to="/home" replace />;
   }
 
   return <Outlet />;

@@ -122,6 +122,10 @@ const Setup = () => {
 
     try {
       await saveProfile(formData, courses, session.user.id);
+
+      console.log('Profile saved successfully');
+      console.log('Navigating to home');
+
       navigate('/home');
 
     } catch (error) {
