@@ -1,7 +1,131 @@
-function Matches() {
-    return (
-        <h1>Matches</h1>
-    )
-}
+import { useEffect, useState } from "react";
+import { supabase } from "../../../services/supabase";
+import { useNavigate } from "react-router-dom";
+import classes from "./Matches.module.css";
+const Matches = () => {
+  const [matches, setMatches] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const sendMessage = (matchId) => {
+    navigate(`/messages/${matchId}`);
+  };
+  const removeMatch = async (matchId) => {
+    const windowConfirm = window.confirm(
+      "Are you sure you want to remove this match?",
+    );
+    if (!windowConfirm) {
+      return;
+    }
+    /*const { data: removeData, error: removeError } = await supabase
+      .from("matches")
+      .delete()
+      .eq("id", matchId);
+    if (removeError) {
+      console.error("Error removing match:", removeError);
+      return;
+    }
+    console.log("Match removed:", removeData);
+    setMatches((prevMatches) =>
+      prevMatches.filter((match) => match.id !== matchId),
+    );*/
+  };
+  useEffect(() => {
+    const fetchMatches = async () => {
+      const { data: sessionData, error: sessionError } =
+        await supabase.auth.getSession();
+      console.log("logged in user:", sessionData);
 
-export default Matches
+      if (sessionError) {
+        console.error("Error fetching session:", sessionError);
+        return;
+      }
+
+      const userId = sessionData.session.user.id;
+
+      const { data: matchesData, error: matchesError } = await supabase
+        .from("matches")
+        .select("*")
+        .or(`user1_id.eq.${userId},user2_id.eq.${userId}`);
+      console.log("match rows:", matchesData);
+
+      if (matchesError) {
+        console.error("Error fetching matches:", matchesError);
+        return;
+      }
+      const userIds = matchesData.map((match) =>
+        match.user1_id === userId ? match.user2_id : match.user1_id,
+      );
+      console.log("userIds:", userIds);
+      if (userIds.length === 0) {
+        setMatches([]);
+        return;
+      }
+
+      const { data: userData, error: userError } = await supabase
+        .from("profiles")
+        .select("*")
+        .in("id", userIds);
+      console.log("profiles returned", userData);
+
+      if (userError) {
+        console.error("Error fetching user data:", userError);
+        return;
+      }
+      setMatches(userData);
+    };
+    fetchMatches();
+  }, []);
+  return (
+    <div className={classes.localbody}>
+      <div className={classes.header}>
+        <h1>Matches</h1>
+      </div>
+      <div className={classes.matchesList}>
+        {matches.length === 0 ? (
+          <div className={classes.matchEmpty}>
+            <p>Match with people to find them here!</p>
+          </div>
+        ) : (
+          matches.map((match) => (
+            <div className={classes.matchCard} key={match.id}>
+              <div className={classes.avatar}>
+                <img src="/images.png" alt="User Avatar" />
+              </div>
+              <div className={classes.matchinfo}>
+                <h2>
+                  {match.first_name} {match.last_name}
+                </h2>
+                <p>Major: {match.major}</p>
+                <div className={classes.matchProfile}>
+                  <button onClick={() => setIsOpen(true)}>View Profile</button>
+                  {isOpen && (
+                    <div className={classes.profileModal}>
+                      <div className={classes.profileContent}>
+                        <div className={classes.modalAvatar}>
+                          <img src="/images.png" alt="User Avatar" />
+                        </div>
+                        <h2>
+                          {match.first_name} {match.last_name}
+                        </h2>
+                        <p>Major: {match.major}</p>
+                        <p>Bio: {match.bio}</p>
+                        <button onClick={() => setIsOpen(false)}>Close</button>
+                      </div>
+                    </div>
+                  )}
+                  <button onClick={() => sendMessage(match.id)}>Message</button>
+                  <div className={classes.removeMatch}>
+                    <button onClick={() => removeMatch(match.id)}>
+                      Remove Match
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+};
+export default Matches;
