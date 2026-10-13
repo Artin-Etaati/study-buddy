@@ -13,12 +13,8 @@ When a user signs in, the application checks whether they already have a profile
 User signs in
       |
       v
-PrivateRoute
-Checks if the user is authenticated
-      |
-      v
 ProfileRoute
-Checks if the user has a profile
+Checks if the user is authenticated and has a profile
       |
       +-------------------+
       |                   |
@@ -194,21 +190,13 @@ Note: The filename should match the capitalization used in its import statement.
 
 ## 6. Route Protection
 
-### PrivateRoute.jsx
-
-This component checks whether the user is authenticated.
-
-If the user is signed in, they can continue to the next route.
-
-If the user is not signed in, they are redirected away from the protected pages.
-
 ### ProfileRoute.jsx
 
 Location:
 
 `src/components/ProfileRoute.jsx`
 
-This component checks whether the authenticated user has a profile.
+This component checks whether the user is authenticated and has a profile.
 
 It calls:
 
@@ -252,17 +240,16 @@ The routing structure is defined in:
 `src/router.jsx`
 
 ```text
-PrivateRoute
-│
-├── ProfileRoute (requireProfile = true)
-│   │
-│   └── Layout
-│       ├── /home
-│       ├── /profile
-│       ├── /matches
-│       └── /messages
-│
-└── ProfileRoute (requireProfile = false)
+
+ ProfileRoute (requireProfile = true)
+    │
+    └── Layout
+        ├── /home
+        ├── /profile
+        ├── /matches
+        └── /messages
+ 
+ ProfileRoute (requireProfile = false)
     └── /setup
 ```
 

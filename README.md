@@ -92,15 +92,10 @@ The application saves profile information to Supabase.
 
 The application uses two route protection components.
 
-**PrivateRoute**
-
-Checks whether the user is authenticated.
-
-If the user is not signed in, they cannot access protected pages.
 
 **ProfileRoute**
 
-Checks whether the authenticated user already has a profile.
+Checks whether authenticated user and if profile exists.
 
 - Users without a profile are directed to `/setup`.
 - Users with a profile can access the main application.
@@ -178,7 +173,7 @@ study-buddy/
 │   │   │   ├── Layout.jsx
 │   │   │   └── Navbar.jsx
 │   │   │
-│   │   ├── PrivateRoute.jsx
+│   │   ├
 │   │   └── ProfileRoute.jsx
 │   │
 │   ├── services/
@@ -233,13 +228,9 @@ Protected pages include:
 /messages
 ```
 
-### PrivateRoute.jsx
-
-Prevents users who are not signed in from accessing protected pages.
-
 ### ProfileRoute.jsx
 
-Checks whether a signed-in user has a profile.
+Checks whether a signed-in user has a profile and prevents unauthorized access to pages.
 
 It uses the `hasProfile()` function to determine whether the user should access `/setup` or the main application.
 
@@ -386,9 +377,6 @@ Student visits Study Buddy
             |
             v
    Supabase Authentication
-            |
-            v
-       PrivateRoute
             |
             v
        ProfileRoute

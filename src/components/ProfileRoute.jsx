@@ -8,9 +8,9 @@ const ProfileRoute = ({ requireProfile = true }) => {
   const { session } = UserAuth();
   const [profileExists, setProfileExists] = useState(null);
 
+  if (!session?.user) return (<Navigate to ="/about" replace/>);
+  
   useEffect(() => {
-    if (!session?.user) return;
-
     let cancelled = false;
 
     const checkProfile = async () => {
