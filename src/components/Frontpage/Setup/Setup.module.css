@@ -157,3 +157,8 @@
   padding: 10px;
   color: #777;
 }
+
+.activeOption {
+  background-color: #e5efff;
+  color: #222;
+}
