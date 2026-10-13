@@ -166,6 +166,7 @@ return (
           formData={formData}
           handleChange={handleChange}
           universities={universities}
+          majors={majors}
         />
 
         {/* Courses */}

@@ -38,11 +38,11 @@ export async function saveProfile(formData, courses, userId) {
     .insert({
       id: userId,
       university_id: formData.university,
+      major_id: formData.major,
       first_name: formData.firstName.trim(),
       last_name: formData.lastName.trim(),
       birthday: formData.birthday,
       gender: formData.gender,
-      major: formData.major.trim(),
       study_style: formData.studyStyle,
     });
 

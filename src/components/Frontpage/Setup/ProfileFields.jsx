@@ -1,7 +1,7 @@
 
 import classes from './Setup.module.css';
 
-const ProfileFields = ({ formData, handleChange, universities }) => {
+const ProfileFields = ({ formData, handleChange, universities, majors }) => {
   return (
     <>
       {/* First Name + Last Name */}
@@ -63,6 +63,7 @@ const ProfileFields = ({ formData, handleChange, universities }) => {
             onChange={handleChange}
           >
             <option value="">Select School</option>
+
             {universities.map((school) => (
               <option key={school.id} value={school.id}>
                 {school.name}
@@ -73,12 +74,19 @@ const ProfileFields = ({ formData, handleChange, universities }) => {
 
         <div className={classes.formGroup}>
           <label>Major</label>
-          <input
-            type="text"
+          <select
             name="major"
             value={formData.major}
             onChange={handleChange}
-          />
+          >
+            <option value="">Select Major</option>
+
+            {majors.map((major) => (
+              <option key={major.id} value={major.id}>
+                {major.name}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
     </>
@@ -86,3 +94,5 @@ const ProfileFields = ({ formData, handleChange, universities }) => {
 };
 
 export default ProfileFields;
+
+
