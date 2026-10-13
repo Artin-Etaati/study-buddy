@@ -117,3 +117,43 @@
   color: #e53e3e;
   font-size: 14px;
 }
+
+
+.searchableSelect {
+  position: relative;
+  width: 100%;
+}
+
+.searchableSelect input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdownOption {
+  padding: 10px;
+  cursor: pointer;
+  color: #333;
+}
+
+.dropdownOption:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdownEmpty {
+  padding: 10px;
+  color: #777;
+}

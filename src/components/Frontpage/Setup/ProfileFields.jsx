@@ -1,5 +1,6 @@
 
 import classes from './Setup.module.css';
+import SearchableSelect from './SearchableSelect';
 
 const ProfileFields = ({ formData, handleChange, universities, majors }) => {
   return (
@@ -53,40 +54,29 @@ const ProfileFields = ({ formData, handleChange, universities, majors }) => {
         </div>
       </div>
 
+
       {/* School + Major */}
       <div className={classes.row}>
         <div className={classes.formGroup}>
           <label>School</label>
-          <select
+          <SearchableSelect
             name="university"
             value={formData.university}
+            options={universities}
             onChange={handleChange}
-          >
-            <option value="">Select School</option>
-
-            {universities.map((school) => (
-              <option key={school.id} value={school.id}>
-                {school.name}
-              </option>
-            ))}
-          </select>
+            placeholder="Search universities..."
+          />
         </div>
 
         <div className={classes.formGroup}>
           <label>Major</label>
-          <select
+          <SearchableSelect
             name="major"
             value={formData.major}
+            options={majors}
             onChange={handleChange}
-          >
-            <option value="">Select Major</option>
-
-            {majors.map((major) => (
-              <option key={major.id} value={major.id}>
-                {major.name}
-              </option>
-            ))}
-          </select>
+            placeholder="Search majors..."
+          />
         </div>
       </div>
     </>
