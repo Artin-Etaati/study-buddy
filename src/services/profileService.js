@@ -35,13 +35,13 @@ export async function saveProfile(formData, courses, userId) {
     throw profileError;
   }
 
-  // 2. Prepare courses
+  // 2. Map courses as objects for insertion into course table
   const courseRows = courses.map((course) => ({
     university_id: formData.university,
     course_code: course
   }));
 
-  // 3. Save courses
+  // 3. Save courses to course table
   const { error: courseError } = await supabase
     .from('courses')
     .upsert(courseRows, {
@@ -52,12 +52,12 @@ export async function saveProfile(formData, courses, userId) {
   if (courseError) {
     throw courseError;
   }
-
-  // 4. Get course IDs
+  //get only the users course codes out of courserows
   const courseCodes = courseRows.map(
     (course) => course.course_code
   );
 
+  // 4. Get course IDs that match with users courses to save in user course table
   const { data: savedCourses, error: fetchError } = await supabase
     .from('courses')
     .select('id')
