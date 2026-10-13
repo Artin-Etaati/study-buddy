@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { UserAuth } from '@/AuthContext';
-import { hasProfile } from '@/services/profileCheck';
+import { hasProfile } from '@/services/ProfileCheck';
 
 const ProfileRoute = ({ requireProfile = true }) => {
   const { session } = UserAuth();
