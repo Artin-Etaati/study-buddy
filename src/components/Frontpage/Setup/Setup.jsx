@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import ProfileFields from './ProfileFields';
 import CourseSelector from './CourseSelector';
 import StudyPreferences from './StudyPreferences';
-import { getUniversities, saveProfile } from '@/services/profileService';
+import { getUniversities, getMajors, saveProfile } from '@/services/profileService';
 
 const Setup = () => {
 
@@ -21,6 +21,7 @@ const Setup = () => {
   const [courseInput, setCourseInput] = useState('');
   const [courses, setCourses] = useState([]);
   const [universities, setUniversities] = useState([]);
+  const [majors, setMajors] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { session } = UserAuth();
@@ -37,8 +38,7 @@ const Setup = () => {
   });
 };
 
-///////
-
+/////// for university
   useEffect(() => {
     const fetchUniversities = async () => {
       try {
@@ -52,9 +52,21 @@ const Setup = () => {
     fetchUniversities();
   }, []);
 
-//////
-  
+////// for majors
+  useEffect(() => {
+    const fetchMajors = async () => {
+      try {
+        const data = await getMajors();
+        setMajors(data);
+      } catch (error) {
+        console.error('Error fetching majors:', error);
+      }
+    };
 
+    fetchMajors();
+  }, []);
+  
+/////
   const handleAddCourse = () => {
     const newCourse = courseInput.trim().toUpperCase();
 

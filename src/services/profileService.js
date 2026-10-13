@@ -13,6 +13,21 @@ export async function getUniversities() {
   return data;
 }
 
+export const getMajors = async () => {
+  const { data, error } = await supabase
+    .from('majors')
+    .select('id, name')
+    .order('name', { ascending: true });
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+};
+
+
+
 
 
 export async function saveProfile(formData, courses, userId) {
