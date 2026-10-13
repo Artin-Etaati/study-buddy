@@ -7,10 +7,9 @@ import { hasProfile } from '@/services/profileCheck';
 const ProfileRoute = ({ requireProfile = true }) => {
   const { session } = UserAuth();
   const [profileExists, setProfileExists] = useState(null);
-
-  if (!session?.user) return (<Navigate to ="/about" replace/>);
   
   useEffect(() => {
+    if(!session) return;
     let cancelled = false;
 
     const checkProfile = async () => {
@@ -34,6 +33,8 @@ const ProfileRoute = ({ requireProfile = true }) => {
       cancelled = true;
     };
   }, [session?.user?.id, requireProfile]);
+
+  if (!session?.user) return (<Navigate to ="/about" replace/>);
 
   if (profileExists === null) {
     return <p>Checking profile...</p>;
