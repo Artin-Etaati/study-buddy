@@ -5,7 +5,7 @@ import { UserAuth } from '@/AuthContext';
 import { hasProfile } from '@/services/ProfileCheck';
 
 const ProfileRoute = ({ requireProfile = true }) => {
-  const { session } = UserAuth();
+  const {session, loading} = UserAuth();
   const [profileExists, setProfileExists] = useState(null);
   
   useEffect(() => {
@@ -32,8 +32,9 @@ const ProfileRoute = ({ requireProfile = true }) => {
     return () => {
       cancelled = true;
     };
-  }, [session?.user?.id, requireProfile]);
+  }, [session, requireProfile]);
 
+  if(loading) return <div>Loading...</div>
   if (!session?.user) return (<Navigate to ="/about" replace/>);
 
   if (profileExists === null) {
