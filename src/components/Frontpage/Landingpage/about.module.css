@@ -1,0 +1,57 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  padding:1.5rem;
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 1.25rem;
+  margin-top: 3rem;
+}
+
+.description {
+  font-size: 1.125rem;
+  color: #4b5563;
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 2.5rem 0;
+}
+
+.statItem {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.statNumber {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #020202;
+}
+
+.statLabel {
+  font-size: 2rem;
+  color: #020202;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.matchmakers {
+  margin-top: 4rem;
+  display: flex;
+  justify-content: space-between;
+}

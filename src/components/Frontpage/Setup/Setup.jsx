@@ -1,0 +1,456 @@
+import React, { useEffect, useState } from 'react'
+import classes from './Setup.module.css'
+import { supabase } from '@/services/supabase'
+import { UserAuth } from '@/AuthContext'
+import { useNavigate } from 'react-router-dom';
+
+
+const Setup = () => {
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [birthday, setBirthday] = useState('');
+  const [gender, setGender] = useState('');
+  const [major, setMajor] = useState('');
+  const [studyStyle, setStudyStyle] = useState('');
+  const [universities, setUniversities] = useState([]);
+  const [university, setUniversity] = useState('');
+  const [courseInput, setCourseInput] = useState('');
+  const [courses, setCourses] = useState([]);
+  const { session } = UserAuth();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+
+///////
+  useEffect(() => {
+
+    const getUniversities = async () => {
+
+      const { data, error } = await supabase.from('universities').select('*');
+
+      if (error) {
+        console.error('Error getting universities:', error);
+        return;
+      }
+
+      setUniversities(data);
+    };
+
+    getUniversities();
+
+  }, []);
+//////
+  useEffect(() => {
+    const loadProfile = async () => {
+
+      if (!session?.user) {
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', session.user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error loading profile:', error);
+        return;
+      }
+
+      console.log('Loaded profile:', data);
+
+      if (data) {
+        setFirstName(data.first_name || '');
+        setLastName(data.last_name || '');
+        setBirthday(data.birthday || '');
+        setGender(data.gender || '');
+        setUniversity(data.university_id || '');
+        setMajor(data.major || '');
+        setStudyStyle(data.study_style || '');
+      }
+
+      const { data: userCourses, error: coursesError } = await supabase
+        .from('user_courses')
+        .select(`
+          course_id,
+          courses (
+            course_code
+          )
+        `)
+        .eq('user_id', session.user.id);
+
+      if (coursesError) {
+        console.error('Error loading courses:', coursesError);
+        return;
+      }
+
+      console.log('Loaded user courses:', userCourses);
+
+      const courseCodes = userCourses.map((item) => (
+        item.courses.course_code
+      ));
+
+      setCourses(courseCodes);
+
+    };
+
+    loadProfile();
+
+  }, [session]);
+  /////
+
+
+  const handleAddCourse = () => {
+  if (courseInput.trim() === '') {
+    return;
+  }
+
+  setCourses([...courses, courseInput.trim()]);
+  setCourseInput('');
+  };
+
+
+///////
+  const handleRemoveCourse = (indexToRemove) => {
+
+  const updatedCourses = courses.filter(
+    (_, index) => index !== indexToRemove
+  );
+
+  setCourses(updatedCourses);
+  };
+
+//////
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // a validation proccess where it make sures that the set up profile hass been filled out completely
+  
+    setError('');
+
+      if (
+        !firstName.trim() ||
+        !lastName.trim() ||
+        !birthday ||
+        !gender ||
+        !university ||
+        !major.trim() ||
+        !studyStyle
+      ) {
+        setError('Please fill out all required fields.');
+        return;
+      }
+
+      if (courses.length === 0) {
+        setError('Please add at least one course.');
+        return;
+      }
+
+
+    setLoading(true);
+    setError('');
+
+    // Save/update profile
+    const { error } = await supabase
+      .from('profiles')
+      .upsert({
+        id: session.user.id,
+        university_id: university,
+        first_name: firstName,
+        last_name: lastName,
+        birthday: birthday,
+        gender: gender,
+        major: major,
+        study_style: studyStyle,
+      });
+
+    if (error) {
+      console.error('Error creating profile:', error);
+      setError(error.message);
+      setLoading(false);
+      return;
+    }
+
+    console.log('Profile created successfully');
+
+    // Convert React courses array into database rows
+    const courseRows = courses.map((course) => ({
+      university_id: university,
+      course_code: course.trim().toUpperCase()
+    }));
+
+  const savedCourses = [];
+
+  for (const course of courseRows) {
+
+    const { data: existingCourse, error: findError } = await supabase
+      .from('courses')
+      .select('*')
+      .eq('university_id', course.university_id)
+      .eq('course_code', course.course_code)
+      .maybeSingle();
+
+    if (findError) {
+      console.error('Error finding course:', findError);
+      setError(findError.message);
+      setLoading(false);
+      return;
+    }
+
+    if (existingCourse) {
+
+      savedCourses.push(existingCourse);
+
+    } else {
+
+      const { data: newCourse, error: insertError } = await supabase
+        .from('courses')
+        .insert(course)
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('Error creating course:', insertError);
+        setError(insertError.message);
+        setLoading(false);
+        return;
+      }
+
+      savedCourses.push(newCourse);
+    }
+  }
+
+  // Now ALL courses have been processed
+  console.log('Saved courses:', savedCourses);
+
+  const { error: deleteError } = await supabase
+    .from('user_courses')
+    .delete()
+    .eq('user_id', session.user.id);
+
+  if (deleteError) {
+    console.error('Error removing old user courses:', deleteError);
+    setError(deleteError.message);
+    setLoading(false);
+    return;
+  }
+
+
+  const userCourseRows = savedCourses.map((course) => ({
+    user_id: session.user.id,
+    course_id: course.id
+  }));
+
+  console.log('User course rows:', userCourseRows);
+
+  if (userCourseRows.length > 0) {
+
+    const { error: userCourseError } = await supabase
+      .from('user_courses')
+      .insert(userCourseRows);
+
+    if (userCourseError) {
+      console.error('Error connecting courses to user:', userCourseError);
+      setError(userCourseError.message);
+      setLoading(false);
+      return;
+    }
+
+    console.log('Courses connected to user successfully');
+  }
+
+  setLoading(false);
+  navigate('/dashboard');
+  };
+//////
+
+  return (
+    <div className={classes.localbody}>
+
+      <div className={classes.main}>
+
+        <form className={classes.form} onSubmit={handleSubmit}>
+
+          <h1>Set Up Your Profile</h1>
+
+          {/* First Name + Last Name */}
+          <div className={classes.row}>
+
+            <div className={classes.formGroup}>
+              <label>First Name</label>
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
+
+            <div className={classes.formGroup}>
+              <label>Last Name</label>
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
+
+          </div>
+
+
+          {/* Birthday + Gender */}
+          <div className={classes.row}>
+
+            <div className={classes.formGroup}>
+              <label>Birthday</label>
+              <input
+                type="date"
+                value={birthday}
+                onChange={(e) => setBirthday(e.target.value)}
+              />
+            </div>
+
+            <div className={classes.formGroup}>
+              <label>Gender</label>
+              <select
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+              >
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+
+          </div>
+
+
+          {/* School + Major */}
+          <div className={classes.row}>
+
+            <div className={classes.formGroup}>
+              <label>School</label>
+
+              <select
+                value={university}
+                onChange={(e) => setUniversity(e.target.value)}
+              >
+                <option value="">Select School</option>
+
+                {universities.map((school) => (
+                  <option key={school.id} value={school.id}>
+                    {school.name}
+                  </option>
+                ))}
+
+              </select>
+            </div>
+
+
+            <div className={classes.formGroup}>
+              <label>Major</label>
+              <input
+                type="text"
+                value={major}
+                onChange={(e) => setMajor(e.target.value)}
+              />
+            </div>
+
+          </div>
+
+
+          {/* Courses */}
+          <div className={classes.formGroup}>
+
+            <label>Current Courses</label>
+
+            <div className={classes.courseInput}>
+
+              <input
+                type="text"
+                value={courseInput}
+                onChange={(e) => setCourseInput(e.target.value)}
+                placeholder="Example: COMP 380"
+              />
+
+              <button
+                type="button"
+                className={classes.addButton}
+                onClick={handleAddCourse}
+              >
+                Add Course
+              </button>
+
+            </div>
+
+
+            <div className={classes.courseList}>
+
+              {courses.map((course, index) => (
+                <div className={classes.courseTag} key={index}>
+
+                  <span>{course}</span>
+
+                  <button
+                    type="button"
+                    className={classes.removeButton}
+                    onClick={() => handleRemoveCourse(index)}
+                  >
+                    ×
+                  </button>
+
+                </div>
+              ))}
+
+            </div>
+
+          </div>
+
+
+          {/* Study Style */}
+          <div className={classes.formGroup}>
+
+            <label>Study Style</label>
+
+            <select
+              value={studyStyle}
+              onChange={(e) => setStudyStyle(e.target.value)}
+            >
+              <option value="">Select Study Style</option>
+              <option value="In Person">In Person</option>
+              <option value="Online">Online</option>
+              <option value="Either">Either</option>
+            </select>
+
+          </div>
+
+
+          <button
+            className={classes.submitButton}
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? 'Saving...' : 'Submit'}
+          </button>
+
+
+          {error && (
+            <p className={classes.error}>
+              {error}
+            </p>
+          )}
+
+        </form>
+
+      </div>
+
+    </div>
+  )
+
+
+
+}
+
+export default Setup
