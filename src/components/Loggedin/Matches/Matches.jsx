@@ -3,7 +3,11 @@ import { supabase } from "../../../services/supabase";
 import { useNavigate } from "react-router-dom";
 import classes from "./Matches.module.css";
 const Matches = () => {
-  const [matches, setMatches] = useState([]);
+  const [matches, setMatches] = useState([
+    { id: 1, first_name: "John", last_name: "Doe", major: "Computer Science" },
+    { id: 2, first_name: "Jane", last_name: "Smith", major: "Mathematics" },
+    { id: 3, first_name: "Alice", last_name: "Johnson", major: "Physics" },
+  ]);
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [requests, setRequests] = useState([
@@ -49,8 +53,8 @@ const Matches = () => {
     setMatches((prevMatches) =>
       prevMatches.filter((match) => match.id !== matchId),
     );*/
-  };
-  useEffect(() => {
+    // };
+    /*useEffect(() => {
     const fetchMatches = async () => {
       const { data: sessionData, error: sessionError } =
         await supabase.auth.getSession();
@@ -95,16 +99,19 @@ const Matches = () => {
       setMatches(userData);
     };
     fetchMatches();
-  }, []);
+  */ //}, []);
+  };
   return (
     <div className={classes.localbody}>
       <div className={classes.header}>
         <h1>Matches</h1>
         <div className={classes.incomingRequests}>
-          <button onClick={() => setIsOpen(true)}>Incoming Requests</button>
+          <button onClick={() => setSelectedProfile(true)}>
+            Incoming Requests
+          </button>
         </div>
       </div>
-      {isOpen && (
+      {selectedProfile && (
         <div className={classes.requestsModal}>
           <div className={classes.requestsContent}>
             <h2>Incoming Requests</h2>
@@ -143,7 +150,7 @@ const Matches = () => {
                 </div>
               ))
             )}
-            <button onClick={() => setIsOpen(false)}>Close</button>
+            <button onClick={() => setSelectedProfile(false)}>Close</button>
           </div>
         </div>
       )}
@@ -167,8 +174,8 @@ const Matches = () => {
                 </h2>
                 <p>Major: {match.major}</p>
                 <div className={classes.matchProfile}>
-                  <button onClick={() => setIsOpen(true)}>View Profile</button>
-                  {isOpen && (
+                  <button onClick={() => setIsOpen(match)}>View Profile</button>
+                  {isOpen?.id == match.id && (
                     <div className={classes.profileModal}>
                       <div className={classes.profileContent}>
                         <div className={classes.modalAvatar}>
