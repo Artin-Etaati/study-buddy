@@ -6,6 +6,7 @@ import ProfileFields from './ProfileFields';
 import CourseSelector from './CourseSelector';
 import StudyPreferences from './StudyPreferences';
 import { getUniversities, getMajors, saveProfile } from '@/services/profileService';
+import ProfilePhoto from './ProfilePhoto';
 
 const Setup = () => {
 
@@ -26,6 +27,7 @@ const Setup = () => {
   const [error, setError] = useState('');
   const { session } = UserAuth();
   const navigate = useNavigate();
+  const [photo, setPhoto] = useState(null);
 
 
 
@@ -160,6 +162,11 @@ return (
       <form className={classes.form} onSubmit={handleSubmit}>
 
         <h1>Set Up Your Profile</h1>
+
+        <ProfilePhoto
+          photo={photo}
+          setPhoto={setPhoto}
+        />
 
         {/* Personal Information */}
         <ProfileFields
