@@ -1,5 +1,6 @@
 import {useNavigate } from "react-router-dom";
 import classes from "@/css/LandingPageCss/Navbar.module.css"
+import y from "@/assets/logo.png"
 
 
 const Navbar = () => {
@@ -7,7 +8,7 @@ const Navbar = () => {
   return (
     <header className={classes.navbar}>
       <div className={classes.logo} onClick={() => navigate('/about')}>
-        <span className={classes.logoimg}>logo</span>
+       <img className={classes.logoimg} src={y}/>
         StuddyBuddy
       </div>
 

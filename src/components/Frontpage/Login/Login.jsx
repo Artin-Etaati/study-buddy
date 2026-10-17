@@ -21,7 +21,7 @@ const Frontpage = ({isSignup}) => {
     if (result.success) {
 
         if (isSignup) {
-            navigate('/Setup');
+            navigate('/setup');
         } else {
             navigate('/home');
         }

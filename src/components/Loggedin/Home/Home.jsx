@@ -9,18 +9,20 @@ const Home = () => {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(true)
   const [name, setName] = useState("")
+  const [university, setUniversity] = useState("")
 
   useEffect(() => {
 
-    async function getName() {
-      const {data, error} = await supabase.from('profiles').select("first_name, last_name").eq('id', userId)
+    async function getInfo() {
+      const {data, error} = await supabase.from('profiles').select("first_name, last_name, university").eq('id', userId)
       if(error) {
-        console.log("can't get name")
+        console.log("can't get info")
         return;
       }
-      setName(data[0].first_name + " " + data[0].last_name)      
+      setName(data[0].first_name + " " + data[0].last_name)    
+      setUniversity(data[0].university)
     }
-    getName()
+    getInfo()
 
   }, [])
 
@@ -28,6 +30,7 @@ const Home = () => {
   return (
     <div className={home.container}>
       <h1 className={home.title}>Welcome {name}</h1>
+      <h2>Attending {university}</h2>
       <div className={home.matchContainer}>
         <UserPreview />
       </div>
