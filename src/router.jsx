@@ -7,7 +7,7 @@ import Messages from "./components/Loggedin/Messages/Messages";
 import Layout from "./components/Loggedin/Layout";
 import About from "./components/Frontpage/Landingpage/about";
 import Landingpage from "./components/Frontpage/Landingpage/Landingpage";
-import Features from "./components/Frontpage/Landingpage/features";
+import Features from "./components/Frontpage/Landingpage/Features";
 import Login from "./components/Frontpage/Login/Login";
 import PrivateRoute from "./components/PrivateRoute";
 
