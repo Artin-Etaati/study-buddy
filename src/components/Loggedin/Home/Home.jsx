@@ -9,7 +9,6 @@ const Home = () => {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(true)
   const [name, setName] = useState("")
-  const [university, setUniversity] = useState("")
 
   useEffect(() => {
 
@@ -20,7 +19,6 @@ const Home = () => {
         return;
       }
       setName(data[0].first_name + " " + data[0].last_name)    
-      setUniversity(data[0].university)
     }
     getInfo()
 
@@ -30,7 +28,6 @@ const Home = () => {
   return (
     <div className={home.container}>
       <h1 className={home.title}>Welcome {name}</h1>
-      <h2>Attending {university}</h2>
       <div className={home.matchContainer}>
         <UserPreview />
       </div>
