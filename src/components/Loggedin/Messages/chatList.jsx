@@ -1,4 +1,4 @@
-import classes from "./Messages.module.css"
+import classes from "./Chats.module.css"
 import ChatCard from "./chatCard";
 import { useOutletContext } from "react-router-dom";
 
