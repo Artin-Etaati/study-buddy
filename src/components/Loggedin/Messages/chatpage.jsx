@@ -4,7 +4,14 @@ import { supabase } from "../../../services/supabase";
 import styles from "./chatpage.module.css"
 import { UserAuth } from "../../../AuthContext";
 
-
+function formatTimestamp(timestamp) {
+  const date = new Date(timestamp);
+  
+  return date.toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
 
 
 export default function Chat() {
@@ -16,7 +23,6 @@ export default function Chat() {
     const [input, setInput] = useState('');
     const userID = UserAuth().session.user.id;
     const matchInfo = useOutletContext().users.find((user)=>user.matchedProfile.id===profilenum);
-
 
   
 
