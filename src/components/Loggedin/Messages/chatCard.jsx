@@ -1,5 +1,5 @@
 import y from "@/assets/y.png"
-import classes from "./Messages.module.css"
+import classes from "./Chats.module.css"
 import { useNavigate } from "react-router-dom"
 
 export default function chatCard ({user}) {
