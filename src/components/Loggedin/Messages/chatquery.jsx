@@ -10,14 +10,15 @@ export default function chatquery () {
     
     useEffect (()=>{
         const fetchMatches = async () => {
-            //get raw matches and ids for current user
-            const {data:UserIds, error:Iderror } = await supabase
+            //get raw matches for current user
+            const {data:matchData, error:matchError } = await supabase
                 .from('matches')
                 .select('*');
-            if(Iderror) return console.error(Iderror);
+            if(matchError) return console.error(matchError);
+
 
             //find if current user is matched with user1 or user2 and set ids
-            const matchedUserIds = UserIds.map((object)=> object.user1_id===session.user.id ? object.user2_id : object.user1_id);
+            const matchedUserIds = matchData.map((object)=> object.user1_id===session.user.id ? object.user2_id : object.user1_id);
             
             //find the profile data given the matched ids
             const{data:matchedUsers, error:nameError} = await supabase
@@ -25,10 +26,19 @@ export default function chatquery () {
              .select("id, first_name")
              .in('id', matchedUserIds)
 
+
              if(nameError) return console.error(nameError);
             
-             //set the profile data to users
-             setUsers(matchedUsers);
+             //take the match data and profile data and create one object
+             const matchinfo = matchData.map((match)=>{
+                const matchedUserID = match.user1_id==session.user.id ? match.user2_id : match.user1_id;
+                return {
+                    matchId:match.id,
+                    matchedProfile: matchedUsers.find((user)=>user.id===matchedUserID)
+                }
+            })
+             //set the combined data to users
+             setUsers(matchinfo);
              setLoading(false);
         }
         fetchMatches();
