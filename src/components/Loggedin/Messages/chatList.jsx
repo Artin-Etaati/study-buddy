@@ -13,7 +13,7 @@ function chatList() {
             <h2>Current Messages</h2>
             <div className={classes.messagecontainer}>
                 {users.length>0 ? users.map((user)=>
-                    <ChatCard user={user}></ChatCard>
+                    <ChatCard user={user.matchedProfile}></ChatCard>
                 ): <p>None found</p>}
             </div>
         </div>
