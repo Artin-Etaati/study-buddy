@@ -23,7 +23,7 @@ export default function chatquery () {
             if(matchError) return console.error(matchError);
 
             
-             //take the match data and filter it slightly
+             //take the match data and filter out self
              const matchinfo = matchData.map((match)=>{
                 const isSelfUser1 = match.user1_id===session.user.id;
                 return {
