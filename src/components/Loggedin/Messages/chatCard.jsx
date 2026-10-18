@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 export default function chatCard ({user}) {
         const navigate = useNavigate();
        return (
-    <div className={classes.card} onClick={()=>navigate(`/messages/${user.id}`)}>
+    <div className={classes.card} onClick={()=>navigate(`/messages/${user.id}`)} key={user.id}>
       <div className={classes.pictureContainer}>
         <img 
           src={y} 
