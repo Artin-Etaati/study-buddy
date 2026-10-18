@@ -10,34 +10,28 @@ export default function chatquery () {
     
     useEffect (()=>{
         const fetchMatches = async () => {
-            //get raw matches for current user
+            //get the matchdata along with foreign key profiles
             const {data:matchData, error:matchError } = await supabase
                 .from('matches')
-                .select('*');
+                .select(
+                `matchId:id,
+                user1_id,
+                user2_id,
+                user1:profiles!user1_id(*),
+                user2:profiles!user2_id(*)`
+                );
             if(matchError) return console.error(matchError);
 
-
-            //find if current user is matched with user1 or user2 and set ids
-            const matchedUserIds = matchData.map((object)=> object.user1_id===session.user.id ? object.user2_id : object.user1_id);
             
-            //find the profile data given the matched ids
-            const{data:matchedUsers, error:nameError} = await supabase
-             .from('profiles')
-             .select("id, first_name")
-             .in('id', matchedUserIds)
-
-
-             if(nameError) return console.error(nameError);
-            
-             //take the match data and profile data and create one object
+             //take the match data and filter it slightly
              const matchinfo = matchData.map((match)=>{
-                const matchedUserID = match.user1_id==session.user.id ? match.user2_id : match.user1_id;
+                const isSelfUser1 = match.user1_id===session.user.id;
                 return {
-                    matchId:match.id,
-                    matchedProfile: matchedUsers.find((user)=>user.id===matchedUserID)
+                    matchId:match.matchId,
+                    matchedProfile: isSelfUser1 ? match.user2 : match.user1
                 }
             })
-             //set the combined data to users
+             //set the new data to users
              setUsers(matchinfo);
              setLoading(false);
         }
