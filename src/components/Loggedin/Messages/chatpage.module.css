@@ -8,7 +8,6 @@
   overflow: hidden;
 }
 
-/* Header */
 .container h2 {
   padding: 16px 24px;
   margin: 0;
@@ -40,14 +39,14 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
 }
 
-.otherMessage {
+.recieveMessage {
   align-self: flex-start;
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
   border-bottom-left-radius: 6px;
 }
 
-.myMessage {
+.sendMessage {
   align-self: flex-end;
   background-color: #2563eb;
   color: #ffffff;
