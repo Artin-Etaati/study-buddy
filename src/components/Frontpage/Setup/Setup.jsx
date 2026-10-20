@@ -141,10 +141,7 @@ const Setup = () => {
 
       // Step 2: Upload photo if one was selected
       if (photo) {
-        const photoPath = await uploadProfilePhoto(
-          photo,
-          session.user.id
-        );
+        const photoPath = await uploadProfilePhoto(photo, session.user.id);
 
         // Step 3: Save photo path in the database
         const { error: photoError } = await supabase
@@ -170,12 +167,7 @@ const Setup = () => {
     }
   };
 
-
-
 //////
-
-
-
 return (
   <div className={classes.localbody}>
     <div className={classes.main}>
