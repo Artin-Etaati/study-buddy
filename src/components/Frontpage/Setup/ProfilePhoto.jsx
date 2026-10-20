@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from 'react';
+import classes from '@/css/Setup/Setup.module.css';
 import defaultAvatar from '@/assets/default-avatar.png';
 
 const ProfilePhoto = ({ photo, setPhoto }) => {
@@ -46,10 +47,11 @@ const ProfilePhoto = ({ photo, setPhoto }) => {
   };
 
   return (
-    <div>
+    <div className ={classes.photoSection}>
       <h3>Profile Photo (Optional)</h3>
 
       <img
+        className={classes.photoPreview}
         src={preview || defaultAvatar}
         alt="Profile preview"
         style={{
