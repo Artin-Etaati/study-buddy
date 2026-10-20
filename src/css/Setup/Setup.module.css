@@ -179,3 +179,58 @@
   object-fit: cover;
   border: 3px solid #667eea;
 }
+
+.photoButtons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.photoInput {
+  display: none;
+}
+
+.choosePhotoButton {
+  background-color: #667eea;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.choosePhotoButton:hover {
+  background-color: #5568d3;
+}
+
+.removePhotoButton {
+  background-color: transparent;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.removePhotoButton:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.photoError {
+  color: #dc3545;
+  font-size: 13px;
+  text-align: center;
+}
+
+.photoHint {
+  font-size: 12px;
+  color: #777;
+  text-align: center;
+}

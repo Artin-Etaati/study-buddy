@@ -46,45 +46,56 @@ const ProfilePhoto = ({ photo, setPhoto }) => {
     setPhoto(file);
   };
 
-  return (
-    <div className ={classes.photoSection}>
-      <h3>Profile Photo (Optional)</h3>
+return (
+  <div className={classes.photoSection}>
+    <h3>Profile Photo (Optional)</h3>
 
-      <img
-        className={classes.photoPreview}
-        src={preview || defaultAvatar}
-        alt="Profile preview"
-        style={{
-          width: '120px',
-          height: '120px',
-          borderRadius: '50%',
-          objectFit: 'cover'
-        }}
+    <img
+      className={classes.photoPreview}
+      src={preview || defaultAvatar}
+      alt="Profile preview"
+    />
+
+    <div className={classes.photoButtons}>
+      <label
+        htmlFor="profilePhotoInput"
+        className={classes.choosePhotoButton}
+      >
+        Choose Photo
+      </label>
+
+      <input
+        id="profilePhotoInput"
+        className={classes.photoInput}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        onChange={handlePhotoChange}
       />
 
-      <div>
-        <input
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          onChange={handlePhotoChange}
-        />
-
-        {photo && (
-          <button
-            type="button"
-            onClick={() => {
-              setPhoto(null);
-              setError('');
-            }}
-          >
-            Remove Photo
-          </button>
-        )}
-      </div>
-
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {photo && (
+        <button
+          type="button"
+          className={classes.removePhotoButton}
+          onClick={() => {
+            setPhoto(null);
+            setError('');
+          }}
+        >
+          Remove Photo
+        </button>
+      )}
     </div>
-  );
+
+    <p className={classes.photoHint}>
+      JPG, PNG, or WebP (Max 5 MB)
+    </p>
+
+    {error && (
+      <p className={classes.photoError}>{error}</p>
+    )}
+  </div>
+);
+
 };
 
 export default ProfilePhoto;
