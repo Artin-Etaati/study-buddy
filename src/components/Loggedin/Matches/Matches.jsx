@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../../services/supabase";
 import { useNavigate } from "react-router-dom";
 import classes from "./Matches.module.css";
+import LikeRejectButtons from "../Home/LikeRejectButtons";
 const Matches = () => {
   const [matches, setMatches] = useState([
     { id: 1, first_name: "John", last_name: "Doe", major: "Computer Science" },
@@ -16,17 +17,17 @@ const Matches = () => {
     { id: 3, first_name: "Alice", last_name: "Johnson", major: "Physics" },
   ]);
   const approvedRequest = (id) => {
+    const acceptedPerson = requests.find((requests) => requests.id === id);
+    if (!acceptedPerson) return;
+    setMatches((prevMatches) => [...prevMatches, acceptedPerson]);
+
     setRequests((prevRequests) =>
-      prevRequests.map((request) =>
-        request.id === id ? { ...request, status: "approved" } : request,
-      ),
+      prevRequests.filter((request) => request.id !== id),
     );
   };
   const denyedRequest = (id) => {
     setRequests((prevRequests) =>
-      prevRequests.map((request) =>
-        request.id === id ? { ...request, status: "denied" } : request,
-      ),
+      prevRequests.filter((request) => request.id !== id),
     );
   };
 
@@ -41,7 +42,8 @@ const Matches = () => {
     if (!windowConfirm) {
       return;
     }
-    /*const { data: removeData, error: removeError } = await supabase
+  };
+  /*const { data: removeData, error: removeError } = await supabase
       .from("matches")
       .delete()
       .eq("id", matchId);
@@ -53,8 +55,8 @@ const Matches = () => {
     setMatches((prevMatches) =>
       prevMatches.filter((match) => match.id !== matchId),
     );*/
-    // };
-    /*useEffect(() => {
+  // };
+  useEffect(() => {
     const fetchMatches = async () => {
       const { data: sessionData, error: sessionError } =
         await supabase.auth.getSession();
@@ -99,8 +101,7 @@ const Matches = () => {
       setMatches(userData);
     };
     fetchMatches();
-  */ //}, []);
-  };
+  }, []);
   return (
     <div className={classes.localbody}>
       <div className={classes.header}>
