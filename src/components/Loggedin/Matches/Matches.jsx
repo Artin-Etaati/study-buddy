@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../../services/supabase";
 import { useNavigate } from "react-router-dom";
 import classes from "./Matches.module.css";
-import LikeRejectButtons from "../Home/LikeRejectButtons";
 const Matches = () => {
   const [matches, setMatches] = useState([
     { id: 1, first_name: "John", last_name: "Doe", major: "Computer Science" },
@@ -174,29 +173,36 @@ const Matches = () => {
                   {match.first_name} {match.last_name}
                 </h2>
                 <p>Major: {match.major}</p>
-                <div className={classes.matchProfile}>
-                  <button onClick={() => setIsOpen(match)}>View Profile</button>
-                  {isOpen?.id == match.id && (
-                    <div className={classes.profileModal}>
-                      <div className={classes.profileContent}>
-                        <div className={classes.modalAvatar}>
-                          <img src="/images.png" alt="User Avatar" />
-                        </div>
+              </div>
+              <div className={classes.matchProfile}>
+                <button onClick={() => setIsOpen(match)}>View Profile</button>
+                {isOpen?.id == match.id && (
+                  <div className={classes.profileModal}>
+                    <div className={classes.profileContent}>
+                      <div className={classes.modalAvatar}>
+                        <img src="/images.png" alt="User Avatar" />
+                      </div>
+                      <div className={classes.profileHeader}>
                         <h2>
                           {match.first_name} {match.last_name}
                         </h2>
                         <p>Major: {match.major}</p>
-                        <p>Bio: {match.bio}</p>
-                        <button onClick={() => setIsOpen(false)}>Close</button>
                       </div>
+
+                      <hr className={classes.profileLine} />
+
+                      <div className={classes.profileDetails}>
+                        <p>About Me: {match.bio}</p>
+                      </div>
+                      <button onClick={() => setIsOpen(false)}>Close</button>
                     </div>
-                  )}
-                  <button onClick={() => sendMessage(match.id)}>Message</button>
-                  <div className={classes.removeMatch}>
-                    <button onClick={() => removeMatch(match.id)}>
-                      Remove Match
-                    </button>
                   </div>
+                )}
+                <button onClick={() => sendMessage(match.id)}>Message</button>
+                <div className={classes.removeMatch}>
+                  <button onClick={() => removeMatch(match.id)}>
+                    Remove Match
+                  </button>
                 </div>
               </div>
             </div>

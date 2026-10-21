@@ -96,23 +96,46 @@
   justify-content: center;
   align-items: center;
 }
+.profileHeader {
+  text-align: center;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
 .profileContent {
   background-color: white;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
   border-radius: 10px;
-  width: 300px;
+  width: 500px;
+  height: 500px;
   text-align: center;
 }
 .matchProfile {
   display: flex;
+  align-items: center;
   margin: 0 auto;
+  padding: 10px 16px;
+  font-size: 20px;
+}
+.profileDetails {
+  margin-top: -50px;
+}
+.profileDetails p {
+  font-weight: 700;
 }
 .modalAvatar {
-  width: 100px;
-  height: 100px;
+  width: 75px;
+  height: 75px;
   border-radius: 50%;
   display: flex;
   margin: 0 auto 10px auto;
+  overflow: hidden;
+}
+.profileLine {
+  width: 100%;
+  margin: 70px auto;
 }
 .requestsModal {
   position: fixed;
