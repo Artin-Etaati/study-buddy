@@ -9,6 +9,7 @@
 
 .matchCard {
   display: flex;
+  align-items: center;
   border: 1px solid #ccc;
   padding: 20px;
   margin: 5px 0;
@@ -115,9 +116,12 @@
 .matchProfile {
   display: flex;
   align-items: center;
-  margin: 0 auto;
+  margin-left: auto;
   padding: 10px 16px;
   font-size: 20px;
+}
+.removeMatch {
+  margin-bottom: 5px;
 }
 .profileDetails {
   margin-top: -50px;

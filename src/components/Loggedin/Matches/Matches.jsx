@@ -198,12 +198,9 @@ const Matches = () => {
                     </div>
                   </div>
                 )}
-                <button onClick={() => sendMessage(match.id)}>Message</button>
-                <div className={classes.removeMatch}>
-                  <button onClick={() => removeMatch(match.id)}>
-                    Remove Match
-                  </button>
-                </div>
+                <button onClick={() => removeMatch(match.id)}>
+                  Remove Match
+                </button>
               </div>
             </div>
           ))
