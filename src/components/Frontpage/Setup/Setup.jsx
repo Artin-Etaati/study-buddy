@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import classes from './Setup.module.css'
+import classes from '@/css/Setup/Setup.module.css'
 import { UserAuth } from '@/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import ProfileFields from './ProfileFields';

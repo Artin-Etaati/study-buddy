@@ -1,5 +1,5 @@
 
-import classes from './Setup.module.css';
+import classes from '@/css/Setup/Setup.module.css';
 import SearchableSelect from './SearchableSelect';
 
 const ProfileFields = ({ formData, handleChange, universities, majors }) => {
