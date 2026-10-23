@@ -1,18 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {Navigate, useOutletContext, useParams } from "react-router-dom";
 import { supabase } from "../../../services/supabase";
 import styles from "./chatpage.module.css"
 import { UserAuth } from "../../../AuthContext";
 
-function formatTimestamp(timestamp) {
-  const date = new Date(timestamp);
-  
-  return date.toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
 
+const formatTimestamp = (timestamp) => {
+  const date = new Date(timestamp);
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
 
 export default function Chat() {
 
@@ -23,6 +19,7 @@ export default function Chat() {
     const [input, setInput] = useState('');
     const userID = UserAuth().session.user.id;
     const matchInfo = useOutletContext().users.find((user)=>user.matchedProfile.id===profilenum);
+    const containerRef = useRef(null);
 
   
 
@@ -58,6 +55,10 @@ export default function Chat() {
 
     }, [])
 
+    useEffect(()=>{
+      if(containerRef.current) containerRef.current.scrollTo({top:containerRef.current.scrollHeight})
+    }, [messages])
+
 
     const handleSendMessage = async (e) => {
         e.preventDefault();
@@ -82,7 +83,7 @@ export default function Chat() {
     <div className={styles.container}>
       <h2>{(matchInfo.matchedProfile.first_name)}</h2>
       
-      <div className={styles.chatList}>
+      <div ref={containerRef} className={styles.chatList}>
         {messages.map((msg) => {
             const self = msg.sender_id === userID;
             const sender = self ? "You" : matchInfo.matchedProfile.first_name;
