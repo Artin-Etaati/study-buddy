@@ -1,5 +1,4 @@
-
-import classes from './Setup.module.css';
+import classes from '@/css/Setup/Setup.module.css';
 
 const CourseSelector = ({
   courseInput,
