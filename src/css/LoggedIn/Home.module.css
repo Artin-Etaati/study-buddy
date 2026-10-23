@@ -17,6 +17,10 @@
 }
 
 .profilePhoto {
+  position: absolute;
+  top: 29px;
+  left: 190px;
+
   width: 80px;
   height: 80px;
   border-radius: 50%;
