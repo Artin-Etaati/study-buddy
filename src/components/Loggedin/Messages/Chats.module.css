@@ -65,3 +65,44 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding-right: 1rem;
+}
+
+.searchinput {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+
+.dropdown {
+  width: 100%;
+  max-height: 160px; 
+  overflow-y:auto;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  margin-top: 6px; 
+  box-sizing: border-box;
+  display: block; 
+}
+
+.dropdownItem {
+  padding: 10px 16px;
+  font-size: 14px;
+  color: #334155;
+  cursor: pointer;
+}
+
+.dropdownItem:hover {
+  background-color:#c8c5c5;
+}
