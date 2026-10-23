@@ -157,6 +157,7 @@ const Setup = () => {
 
         } catch (photoError) {
           console.error('Error uploading profile photo:', photoError);
+          alert('Your profile was saved, but your photo could not be uploaded.');
         }
       }
 
