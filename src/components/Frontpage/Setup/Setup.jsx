@@ -103,6 +103,7 @@ const Setup = () => {
 
 //////
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -141,16 +142,21 @@ const Setup = () => {
 
       // Step 2: Upload photo if one was selected
       if (photo) {
-        const photoPath = await uploadProfilePhoto(photo, session.user.id);
+        try {
+          const photoPath = await uploadProfilePhoto(photo, session.user.id);
 
-        // Step 3: Save photo path in the database
-        const { error: photoError } = await supabase
-          .from('profiles')
-          .update({ profile_picture_name: photoPath })
-          .eq('id', session.user.id);
+          // Step 3: Save photo path in the database
+          const { error: photoError } = await supabase
+            .from('profiles')
+            .update({ profile_picture_name: photoPath })
+            .eq('id', session.user.id);
 
-        if (photoError) {
-          throw photoError;
+          if (photoError) {
+            throw photoError;
+          }
+
+        } catch (photoError) {
+          console.error('Error uploading profile photo:', photoError);
         }
       }
 
@@ -166,6 +172,7 @@ const Setup = () => {
       setLoading(false);
     }
   };
+
 
 //////
 return (
