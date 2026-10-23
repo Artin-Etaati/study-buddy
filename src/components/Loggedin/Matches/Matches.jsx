@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../../services/supabase";
-import { useNavigate } from "react-router-dom";
 import classes from "./Matches.module.css";
 const Matches = () => {
   const [matches, setMatches] = useState([
@@ -28,11 +27,6 @@ const Matches = () => {
     setRequests((prevRequests) =>
       prevRequests.filter((request) => request.id !== id),
     );
-  };
-
-  const navigate = useNavigate();
-  const sendMessage = (matchId) => {
-    navigate(`/messages/${matchId}`);
   };
   const removeMatch = async (matchId) => {
     const windowConfirm = window.confirm(
@@ -100,6 +94,45 @@ const Matches = () => {
       setMatches(userData);
     };
     fetchMatches();
+  }, []);
+  useEffect(() => {
+    const fetchRequests = async () => {
+      const { data: userData, error: userError } =
+        await supabase.auth.getUser();
+      if (userError) {
+        console.error("Error fetching session:", userError);
+        return;
+      }
+      const userId = userData.user.id;
+      console.log("My user ID:", userId);
+      const { data, error } = await supabase
+        .from("swipes")
+        .select("*")
+        .eq("swiped_id", userId)
+        .eq("action", true);
+      if (error) {
+        console.error("Error fetching user data:", error);
+        return;
+      }
+      console.log("Likes recieved", data);
+
+      const senderIds = data.map((swipe) => swipe.swiper_id);
+
+      if (senderIds.length == 0) {
+        setRequests([]);
+        return;
+      }
+      const { data: profiles, error: profileError } = await supabase
+        .from("profiles")
+        .select("*")
+        .in("id", senderIds);
+      if (profileError) {
+        console.error("Error fetching profiles", profileError);
+        return;
+      }
+      console.log("Request profiles recieved", profiles);
+    };
+    fetchRequests();
   }, []);
   return (
     <div className={classes.localbody}>

@@ -9,19 +9,31 @@ import About from "./components/Frontpage/Landingpage/about";
 import Landingpage from "./components/Frontpage/Landingpage/Landingpage";
 import Features from "./components/Frontpage/Landingpage/features";
 import Login from "./components/Frontpage/Login/Login";
+import ProfileRoute from "./components/ProfileRoute";
 
 export const Router = createBrowserRouter([
   { path: "/", element: <Navigate to="/about" /> },
-  { path: "/Setup", element: /*add priv route */ <Setup /> },
+
   {
-    element: <Layout />,
+    element: <ProfileRoute requireProfile={true} />,
     children: [
-      { path: "/home", element: <Home /> },
-      { path: "/profile", element: <Profile /> },
-      { path: "/matches", element: <Matches /> },
-      { path: "/messages", element: <Messages /> },
+      {
+        element: <Layout />,
+        children: [
+          { path: "/home", element: <Home /> },
+          { path: "/profile", element: <Profile /> },
+          { path: "/matches", element: <Matches /> },
+          { path: "/messages", element: <Messages /> },
+        ],
+      },
     ],
   },
+
+  {
+    element: <ProfileRoute requireProfile={false} />,
+    children: [{ path: "/setup", element: <Setup /> }],
+  },
+
   {
     element: <Landingpage />,
     children: [
@@ -31,5 +43,6 @@ export const Router = createBrowserRouter([
       { path: "/login", element: <Login isSignup={false} /> },
     ],
   },
+
   { path: "*", element: <Navigate to="/about" /> },
 ]);
