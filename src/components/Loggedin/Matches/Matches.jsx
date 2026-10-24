@@ -9,16 +9,38 @@ const Matches = () => {
   ]);
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [requests, setRequests] = useState([
-    { id: 1, first_name: "John", last_name: "Doe", major: "Computer Science" },
-    { id: 2, first_name: "Jane", last_name: "Smith", major: "Mathematics" },
-    { id: 3, first_name: "Alice", last_name: "Johnson", major: "Physics" },
-  ]);
-  const approvedRequest = (id) => {
+  const [requests, setRequests] = useState([]);
+  //  { id: 1, first_name: "John", last_name: "Doe", major: "Computer Science" },
+  //{ id: 2, first_name: "Jane", last_name: "Smith", major: "Mathematics" },
+  //{ id: 3, first_name: "Alice", last_name: "Johnson", major: "Physics" },
+  //]);
+  const approvedRequest = async (id) => {
     const acceptedPerson = requests.find((requests) => requests.id === id);
     if (!acceptedPerson) return;
-    setMatches((prevMatches) => [...prevMatches, acceptedPerson]);
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError) {
+      console.error("Error getting user", userError);
+      return;
+    }
+    const userId = userData.user.id;
+    console.log("Logged in user", userId);
+    console.log("Accepted person", acceptedPerson.sender_id);
+    const { data: sessionData } = await supabase.auth.getSession();
 
+    console.log("Session exists:", !!sessionData.session);
+    console.log("Session user:", sessionData.session?.user.id);
+    const { error: matchError } = await supabase.from("matches").insert({
+      user1_id: userId,
+      user2_id: acceptedPerson.sender_id,
+    });
+    if (matchError) {
+      console.error("Error getting match", matchError);
+      return;
+    }
+    setMatches((prevMatches) => [
+      ...prevMatches,
+      { ...acceptedPerson, id: acceptedPerson.sender_id },
+    ]);
     setRequests((prevRequests) =>
       prevRequests.filter((request) => request.id !== id),
     );
@@ -131,6 +153,21 @@ const Matches = () => {
         return;
       }
       console.log("Request profiles recieved", profiles);
+      const incomingRequests = data
+        .map((swipe) => {
+          const profile = profiles.find(
+            (person) => person.id === swipe.swiper_id,
+          );
+          if (!profile) return null;
+
+          return {
+            ...profile,
+            id: swipe.id,
+            sender_id: swipe.swiper_id,
+          };
+        })
+        .filter((request) => request != null);
+      setRequests(incomingRequests);
     };
     fetchRequests();
   }, []);
