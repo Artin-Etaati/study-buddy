@@ -23,12 +23,6 @@ const Matches = () => {
       return;
     }
     const userId = userData.user.id;
-    console.log("Logged in user", userId);
-    console.log("Accepted person", acceptedPerson.sender_id);
-    const { data: sessionData } = await supabase.auth.getSession();
-
-    console.log("Session exists:", !!sessionData.session);
-    console.log("Session user:", sessionData.session?.user.id);
     const { error: matchError } = await supabase.from("matches").insert({
       user1_id: userId,
       user2_id: acceptedPerson.sender_id,
@@ -57,11 +51,20 @@ const Matches = () => {
     if (!windowConfirm) {
       return;
     }
-  };
-  /*const { data: removeData, error: removeError } = await supabase
+    /*const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError) {
+      console.error("Error getting user", userError);
+      return;
+    }
+
+    const userId = userData.user.id;
+
+    const { data: removeData, error: removeError } = await supabase
       .from("matches")
       .delete()
-      .eq("id", matchId);
+      .or('and(user1_id.eq.${userId},user2_id.eq.${matchId}),and(user1_id.eq.${matchId},user2_id.eq.${userId})",
+      )
+      .select("id");
     if (removeError) {
       console.error("Error removing match:", removeError);
       return;
@@ -70,7 +73,7 @@ const Matches = () => {
     setMatches((prevMatches) =>
       prevMatches.filter((match) => match.id !== matchId),
     );*/
-  // };
+  };
   useEffect(() => {
     const fetchMatches = async () => {
       const { data: sessionData, error: sessionError } =
@@ -125,7 +128,26 @@ const Matches = () => {
         console.error("Error fetching session:", userError);
         return;
       }
+      const { data: existingMatches, error: existingmatchesError } =
+        await supabase
+          .from("matches")
+          .select("user1_id", "user2_id")
+          .or("user1_id.eq.${userId},user2_id.eq.${userId}");
+      if (existingmatchesError) {
+        console.error("Error fetching existing matches", existingmatchesError);
+        return;
+      }
+      const unmatchedLikes = data.filter(
+        (swipe) =>
+          !existingMatches.some(
+            (match) =>
+              match.user1.id === swipe.swiper.id ||
+              match.user2.id === swipe.swiper.id,
+          ),
+      );
+
       const userId = userData.user.id;
+
       console.log("My user ID:", userId);
       const { data, error } = await supabase
         .from("swipes")
@@ -138,7 +160,7 @@ const Matches = () => {
       }
       console.log("Likes recieved", data);
 
-      const senderIds = data.map((swipe) => swipe.swiper_id);
+      const senderIds = unmatchedLikes.map((swipe) => swipe.swiper_id);
 
       if (senderIds.length == 0) {
         setRequests([]);
@@ -153,13 +175,12 @@ const Matches = () => {
         return;
       }
       console.log("Request profiles recieved", profiles);
-      const incomingRequests = data
+      const incomingRequests = unmatchedLikes
         .map((swipe) => {
           const profile = profiles.find(
             (person) => person.id === swipe.swiper_id,
           );
           if (!profile) return null;
-
           return {
             ...profile,
             id: swipe.id,
