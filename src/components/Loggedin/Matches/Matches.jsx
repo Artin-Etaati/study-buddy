@@ -51,7 +51,7 @@ const Matches = () => {
     if (!windowConfirm) {
       return;
     }
-    /*const { data: userData, error: userError } = await supabase.auth.getUser();
+    const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError) {
       console.error("Error getting user", userError);
       return;
@@ -62,7 +62,8 @@ const Matches = () => {
     const { data: removeData, error: removeError } = await supabase
       .from("matches")
       .delete()
-      .or('and(user1_id.eq.${userId},user2_id.eq.${matchId}),and(user1_id.eq.${matchId},user2_id.eq.${userId})",
+      .or(
+        "and(user1_id.eq.${userId},user2_id.eq.${matchId}),and(user1_id.eq.${matchId},user2_id.eq.${userId})",
       )
       .select("id");
     if (removeError) {
@@ -72,7 +73,7 @@ const Matches = () => {
     console.log("Match removed:", removeData);
     setMatches((prevMatches) =>
       prevMatches.filter((match) => match.id !== matchId),
-    );*/
+    );
   };
   useEffect(() => {
     const fetchMatches = async () => {
@@ -128,25 +129,16 @@ const Matches = () => {
         console.error("Error fetching session:", userError);
         return;
       }
+      const userId = userData.user.id;
       const { data: existingMatches, error: existingmatchesError } =
         await supabase
           .from("matches")
-          .select("user1_id", "user2_id")
-          .or("user1_id.eq.${userId},user2_id.eq.${userId}");
+          .select("user1_id, user2_id")
+          .or("user1_id.eq." + userId + ",user2_id.eq." + userId);
       if (existingmatchesError) {
         console.error("Error fetching existing matches", existingmatchesError);
         return;
       }
-      const unmatchedLikes = data.filter(
-        (swipe) =>
-          !existingMatches.some(
-            (match) =>
-              match.user1.id === swipe.swiper.id ||
-              match.user2.id === swipe.swiper.id,
-          ),
-      );
-
-      const userId = userData.user.id;
 
       console.log("My user ID:", userId);
       const { data, error } = await supabase
@@ -159,6 +151,15 @@ const Matches = () => {
         return;
       }
       console.log("Likes recieved", data);
+
+      const unmatchedLikes = data.filter(
+        (swipe) =>
+          !existingMatches.some(
+            (match) =>
+              match.user1_id === swipe.swiper_id ||
+              match.user2_id === swipe.swiper_id,
+          ),
+      );
 
       const senderIds = unmatchedLikes.map((swipe) => swipe.swiper_id);
 
