@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import classes from './Setup.module.css';
+import classes from '@/css/Setup/Setup.module.css';
 
 const SearchableSelect = ({ name, value, options, onChange, placeholder }) => {
   const [search, setSearch] = useState('');

@@ -35,7 +35,7 @@ export async function saveProfile(formData, courses, userId) {
   // 1. Create profile
   const { error: profileError } = await supabase
     .from('profiles')
-    .insert({
+    .upsert({
       id: userId,
       university_id: formData.university,
       major_id: formData.major,
@@ -91,7 +91,10 @@ export async function saveProfile(formData, courses, userId) {
 
   const { error: userCourseError } = await supabase
     .from('user_courses')
-    .insert(userCourseRows);
+    .upsert(userCourseRows, {
+      onConflict: 'user_id,course_id',
+      ignoreDuplicates: true
+    });
 
   if (userCourseError) {
     throw userCourseError;

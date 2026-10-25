@@ -7,11 +7,16 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "express": "node --env-file=.env.local src/services/express.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.1",
     "bootstrap": "^5.3.8",
+<<<<<<< HEAD
+=======
+    "cors": "^2.8.6",
+>>>>>>> main
     "express": "^5.3.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
