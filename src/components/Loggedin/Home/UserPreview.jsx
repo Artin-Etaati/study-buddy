@@ -46,7 +46,7 @@ function UserPreview() {
             const profilePicExpTime = profiles[0].profile_picture_expiration
             setProfileViewId(profiles[0].id);
             const isExpired = new Date(profilePicExpTime).getTime() <= Date.now() + 10 * 60 * 1000;
-            if (isExpired || profilePicExpTime == null) {
+            if (profiles[0].profile_picture_name && (isExpired || profilePicExpTime == null)) {
                 // image has expired
                 // Generate a new signedURL
                 try {
