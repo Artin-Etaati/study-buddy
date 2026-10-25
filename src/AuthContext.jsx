@@ -50,7 +50,7 @@ export const AuthContextProvider = ({children}) => {
                 if(userIdError) throw userIdError
 
                 setSession(session)
-                setUserId(user.id)
+                setUserId(user.id ?? null)
             } catch(error) {
                 console.log("Authentication error " + error)
 
@@ -64,7 +64,7 @@ export const AuthContextProvider = ({children}) => {
         const {data: {subscription}} = supabase.auth.onAuthStateChange((_event, session) =>{
             setSession(session);
             // @@@ make this use getUser() @@@
-            setUserId(session.user.id)
+            setUserId(session.user.id ?? null)
             setLoading(false);
         });
         
@@ -77,12 +77,13 @@ export const AuthContextProvider = ({children}) => {
 
 
     //sign out
-    const signOut = () =>{ 
-        const {error} = supabase.auth.signOut();
-        if(error) {
-            console.error("there was an error: ", error);
-        }
+    const signOut = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+        console.error("there was an error: ", error);
     }
+    };
 
     
     return (
