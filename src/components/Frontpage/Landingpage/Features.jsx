@@ -1,4 +1,4 @@
-import classes from './Feature.module.css'
+import classes from '@/css/LandingPageCss/Feature.module.css'
 
 const Features = () => {
   return (

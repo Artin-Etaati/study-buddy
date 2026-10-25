@@ -3,10 +3,9 @@ import { supabase } from "./services/supabase";
 const AuthContext = createContext({});
 
 export const AuthContextProvider = ({children}) => {
-    const[session, setSession] = useState(undefined);
+    const[session, setSession] = useState(null);
     const[loading, setLoading] = useState(true);
-
-
+    const[userId, setUserId] = useState(null)
     //Sign up
     const signUpNewUser = async (email, password)=>{
         const{data, error} = await supabase.auth.signUp({
@@ -38,15 +37,38 @@ export const AuthContextProvider = ({children}) => {
     };
     
     useEffect (()=>{
-            supabase.auth.getSession().then(({data: {session}} )=>{
-                setSession(session);
-                setLoading(false);
-            });
+
+        async function loadAuth() {
+            setLoading(true);
+            try {
+                const {data: {session}, error: sessionError} = await supabase.auth.getSession();
+
+                if(sessionError) throw sessionError
+
+                const {data: {user}, error: userIdError} = await supabase.auth.getUser();
+
+                if(userIdError) throw userIdError
+
+                setSession(session)
+                setUserId(user.id)
+            } catch(error) {
+                console.log("Authentication error " + error)
+
+                setSession(null)
+                setUserId(null)
+
+            } finally {
+                setLoading(false)
+            }
+        }
         const {data: {subscription}} = supabase.auth.onAuthStateChange((_event, session) =>{
             setSession(session);
+            // @@@ make this use getUser() @@@
+            setUserId(session.user.id)
             setLoading(false);
         });
-
+        
+        loadAuth()
         return () => {
             console.log("leaving");
              subscription.unsubscribe();
@@ -62,12 +84,9 @@ export const AuthContextProvider = ({children}) => {
         }
     }
 
-
-        
     
- 
     return (
-       <AuthContext.Provider value={{session, signUpNewUser, signInUser, signOut, loading}}>
+       <AuthContext.Provider value={{session, userId, signUpNewUser, signInUser, signOut, loading}}>
         {children}
        </AuthContext.Provider>
     )

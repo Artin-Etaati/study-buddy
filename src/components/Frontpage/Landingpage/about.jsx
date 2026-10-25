@@ -1,4 +1,4 @@
-import classes from "./about.module.css"
+import classes from "@/css/LandingPageCss/about.module.css"
 import y from '@/assets/y.png'
 
 const About = () => {

@@ -15,3 +15,14 @@
     padding-top: 4rem;
     justify-self: center;
 }
+
+.profilePhoto {
+  position: absolute;
+  top: 29px;
+  left: 190px;
+
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}

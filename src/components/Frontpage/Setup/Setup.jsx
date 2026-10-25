@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import classes from './Setup.module.css'
+import classes from '@/css/Setup/Setup.module.css'
 import { UserAuth } from '@/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import ProfileFields from './ProfileFields';
 import CourseSelector from './CourseSelector';
 import StudyPreferences from './StudyPreferences';
 import { getUniversities, getMajors, saveProfile } from '@/services/profileService';
+import ProfilePhoto from './ProfilePhoto';
+import { uploadProfilePhoto } from '@/services/profilePhotoService';
+import { supabase } from '@/services/supabase';
 
 const Setup = () => {
 
@@ -26,6 +29,7 @@ const Setup = () => {
   const [error, setError] = useState('');
   const { session } = UserAuth();
   const navigate = useNavigate();
+  const [photo, setPhoto] = useState(null);
 
 
 
@@ -99,9 +103,9 @@ const Setup = () => {
 
 //////
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setError('');
 
     // Validate profile fields
@@ -133,11 +137,32 @@ const Setup = () => {
     setLoading(true);
 
     try {
+      // Step 1: Save profile information
       await saveProfile(formData, courses, session.user.id);
 
-      console.log('Profile saved successfully');
-      console.log('Navigating to home');
+      // Step 2: Upload photo if one was selected
+      if (photo) {
+        try {
+          const photoPath = await uploadProfilePhoto(photo, session.user.id);
 
+          // Step 3: Save photo path in the database
+          const { error: photoError } = await supabase
+            .from('profiles')
+            .update({ profile_picture_name: photoPath })
+            .eq('id', session.user.id);
+
+          if (photoError) {
+            throw photoError;
+          }
+
+        } catch (photoError) {
+          console.error('Error uploading profile photo:', photoError);
+          alert('Your profile was saved, but your photo could not be uploaded.');
+        }
+      }
+
+      // Step 4: Navigate to Home
+      console.log('Profile saved successfully');
       navigate('/home');
 
     } catch (error) {
@@ -149,10 +174,8 @@ const Setup = () => {
     }
   };
 
+
 //////
-
-
-
 return (
   <div className={classes.localbody}>
     <div className={classes.main}>
@@ -160,6 +183,11 @@ return (
       <form className={classes.form} onSubmit={handleSubmit}>
 
         <h1>Set Up Your Profile</h1>
+
+        <ProfilePhoto
+          photo={photo}
+          setPhoto={setPhoto}
+        />
 
         {/* Personal Information */}
         <ProfileFields
