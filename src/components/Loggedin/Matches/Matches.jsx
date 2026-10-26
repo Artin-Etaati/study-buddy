@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../../services/supabase";
 import classes from "./Matches.module.css";
+import defaultAvatar from '@/assets/default-avatar.png';
 const Matches = () => {
-  const [matches, setMatches] = useState([
-    { id: 1, first_name: "John", last_name: "Doe", major: "Computer Science" },
-    { id: 2, first_name: "Jane", last_name: "Smith", major: "Mathematics" },
-    { id: 3, first_name: "Alice", last_name: "Johnson", major: "Physics" },
-  ]);
+  const [matches, setMatches] = useState([]);
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [requests, setRequests] = useState([]);
@@ -39,9 +36,32 @@ const Matches = () => {
       prevRequests.filter((request) => request.id !== id),
     );
   };
-  const denyedRequest = (id) => {
+  const denyedRequest = async (id) => {
+     const { data: denyData, error: denyError } = await supabase.auth.getUser();
+     console.log("User data:", denyData);
+    if (denyError || !denyData?.user) {
+      console.error("Error getting user", denyError);
+      return;
+    }
+
+    const userId = denyData.user.id;
+
+    const { data: removeDeny, error: denyrequestError } = await supabase
+      .from("swipes")
+      .delete()
+      .eq("id", id)
+       .eq("swiped_id", userId)
+      .select("id");
+    if (denyrequestError) {
+      console.error("Error removing match:", denyrequestError);
+      return;
+    }
+    if (!removeDeny || removeDeny.length === 0){
+      console.error("No request was deleted");
+      return;
+    }
     setRequests((prevRequests) =>
-      prevRequests.filter((request) => request.id !== id),
+      prevRequests.filter((request) => request.id !== id)
     );
   };
   const removeMatch = async (matchId) => {
@@ -62,18 +82,34 @@ const Matches = () => {
     const { data: removeData, error: removeError } = await supabase
       .from("matches")
       .delete()
-      .or(
-        "and(user1_id.eq.${userId},user2_id.eq.${matchId}),and(user1_id.eq.${matchId},user2_id.eq.${userId})",
-      )
+      .or("and(user1_id.eq." + userId + ",user2_id.eq." + matchId + "),and(user1_id.eq." + matchId + ",user2_id.eq." + userId + ")")
       .select("id");
     if (removeError) {
       console.error("Error removing match:", removeError);
+      return;
+    }
+    const { data: swipeData,error: swipeError } = await supabase
+      .from("swipes")
+      .delete()
+      .eq("swiper_id", matchId)
+      .eq("swiped_id", userId)
+      .select("id");
+         if(swipeError){
+          console.error("Error removing the swipe")
+          return;
+         }
+         console.log("Deleted swipe", swipeData)
+    if (!removeData || removeData.length ===0){
+      console.error("No match was deleted");
       return;
     }
     console.log("Match removed:", removeData);
     setMatches((prevMatches) =>
       prevMatches.filter((match) => match.id !== matchId),
     );
+    setRequests((prevRequests) =>
+      prevRequests.filter((request) => request.sender_id !== matchId)
+  )
   };
   useEffect(() => {
     const fetchMatches = async () => {
@@ -213,7 +249,7 @@ const Matches = () => {
               requests.map((request) => (
                 <div className={classes.requestCard} key={request.id}>
                   <div className={classes.requestAvatar}>
-                    <img src="/images.png" alt="User Avatar" />
+                    <img src={ request.profile_picture_url || defaultAvatar} alt="User Avatar" />
                   </div>
                   <div className={classes.requestInfo}>
                     <div className={classes.requestDetails}>
@@ -258,7 +294,7 @@ const Matches = () => {
           matches.map((match) => (
             <div className={classes.matchCard} key={match.id}>
               <div className={classes.avatar}>
-                <img src="/images.png" alt="User Avatar" />
+                <img src={match.profile_picture_url || defaultAvatar} alt="User Avatar" />
               </div>
               <div className={classes.matchinfo}>
                 <h2>
@@ -272,7 +308,7 @@ const Matches = () => {
                   <div className={classes.profileModal}>
                     <div className={classes.profileContent}>
                       <div className={classes.modalAvatar}>
-                        <img src="/images.png" alt="User Avatar" />
+                        <img src={match.profile_picture_url ||defaultAvatar} alt="User Avatar" />
                       </div>
                       <div className={classes.profileHeader}>
                         <h2>
