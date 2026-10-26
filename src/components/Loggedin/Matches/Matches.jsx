@@ -7,10 +7,6 @@ const Matches = () => {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [requests, setRequests] = useState([]);
-  //  { id: 1, first_name: "John", last_name: "Doe", major: "Computer Science" },
-  //{ id: 2, first_name: "Jane", last_name: "Smith", major: "Mathematics" },
-  //{ id: 3, first_name: "Alice", last_name: "Johnson", major: "Physics" },
-  //]);
   const approvedRequest = async (id) => {
     const acceptedPerson = requests.find((requests) => requests.id === id);
     if (!acceptedPerson) return;
@@ -38,7 +34,6 @@ const Matches = () => {
   };
   const denyedRequest = async (id) => {
      const { data: denyData, error: denyError } = await supabase.auth.getUser();
-     console.log("User data:", denyData);
     if (denyError || !denyData?.user) {
       console.error("Error getting user", denyError);
       return;
@@ -88,22 +83,21 @@ const Matches = () => {
       console.error("Error removing match:", removeError);
       return;
     }
-    const { data: swipeData,error: swipeError } = await supabase
+    const {error: swipeError } = await supabase
       .from("swipes")
       .delete()
       .eq("swiper_id", matchId)
       .eq("swiped_id", userId)
       .select("id");
          if(swipeError){
-          console.error("Error removing the swipe")
+          console.error("Error removing the swipe", swipeError)
           return;
          }
-         console.log("Deleted swipe", swipeData)
+        
     if (!removeData || removeData.length ===0){
-      console.error("No match was deleted");
+      console.error("No match was deleted", swipeError);
       return;
     }
-    console.log("Match removed:", removeData);
     setMatches((prevMatches) =>
       prevMatches.filter((match) => match.id !== matchId),
     );
@@ -115,7 +109,6 @@ const Matches = () => {
     const fetchMatches = async () => {
       const { data: sessionData, error: sessionError } =
         await supabase.auth.getSession();
-      console.log("logged in user:", sessionData);
 
       if (sessionError) {
         console.error("Error fetching session:", sessionError);
@@ -128,7 +121,6 @@ const Matches = () => {
         .from("matches")
         .select("*")
         .or(`user1_id.eq.${userId},user2_id.eq.${userId}`);
-      console.log("match rows:", matchesData);
 
       if (matchesError) {
         console.error("Error fetching matches:", matchesError);
@@ -137,7 +129,6 @@ const Matches = () => {
       const userIds = matchesData.map((match) =>
         match.user1_id === userId ? match.user2_id : match.user1_id,
       );
-      console.log("userIds:", userIds);
       if (userIds.length === 0) {
         setMatches([]);
         return;
@@ -147,7 +138,6 @@ const Matches = () => {
         .from("profiles")
         .select("*")
         .in("id", userIds);
-      console.log("profiles returned", userData);
 
       if (userError) {
         console.error("Error fetching user data:", userError);
@@ -175,8 +165,6 @@ const Matches = () => {
         console.error("Error fetching existing matches", existingmatchesError);
         return;
       }
-
-      console.log("My user ID:", userId);
       const { data, error } = await supabase
         .from("swipes")
         .select("*")
@@ -186,7 +174,6 @@ const Matches = () => {
         console.error("Error fetching user data:", error);
         return;
       }
-      console.log("Likes recieved", data);
 
       const unmatchedLikes = data.filter(
         (swipe) =>
@@ -211,7 +198,6 @@ const Matches = () => {
         console.error("Error fetching profiles", profileError);
         return;
       }
-      console.log("Request profiles recieved", profiles);
       const incomingRequests = unmatchedLikes
         .map((swipe) => {
           const profile = profiles.find(
@@ -249,7 +235,12 @@ const Matches = () => {
               requests.map((request) => (
                 <div className={classes.requestCard} key={request.id}>
                   <div className={classes.requestAvatar}>
-                    <img src={ request.profile_picture_url || defaultAvatar} alt="User Avatar" />
+                    <img src={ request.profile_picture_url || defaultAvatar} alt="User Avatar" 
+                    onError ={(e) => {
+                      e.currentTarget.oneError = null;
+                      e.currentTarget.src = defaultAvatar;
+                    }}
+                    />
                   </div>
                   <div className={classes.requestInfo}>
                     <div className={classes.requestDetails}>
@@ -294,7 +285,12 @@ const Matches = () => {
           matches.map((match) => (
             <div className={classes.matchCard} key={match.id}>
               <div className={classes.avatar}>
-                <img src={match.profile_picture_url || defaultAvatar} alt="User Avatar" />
+                <img src={match.profile_picture_url || defaultAvatar} alt="User Avatar" 
+                 onError ={(e) => {
+                      e.currentTarget.oneError = null;
+                      e.currentTarget.src = defaultAvatar;
+                    }}
+                    />
               </div>
               <div className={classes.matchinfo}>
                 <h2>
@@ -308,7 +304,12 @@ const Matches = () => {
                   <div className={classes.profileModal}>
                     <div className={classes.profileContent}>
                       <div className={classes.modalAvatar}>
-                        <img src={match.profile_picture_url ||defaultAvatar} alt="User Avatar" />
+                        <img src={match.profile_picture_url ||defaultAvatar} alt="User Avatar" 
+                         onError ={(e) => {
+                      e.currentTarget.oneError = null;
+                      e.currentTarget.src = defaultAvatar;
+                    }}
+                    />
                       </div>
                       <div className={classes.profileHeader}>
                         <h2>

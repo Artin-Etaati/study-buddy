@@ -129,6 +129,10 @@
 .profileDetails p {
   font-weight: 700;
 }
+.profileContent button {
+  align-self: center;
+  margin-top: 200px;
+}
 .modalAvatar {
   width: 75px;
   height: 75px;
