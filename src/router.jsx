@@ -1,4 +1,3 @@
-
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Home from "./components/Loggedin/Home/Home";
 import Setup from "./components/Frontpage/Setup/Setup";
