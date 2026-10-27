@@ -21,6 +21,7 @@ export default function Chat() {
     const matchInfo = useOutletContext().matchList.find((user)=>user.id===profilenum);
     const containerRef = useRef(null);
     const {setactiveChatId, setChats} = useOutletContext();
+    const viewingStatus = useRef(false);
 
   
 
@@ -28,6 +29,34 @@ export default function Chat() {
         if (!matchInfo) return;
         //keep track that this chat is active
         setactiveChatId(matchInfo.matchId);
+
+         const channel = supabase
+        .channel(`chat:${matchInfo.matchid}`, {config: {presence: {key:userID}}});
+
+        channel.on(
+            'postgres_changes',
+            { event: 'INSERT', schema: 'public', table: 'messages', filter:`match_id=eq.${matchInfo.matchId}`},
+             (payload) => {
+              setMessages((prevMessages) => [...prevMessages, payload.new]);
+            }
+          );
+
+        channel.on('presence', {event:'sync'}, ()=> {
+          const currentState = channel.presenceState();
+          const recipientData = currentState[matchInfo.id];
+
+          if(recipientData && recipientData.length) {
+            viewingStatus.current = recipientData.length ? true : false;
+          } else {
+            viewingStatus.current = false;
+          }
+        });
+
+        channel.subscribe(async (status)=>{
+          if(status==='SUBSCRIBED') {
+            await channel.track({viewing:true})
+          }
+        });
 
         const fetchMessages = async () => {
           const { data, error } = await supabase
@@ -54,29 +83,11 @@ export default function Chat() {
           }
 
           setLoading(false)
-
-
         };
 
         fetchMessages();
 
-        const channel = supabase
-        .channel(`chat:${matchInfo.matchid}`)
-        .on(
-            'postgres_changes',
-            { event: 'INSERT', schema: 'public', table: 'messages', filter:`match_id=eq.${matchInfo.matchId}`},
-            async (payload) => {
-              setMessages((prevMessages) => [...prevMessages, payload.new]);
-
-              if(payload.new.sender_id !== userID) { //prevent unneccesary queries
-                const{error} = await supabase.rpc('mark_messages_as_read', {
-                  target_match_id:matchInfo.matchId,
-                });
-                if(error) return console.error("Failed to mark as read", error);
-              }
-            }
-          )
-        .subscribe();
+       
 
         return () => {
           //check race condition of if chat is self or someone else
@@ -100,7 +111,7 @@ export default function Chat() {
             match_id: matchInfo.matchId,
             sender_id: userID,
             content: input.trim(),
-            read:false
+            read:viewingStatus.current
         }])
         setInput('');
         setSent(false);
