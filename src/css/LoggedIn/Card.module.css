@@ -4,18 +4,20 @@
     padding: 1rem 3rem;
     border-radius: 15px;
     width: 400px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .description {
     display: flex;
     justify-content: space-between;
-    padding-bottom: 1rem;
 }
 
 .info_container {
     display: flex;
     justify-content: space-between;
-    padding-top: 1rem;
 }
 .text {
     margin: 0;

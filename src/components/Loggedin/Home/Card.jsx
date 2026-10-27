@@ -7,12 +7,15 @@ import { supabase } from '@/services/supabase'
 // photo
 
 function Card({profile}) {
-
+    console.log(profile)
     return (
         <div className={card.container}>
             <div className={card.description}>
                 <h2 className={card.text}>{profile.first_name}</h2>
                 <h2 className={card.text}>{profile.birthday}</h2>
+            </div>
+            <div className={card.text + " " + card.info}>
+                {profile.gender}
             </div>
             <img className={card.img} src={profile.profile_picture_url} alt="profile_img"/>
             <div className={card.info_container}>

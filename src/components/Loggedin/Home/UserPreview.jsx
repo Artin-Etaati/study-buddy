@@ -9,6 +9,7 @@ function UserPreview() {
     const { userId } = UserAuth()
     const [profiles, setProfiles] = useState(null);
     const [fetchLoading, setFetchLoading] = useState(true)
+    const [makeLoading, setMakeLoading] = useState(false)
     const [error, setError] = useState(null)
     const [profileViewId, setProfileViewId] = useState(null)
     const [fetchNextBatch, setFetchNextBatch] = useState(null);
@@ -18,13 +19,14 @@ function UserPreview() {
         async function fetchProfile() {
             setFetchLoading(true)
             console.log("called fetch")
-            const { data, error } = await supabase.rpc('fetch_profiles', {
+            const { data, error } = await supabase.rpc('fetch_profiles_new', {
                 input_limit: FETCH_LIMIT
             });
             if (error) {
                 setError("error occured")
                 return;
             }
+            console.log(data)
             if (data.length > 0) {
                 setProfiles(data);
             } else {
@@ -41,8 +43,8 @@ function UserPreview() {
     useEffect(() => {
         async function makeCurrentProfile() {
             if (fetchLoading) return;
-            if (profiles == null || profiles.length == 0 ) return;
-
+            if (profiles == null || profiles.length == 0) return;
+            setMakeLoading(true)
             const profilePicExpTime = profiles[0].profile_picture_expiration
             setProfileViewId(profiles[0].id);
             const isExpired = new Date(profilePicExpTime).getTime() <= Date.now() + 10 * 60 * 1000;
@@ -58,8 +60,20 @@ function UserPreview() {
                         body: JSON.stringify({ userId: profiles[0].id })
                     })
 
-                    const newUrl = await response.json()
-                    profiles[0].profile_picture_url = newUrl.url;
+                    const serverResponse = await response.json();
+                    if (serverResponse.status == 200) {
+                        profiles[0].profile_picture_url = serverResponse.url;
+                    } else {
+                        // error occured on server
+                        // load next profile
+                        console.log("server error")
+                        if (profiles.length == 1) {
+                            setFetchNextBatch(!fetchNextBatch)
+                        } else {
+                            setProfiles(profiles => profiles.slice(1))
+                        }
+                        return;
+                    }
                 } catch (error) {
                     // @@@ handle error
                     console.log(error)
@@ -68,7 +82,9 @@ function UserPreview() {
             const currentYear = new Date().getFullYear();
             const age = String(currentYear - parseInt(profiles[0].birthday.substring(0, 4), 10));
             profiles[0].birthday = age
+            console.log(profiles[0])
             setNextProfile(profiles[0])
+            setMakeLoading(false)
             setError(null)
         }
         makeCurrentProfile();
@@ -81,6 +97,7 @@ function UserPreview() {
             console.log(error)
             return;
         }
+
         if (profiles.length == 1) {
             setFetchNextBatch(!fetchNextBatch)
         } else {
@@ -104,6 +121,7 @@ function UserPreview() {
     }
 
     if (fetchLoading) return (<div>Loading fetch...</div>)
+    if (makeLoading) return (<div>Loading make...</div>)
     if (error) return (<div>{error}</div>)
     return (
         <>
