@@ -30,14 +30,25 @@ export default function chatquery () {
                 .order('last_message_time', { ascending: false, nullsFirst: false });
             if(error) return console.error(error);
             
-            //set chat summaries to chat state
-            setChats(data);
+            //take the chat data and manually add a local isunread attribute
+            const formattedChats = data.map((row)=> {
+                const isFromMe = row.last_message_sender === session.user.id;
+
+                return {
+                    ...row, 
+                    is_unread_for_me: isFromMe ? false : !row.last_message_read
+                }
+            })
+
+
+            //set formattedChats to chat state
+            setChats(formattedChats);
             
             //set chatData so that realtime can use it
-            chatData = data;
+            chatData = formattedChats;
 
-             //take the chatsummeries and create list of matched users with matchID
-             const matchList = data.map((row)=>{
+             //take the formattedChats and create list of matched users with matchID
+             const matchList = formattedChats.map((row)=>{
                 const matchedProfile = row.user1_id===session.user.id ? row.user2 : row.user1
                 return {
                     matchId:row.match_id,
@@ -45,7 +56,7 @@ export default function chatquery () {
                     id:matchedProfile.id
                 }
             })
-             //set the new data to users
+             //set the new data to matchlist
              setMatchlist(matchList);
              setLoading(false);
         }
@@ -59,6 +70,15 @@ export default function chatquery () {
                     { event: 'INSERT', schema: 'public', table: 'messages'},
                      (payload) => {
                         const latestRow = payload.new;
+
+                        const isFromMe = latestRow.sender_id === session.user.id;
+
+                        const isChatOpen = latestRow.match_id === activeChatId;
+                        
+                        //is it from them and is the chat closed. only case to be unread
+                        const isUnreadforme = !isFromMe && !isChatOpen;
+
+
                         const editedChats = chatData.filter((row)=>row.match_id!==latestRow.match_id);
                         const users = chatData.find((row)=>row.match_id===payload.new.match_id)
                         const editedRow = {
@@ -69,8 +89,9 @@ export default function chatquery () {
                             user2:users.user2,
                             last_message_content:latestRow.content,
                             last_message_sender:latestRow.sender_id,
-                            last_mesage_read:latestRow.read,
-                            last_message_time:latestRow.created_at
+                            last_message_read:latestRow.read,
+                            last_message_time:latestRow.created_at,
+                            is_unread_for_me:isUnreadforme
                         }
 
                         setChats([editedRow, ...editedChats])
@@ -85,6 +106,6 @@ export default function chatquery () {
     if(loading) return <div>fetching users...</div>
 
     return (
-        <Outlet context={{matchList, chats, setactiveChatId}}/>
+        <Outlet context={{matchList, chats, setactiveChatId, setChats}}/>
     )
 }
