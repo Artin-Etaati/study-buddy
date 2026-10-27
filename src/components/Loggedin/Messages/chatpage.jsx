@@ -20,7 +20,7 @@ export default function Chat() {
     const userID = UserAuth().session.user.id;
     const matchInfo = useOutletContext().matchList.find((user)=>user.id===profilenum);
     const containerRef = useRef(null);
-    const {setactiveChatId} = useOutletContext();
+    const {setactiveChatId, setChats} = useOutletContext();
 
   
 
@@ -38,27 +38,44 @@ export default function Chat() {
 
           if (error) return console.error('Error fetching messages:', error);
           setMessages(data);
-          setLoading(false)
 
           if(data.length) {
             const{error} = await supabase.rpc('mark_messages_as_read', {
               target_match_id:matchInfo.matchId,
             });
             if(error) return console.error("Failed to mark as read", error);
+
+            setChats((prevChats) => {
+              return prevChats.map((chat) => {
+                return chat.match_id === matchInfo.matchId ? { ...chat, is_unread_for_me: false } : chat
+              })
+            });
+
           }
+
+          setLoading(false)
+
+
         };
 
         fetchMessages();
 
         const channel = supabase
-        .channel('public:messagepage')
+        .channel(`chat:${matchInfo.matchid}`)
         .on(
             'postgres_changes',
             { event: 'INSERT', schema: 'public', table: 'messages', filter:`match_id=eq.${matchInfo.matchId}`},
-            (payload) => {
-            setMessages((prevMessages) => [...prevMessages, payload.new]);
+            async (payload) => {
+              setMessages((prevMessages) => [...prevMessages, payload.new]);
+
+              if(payload.new.sender_id !== userID) { //prevent unneccesary queries
+                const{error} = await supabase.rpc('mark_messages_as_read', {
+                  target_match_id:matchInfo.matchId,
+                });
+                if(error) return console.error("Failed to mark as read", error);
+              }
             }
-        )
+          )
         .subscribe();
 
         return () => {
@@ -82,7 +99,8 @@ export default function Chat() {
         const {error} = await supabase.from('messages').insert([{
             match_id: matchInfo.matchId,
             sender_id: userID,
-            content: input.trim()
+            content: input.trim(),
+            read:false
         }])
         setInput('');
         setSent(false);
