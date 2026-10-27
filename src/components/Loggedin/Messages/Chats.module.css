@@ -69,6 +69,21 @@
   padding: 5px 0;
 }
 
+.card.unread {
+  background-color: #f0f4ff;
+  border-color: #3b82f6;
+}
+
+.card.unread:hover {
+  background-color: #e2e8f0;
+}
+
+
+.card.unread .message {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
 .inputContainer {
   display: flex;
   flex-direction: column;

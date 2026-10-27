@@ -36,7 +36,7 @@ export default function chatCard ({row}) {
         
 
        return (
-    <div className={classes.card} onClick={()=>navigate(`/messages/${matchedUser.id}`)} key={matchedUser.id}>
+    <div className={classes.card + " " + (row.is_unread_for_me ? classes.unread : "")} onClick={()=>navigate(`/messages/${matchedUser.id}`)} key={matchedUser.id}>
       <div className={classes.pictureContainer}>
         <img 
           src={y} 
