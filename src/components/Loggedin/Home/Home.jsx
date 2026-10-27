@@ -25,10 +25,10 @@ const Home = () => {
       setUniversity(data[0].university)
       setLoading(false)
 
-      if (data.profile_picture_name) {
+      if (data[0].profile_picture_name) {
         const { data: photoData, error: photoError } = await supabase.storage
           .from('Profile_Picture')
-          .createSignedUrl(data.profile_picture_name, 3600);
+          .createSignedUrl(data[0].profile_picture_name, 3600);
 
         if (photoError) {
           console.error('Error loading profile photo:', photoError);
@@ -46,8 +46,10 @@ const Home = () => {
   if (error) return (<h2>Error Occured {error}</h2>)
   return (
     <div className={home.container}>
-      <img src={profilePhoto || defaultAvatar} alt="My Profile" className={home.profilePhoto}/>
-      <h1 className={home.title}>Welcome {name}</h1>
+      <div className={home.title_container}>
+        <img src={profilePhoto || defaultAvatar} alt="My Profile" className={home.profilePhoto}/>
+        <h1 className={home.title}>Welcome {name}</h1>
+      </div>
       <h3 className={home.subtitle}>Checkout some people attending {university}</h3>
       <div className={home.matchContainer}>
         <UserPreview />

@@ -1,13 +1,13 @@
 import card from "@/css/LoggedIn/Card.module.css"
 import { useEffect } from "react"
 import { supabase } from '@/services/supabase'
+import defaultAvatar from '@/assets/default-avatar.png';
 
 // name
 // age
 // photo
 
 function Card({profile}) {
-    console.log(profile)
     return (
         <div className={card.container}>
             <div className={card.description}>

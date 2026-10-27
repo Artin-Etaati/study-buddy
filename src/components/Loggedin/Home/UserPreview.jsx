@@ -7,7 +7,7 @@ import { UserAuth } from '@/AuthContext'
 
 function UserPreview() {
     const { userId } = UserAuth()
-    const [profiles, setProfiles] = useState(null);
+    const [profiles, setProfiles] = useState([]);
     const [fetchLoading, setFetchLoading] = useState(true)
     const [makeLoading, setMakeLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -18,7 +18,6 @@ function UserPreview() {
     useEffect(() => {
         async function fetchProfile() {
             setFetchLoading(true)
-            console.log("called fetch")
             const { data, error } = await supabase.rpc('fetch_profiles_new', {
                 input_limit: FETCH_LIMIT
             });
@@ -26,7 +25,6 @@ function UserPreview() {
                 setError("error occured")
                 return;
             }
-            console.log(data)
             if (data.length > 0) {
                 setProfiles(data);
             } else {
@@ -66,23 +64,16 @@ function UserPreview() {
                     } else {
                         // error occured on server
                         // load next profile
-                        console.log("server error")
-                        if (profiles.length == 1) {
-                            setFetchNextBatch(!fetchNextBatch)
-                        } else {
-                            setProfiles(profiles => profiles.slice(1))
-                        }
+                        // @@@ add fix that if for any reason server can't create signed url OR server is unresponsive @@@
                         return;
                     }
                 } catch (error) {
                     // @@@ handle error
-                    console.log(error)
                 }
             }
             const currentYear = new Date().getFullYear();
             const age = String(currentYear - parseInt(profiles[0].birthday.substring(0, 4), 10));
             profiles[0].birthday = age
-            console.log(profiles[0])
             setNextProfile(profiles[0])
             setMakeLoading(false)
             setError(null)
@@ -93,10 +84,7 @@ function UserPreview() {
     async function handleLike() {
         const { data, error } = await supabase.from("swipes").insert({ swiper_id: userId, swiped_id: profileViewId, action: true })
 
-        if (error) {
-            console.log(error)
-            return;
-        }
+        if (error) {return;}
 
         if (profiles.length == 1) {
             setFetchNextBatch(!fetchNextBatch)
@@ -108,10 +96,7 @@ function UserPreview() {
     async function handleDislike() {
         const { data, error } = await supabase.from("swipes").insert({ swiper_id: userId, swiped_id: profileViewId, action: false })
 
-        if (error) {
-            console.log(error)
-            return;
-        }
+        if (error) {return;}
         if (profiles.length == 1) {
             setFetchNextBatch(!fetchNextBatch)
         } else {
@@ -120,8 +105,7 @@ function UserPreview() {
 
     }
 
-    if (fetchLoading) return (<div>Loading fetch...</div>)
-    if (makeLoading) return (<div>Loading make...</div>)
+    if (fetchLoading || makeLoading) return (<div>Loading</div>)
     if (error) return (<div>{error}</div>)
     return (
         <>
@@ -130,10 +114,8 @@ function UserPreview() {
                     <Card profile={currentProfile}></Card>
                     <LikeDislikeBtns profile={currentProfile} onLike={handleLike} onDislike={handleDislike} />
                 </div> :
-
                 <h3>No current profiles. check back later.</h3>
             }
-
         </>
     )
 }
