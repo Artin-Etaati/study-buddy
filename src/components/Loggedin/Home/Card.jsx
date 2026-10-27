@@ -17,7 +17,7 @@ function Card({profile}) {
             <div className={card.text + " " + card.info}>
                 {profile.gender}
             </div>
-            <img className={card.img} src={profile.profile_picture_url} alt="profile_img"/>
+            <img className={card.img} src={profile.profile_picture_url || defaultAvatar} alt="Profile picture"/>
             <div className={card.info_container}>
                 <p className={card.text + " " + card.info}>{profile.major}</p>
                 <p className={card.text + " " + card.info}>{profile.study_style}</p>
