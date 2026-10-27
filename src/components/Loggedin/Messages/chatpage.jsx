@@ -18,12 +18,13 @@ export default function Chat() {
     const[sent, setSent] = useState(false);
     const [input, setInput] = useState('');
     const userID = UserAuth().session.user.id;
-    const matchInfo = useOutletContext().users.find((user)=>user.matchedProfile.id===profilenum);
+    const matchInfo = useOutletContext().matchList.find((user)=>user.id===profilenum);
     const containerRef = useRef(null);
 
   
 
     useEffect(() => {
+        if (!matchInfo) return;
         const fetchMessages = async () => {
         const { data, error } = await supabase
             .from('messages')
@@ -39,10 +40,10 @@ export default function Chat() {
         fetchMessages();
 
         const channel = supabase
-        .channel('public:messages')
+        .channel('public:messagepage')
         .on(
             'postgres_changes',
-            { event: 'INSERT', schema: 'public', table: 'messages' },
+            { event: 'INSERT', schema: 'public', table: 'messages', filter:`match_id=eq.${matchInfo.matchId}`},
             (payload) => {
             setMessages((prevMessages) => [...prevMessages, payload.new]);
             }
@@ -81,12 +82,12 @@ export default function Chat() {
 
   return (
     <div className={styles.container}>
-      <h2>{(matchInfo.matchedProfile.first_name)}</h2>
+      <h2>{(matchInfo.name)}</h2>
       
       <div ref={containerRef} className={styles.chatList}>
         {messages.map((msg) => {
             const self = msg.sender_id === userID;
-            const sender = self ? "You" : matchInfo.matchedProfile.first_name;
+            const sender = self ? "You" : matchInfo.name;
           return (
             <div 
               key={msg.id} 
