@@ -8,6 +8,7 @@ import defaultAvatar from '@/assets/default-avatar.png';
 // photo
 
 function Card({profile}) {
+
     return (
         <div className={card.container}>
             <div className={card.description}>
