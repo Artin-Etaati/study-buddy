@@ -8,6 +8,7 @@ export default function chatquery () {
     const [loading, setLoading] = useState(true);
     const {session} = UserAuth();
     const [chats,setChats] = useState([]);
+    const [activeChatId, setactiveChatId] = useState(null);
     
     useEffect (()=>{
         let chatData;
@@ -84,6 +85,6 @@ export default function chatquery () {
     if(loading) return <div>fetching users...</div>
 
     return (
-        <Outlet context={{matchList, chats}}/>
+        <Outlet context={{matchList, chats, setactiveChatId}}/>
     )
 }

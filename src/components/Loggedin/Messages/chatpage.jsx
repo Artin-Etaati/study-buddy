@@ -20,21 +20,32 @@ export default function Chat() {
     const userID = UserAuth().session.user.id;
     const matchInfo = useOutletContext().matchList.find((user)=>user.id===profilenum);
     const containerRef = useRef(null);
+    const {setactiveChatId} = useOutletContext();
 
   
 
     useEffect(() => {
         if (!matchInfo) return;
-        const fetchMessages = async () => {
-        const { data, error } = await supabase
-            .from('messages')
-            .select('*')
-            .eq("match_id", matchInfo.matchId)
-            .order('created_at', { ascending: true })
+        //keep track that this chat is active
+        setactiveChatId(matchInfo.matchId);
 
-        if (error) return console.error('Error fetching messages:', error);
-        setMessages(data);
-        setLoading(false)
+        const fetchMessages = async () => {
+          const { data, error } = await supabase
+              .from('messages')
+              .select('*')
+              .eq("match_id", matchInfo.matchId)
+              .order('created_at', { ascending: true })
+
+          if (error) return console.error('Error fetching messages:', error);
+          setMessages(data);
+          setLoading(false)
+
+          if(data.length) {
+            const{error} = await supabase.rpc('mark_messages_as_read', {
+              target_match_id:matchInfo.matchId,
+            });
+            if(error) return console.error("Failed to mark as read", error);
+          }
         };
 
         fetchMessages();
@@ -51,7 +62,9 @@ export default function Chat() {
         .subscribe();
 
         return () => {
-        supabase.removeChannel(channel);
+          //check race condition of if chat is self or someone else
+          setactiveChatId((prev) => (prev === matchInfo.matchId ? null : prev));
+          supabase.removeChannel(channel);
         };
 
     }, [])
