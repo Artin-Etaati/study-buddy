@@ -18,7 +18,7 @@ function UserPreview() {
         async function fetchProfile() {
             setFetchLoading(true)
             console.log("called fetch")
-            const { data, error } = await supabase.rpc('fetch_profiles', {
+            const { data, error } = await supabase.rpc('fetch_profiles_new', {
                 input_limit: FETCH_LIMIT
             });
             if (error) {
