@@ -247,7 +247,7 @@ const Matches = () => {
                       <p>
                         {request.first_name} {request.last_name}
                       </p>
-                      <p>Major: {request.major}</p>
+                      <p>Major: ...</p>
                     </div>
                     <div className={classes.requestActions}>
                       <button
@@ -296,7 +296,7 @@ const Matches = () => {
                 <h2>
                   {match.first_name} {match.last_name}
                 </h2>
-                <p>Major: {match.major}</p>
+                <p>Major: ...</p>
               </div>
               <div className={classes.matchProfile}>
                 <button onClick={() => setIsOpen(match)}>View Profile</button>
@@ -315,7 +315,7 @@ const Matches = () => {
                         <h2>
                           {match.first_name} {match.last_name}
                         </h2>
-                        <p>Major: {match.major}</p>
+                        <p>Major: ...</p>
                       </div>
 
                       <hr className={classes.profileLine} />
