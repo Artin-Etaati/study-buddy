@@ -14,7 +14,7 @@ function UserPreview() {
     const [profileViewId, setProfileViewId] = useState(null)
     const [fetchNextBatch, setFetchNextBatch] = useState(null);
     const [currentProfile, setNextProfile] = useState(null)
-    const FETCH_LIMIT = 5;
+    const FETCH_LIMIT = 10;
     useEffect(() => {
         async function fetchProfile() {
             setFetchLoading(true)
