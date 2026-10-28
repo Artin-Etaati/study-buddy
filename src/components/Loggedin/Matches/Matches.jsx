@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../../../services/supabase";
-import classes from "./Matches.module.css";
-import defaultAvatar from '@/assets/default-avatar.png';
+import { supabase } from '@/services/supabase'
+import classes from '@/css/Loggedin/Matches.module.css'
+import { UserAuth } from '@/AuthContext'
+import MatchCard from '@/components/Loggedin/Matches/MatchCard.jsx'
+import RequestModal from '@/components/Loggedin/Matches/RequestModal.jsx'
 const Matches = () => {
   const [matches, setMatches] = useState([]);
-  const [selectedProfile, setSelectedProfile] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [setSelectedProfile] = useState(null);
   const [requests, setRequests] = useState([]);
+  const { userId } = UserAuth()
   const approvedRequest = async (id) => {
+    if(!userId) return;
+
     const acceptedPerson = requests.find((requests) => requests.id === id);
     if (!acceptedPerson) return;
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    if (userError) {
-      console.error("Error getting user", userError);
-      return;
-    }
-    const userId = userData.user.id;
+  
     const { error: matchError } = await supabase.from("matches").insert({
       user1_id: userId,
       user2_id: acceptedPerson.sender_id,
@@ -33,13 +32,7 @@ const Matches = () => {
     );
   };
   const denyedRequest = async (id) => {
-     const { data: denyData, error: denyError } = await supabase.auth.getUser();
-    if (denyError || !denyData?.user) {
-      console.error("Error getting user", denyError);
-      return;
-    }
-
-    const userId = denyData.user.id;
+    if(!userId) return;
 
     const { data: removeDeny, error: denyrequestError } = await supabase
       .from("swipes")
@@ -66,13 +59,7 @@ const Matches = () => {
     if (!windowConfirm) {
       return;
     }
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    if (userError) {
-      console.error("Error getting user", userError);
-      return;
-    }
-
-    const userId = userData.user.id;
+   if(!userId) return;
 
     const { data: removeData, error: removeError } = await supabase
       .from("matches")
@@ -107,15 +94,7 @@ const Matches = () => {
   };
   useEffect(() => {
     const fetchMatches = async () => {
-      const { data: sessionData, error: sessionError } =
-        await supabase.auth.getSession();
-
-      if (sessionError) {
-        console.error("Error fetching session:", sessionError);
-        return;
-      }
-
-      const userId = sessionData.session.user.id;
+     if(!userId) return;
 
       const { data: matchesData, error: matchesError } = await supabase
         .from("matches")
@@ -137,7 +116,7 @@ const Matches = () => {
       const { data: userData, error: userError } = await supabase
         .from("profiles")
         .select("*")
-        .in("id", userIds);
+        .eq("id", userIds);
 
       if (userError) {
         console.error("Error fetching user data:", userError);
@@ -225,54 +204,54 @@ const Matches = () => {
           </button>
         </div>
       </div>
-      {selectedProfile && (
-        <div className={classes.requestsModal}>
-          <div className={classes.requestsContent}>
-            <h2>Incoming Requests</h2>
-            {requests.length == 0 ? (
-              <p>No incoming requests at the moment.</p>
-            ) : (
-              requests.map((request) => (
-                <div className={classes.requestCard} key={request.id}>
-                  <div className={classes.requestAvatar}>
-                    <img src={ request.profile_picture_url || defaultAvatar} alt="User Avatar" 
-                    onError ={(e) => {
-                      e.currentTarget.oneError = null;
-                      e.currentTarget.src = defaultAvatar;
-                    }}
-                    />
-                  </div>
-                  <div className={classes.requestInfo}>
-                    <div className={classes.requestDetails}>
-                      <p>
-                        {request.first_name} {request.last_name}
-                      </p>
-                      <p>Major: {request.major}</p>
-                    </div>
-                    <div className={classes.requestActions}>
-                      <button
-                        className={classes.approveButton}
-                        onClick={() => approvedRequest(request.id)}
-                        aria-label="Approve Request"
-                      >
-                        ✓
-                      </button>
-                      <button
-                        className={classes.denyButton}
-                        onClick={() => denyedRequest(request.id)}
-                        aria-label="Deny Request"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
-            <button onClick={() => setSelectedProfile(false)}>Close</button>
-          </div>
-        </div>
-      )}
+{selectedProfile && (
+           <div className={classes.requestsModal}>
+             <div className={classes.requestsContent}>
+               <h2>Incoming Requests</h2>
+               {requests.length == 0 ? (
+                 <p>No incoming requests at the moment.</p>
+               ) : (
+                 requests.map((request) => (
+                   <div className={classes.requestCard} key={request.id}>
+                     <div className={classes.requestAvatar}>
+                       <img src={ request.profile_picture_url || defaultAvatar} alt="User Avatar" 
+                       onError ={(e) => {
+                         e.currentTarget.oneError = null;
+                         e.currentTarget.src = defaultAvatar;
+                       }}
+                       />
+                     </div>
+                     <div className={classes.requestInfo}>
+                       <div className={classes.requestDetails}>
+                         <p>
+                           {request.first_name} {request.last_name}
+                         </p>
+                         <p>Major: {request.major}</p>
+                       </div>
+                       <div className={classes.requestActions}>
+                         <button
+                           className={classes.approveButton}
+                           onClick={() => approvedRequest(request.id)}
+                           aria-label="Approve Request"
+                         >
+                           ✓
+                         </button>
+                         <button
+                           className={classes.denyButton}
+                           onClick={() => denyedRequest(request.id)}
+                           aria-label="Deny Request"
+                         >
+                           ✕
+                         </button>
+                       </div>
+                     </div>
+                   </div>
+                 ))
+               )}
+               <button onClick={() => setSelectedProfile(false)}>Close</button>
+             </div>
+           </div>
+         )}
       <div className={classes.matchCount}>
         <p>Total Matches: {matches.length}</p>
       </div>
@@ -283,55 +262,11 @@ const Matches = () => {
           </div>
         ) : (
           matches.map((match) => (
-            <div className={classes.matchCard} key={match.id}>
-              <div className={classes.avatar}>
-                <img src={match.profile_picture_url || defaultAvatar} alt="User Avatar" 
-                 onError ={(e) => {
-                      e.currentTarget.oneError = null;
-                      e.currentTarget.src = defaultAvatar;
-                    }}
-                    />
-              </div>
-              <div className={classes.matchinfo}>
-                <h2>
-                  {match.first_name} {match.last_name}
-                </h2>
-                <p>Major: {match.major}</p>
-              </div>
-              <div className={classes.matchProfile}>
-                <button onClick={() => setIsOpen(match)}>View Profile</button>
-                {isOpen?.id == match.id && (
-                  <div className={classes.profileModal}>
-                    <div className={classes.profileContent}>
-                      <div className={classes.modalAvatar}>
-                        <img src={match.profile_picture_url ||defaultAvatar} alt="User Avatar" 
-                         onError ={(e) => {
-                      e.currentTarget.oneError = null;
-                      e.currentTarget.src = defaultAvatar;
-                    }}
-                    />
-                      </div>
-                      <div className={classes.profileHeader}>
-                        <h2>
-                          {match.first_name} {match.last_name}
-                        </h2>
-                        <p>Major: {match.major}</p>
-                      </div>
-
-                      <hr className={classes.profileLine} />
-
-                      <div className={classes.profileDetails}>
-                        <p>About Me: {match.bio}</p>
-                      </div>
-                      <button onClick={() => setIsOpen(false)}>Close</button>
-                    </div>
-                  </div>
-                )}
-                <button onClick={() => removeMatch(match.id)}>
-                  Remove Match
-                </button>
-              </div>
-            </div>
+            <MatchCard
+            key = {match.id}
+            match = {match}
+            onRemove = {removeMatch}
+           />
           ))
         )}
       </div>
