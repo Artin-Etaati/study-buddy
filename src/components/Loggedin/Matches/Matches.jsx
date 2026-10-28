@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../../services/supabase";
-import classes from "./Matches.module.css";
+import classes from "@/css/LoggedIn/Matches.module.css";
 import defaultAvatar from '@/assets/default-avatar.png';
 const Matches = () => {
   const [matches, setMatches] = useState([]);
