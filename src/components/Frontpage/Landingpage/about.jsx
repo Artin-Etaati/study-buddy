@@ -1,10 +1,11 @@
 import classes from "@/css/LandingPageCss/about.module.css"
 import y from '@/assets/y.png'
+import x from "@/assets/logo.png"
 
 const About = () => {
   return (
       <div className={classes.container}>
-            <h1>Logo space</h1>
+            <img className={classes.logo} src={x}></img>
             <h2 className={classes.title}>Finding Study Partners Shouldn't Be Hard</h2>
             
             <p className={classes.description}>

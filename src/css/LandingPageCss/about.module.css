@@ -55,3 +55,8 @@
   display: flex;
   justify-content: space-between;
 }
+
+.logo{
+  max-width: 150px;
+  max-height: 150px;
+}
