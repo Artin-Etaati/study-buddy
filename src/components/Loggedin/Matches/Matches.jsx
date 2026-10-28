@@ -235,7 +235,7 @@ const Matches = () => {
               requests.map((request) => (
                 <div className={classes.requestCard} key={request.id}>
                   <div className={classes.requestAvatar}>
-                    <img src={ request.profile_picture_url || defaultAvatar} alt="User Avatar" 
+                    <img className={classes.avatarImg} src={ request.profile_picture_url || defaultAvatar} alt="User Avatar" 
                     onError ={(e) => {
                       e.currentTarget.oneError = null;
                       e.currentTarget.src = defaultAvatar;
