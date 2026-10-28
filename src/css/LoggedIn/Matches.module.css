@@ -227,7 +227,14 @@
   color: red;
 }
 
+
 .avatarImg {
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
   object-fit: cover;
   object-position: center;
+  border: 1px solid #667eea;
+  flex-shrink: 0;
+  display: block;
 }
