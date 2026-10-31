@@ -1,6 +1,5 @@
 import classes from '@/css/Loggedin/Matches.module.css'
 import {useState} from "react";
-import { useState } from "react";
 import defaultAvatar from '@/assets/default-avatar.png';
 const MatchCard =({match, removeMatch}) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -40,10 +39,17 @@ e.currentTarget.src = defaultAvatar;
 <hr className={classes.profileLine} />
 
 <div className={classes.profileDetails}>
+<h3><strong>Gender:</strong> {match.gender}</h3> <h3><strong>Study Style:</strong> {match.study_style}</h3>
+</div>
+<div className = {classes.aboutMe}>
 <p>About Me: {match.bio}</p>
 </div>
-                      
-<button onClick={() => setIsOpen(false)}>Close</button>
+<div className = {classes.profileClasses}>
+<p>Classes: {match.user_courses}</p>
+</div>
+<div className = {classes.closeButton}>
+<button onClick={() => setIsOpen(false)}> ✕ </button>
+</div>
 </div>
 </div>
 )}

@@ -104,7 +104,11 @@
   align-items: center;
   width: 100%;
 }
+.profileHeader h2 {
+  font-size: 24px;
+}
 .profileContent {
+  position:relative;
   background-color: white;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
@@ -123,15 +127,28 @@
 .removeMatch {
   margin-bottom: 5px;
 }
-.profileDetails {
-  margin-top: -50px;
+.profileDetails{
+  display: flex;
+  flex-direction: row;
+  justify-content:space-between;
+  gap: 30px;
+  text-align: center;
+  margin-top: 0;
+}
+.profileDetails h3{
+  font-size: 18px;
+  font-weight: normal;
 }
 .profileDetails p {
   font-weight: 700;
 }
-.profileContent button {
-  align-self: center;
-  margin-top: 200px;
+.closeButton{
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor:pointer;
+  background: transparent;
+  font-size: 24px;
 }
 .modalAvatar {
   width: 75px;
@@ -144,6 +161,7 @@
 .profileLine {
   width: 100%;
   margin: 70px auto;
+  margin-bottom: 10px;
 }
 .requestsModal {
   position: fixed;

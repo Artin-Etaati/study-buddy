@@ -3,10 +3,11 @@ import { supabase } from '@/services/supabase'
 import classes from '@/css/Loggedin/Matches.module.css'
 import { UserAuth } from '@/AuthContext'
 import MatchCard from '@/components/Loggedin/Matches/MatchCard.jsx'
-import RequestModal from '@/components/Loggedin/Matches/RequestModal.jsx'
+import defaultAvatar from '@/assets/default-avatar.png';
+
 const Matches = () => {
   const [matches, setMatches] = useState([]);
-  const [setSelectedProfile] = useState(null);
+  const [selectedProfile, setSelectedProfile] = useState(null);
   const [requests, setRequests] = useState([]);
   const { userId } = UserAuth()
   const approvedRequest = async (id) => {
@@ -116,7 +117,7 @@ const Matches = () => {
       const { data: userData, error: userError } = await supabase
         .from("profiles")
         .select("*")
-        .eq("id", userIds);
+        .in("id", userIds);
 
       if (userError) {
         console.error("Error fetching user data:", userError);
