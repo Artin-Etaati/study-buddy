@@ -10,7 +10,7 @@ const formatTimestamp = (timestamp) => {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
-export default function Chat() {
+export default function Chatpage() {
 
     const[messages, setMessages] = useState([]);
     const {profilenum} = useParams();
@@ -26,7 +26,6 @@ export default function Chat() {
   
 
     useEffect(() => {
-        if (!matchInfo) return;
         //keep track that this chat is active
         setactiveChatId(matchInfo.matchId);
 
@@ -46,7 +45,7 @@ export default function Chat() {
           const recipientData = currentState[matchInfo.id];
 
           if(recipientData && recipientData.length) {
-            viewingStatus.current = recipientData.length ? true : false;
+            viewingStatus.current = true;
           } else {
             viewingStatus.current = false;
           }
@@ -68,12 +67,13 @@ export default function Chat() {
           if (error) return console.error('Error fetching messages:', error);
           setMessages(data);
 
-          if(data.length) {
+          if(data.length) { //this is not always required as messages might be caught up. add an && !unread
             const{error} = await supabase.rpc('mark_messages_as_read', {
               target_match_id:matchInfo.matchId,
             });
             if(error) return console.error("Failed to mark as read", error);
 
+            //set message to read on click locally
             setChats((prevChats) => {
               return prevChats.map((chat) => {
                 return chat.match_id === matchInfo.matchId ? { ...chat, is_unread_for_me: false } : chat
