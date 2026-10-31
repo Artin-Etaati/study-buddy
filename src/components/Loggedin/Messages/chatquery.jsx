@@ -63,7 +63,7 @@ export default function chatquery () {
     useEffect (()=>{
         if(!chats.length) return;
         const channel = supabase
-                .channel(`chat:${activeChatId}`)
+                .channel(`globalChats`)
                 .on('postgres_changes',
                     { event: 'INSERT', schema: 'public', table: 'messages'},
                      (payload) => {
