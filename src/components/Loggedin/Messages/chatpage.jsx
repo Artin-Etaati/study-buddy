@@ -81,7 +81,7 @@ export default function Chatpage() {
             });
 
           }
-
+          if(containerRef.current) containerRef.current.scrollTo({top:containerRef.current.scrollHeight})
           setLoading(false)
         };
 
