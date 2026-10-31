@@ -9,46 +9,8 @@ export default function chatquery () {
     const {session} = UserAuth();
     const [chats,setChats] = useState([]);
     const [activeChatId, setactiveChatId] = useState(null);
-    
+
     useEffect (()=>{
-        let chatData;
-
-        const channel = supabase
-                .channel('public:messages')
-                .on('postgres_changes',
-                    { event: 'INSERT', schema: 'public', table: 'messages'},
-                     (payload) => {
-                        const latestRow = payload.new;
-
-                        const isFromMe = latestRow.sender_id === session.user.id;
-
-                        const isChatOpen = latestRow.match_id === activeChatId;
-                        
-                        //is it from them and is the chat closed. only case to be unread
-                        const isUnreadforme = !isFromMe && !isChatOpen;
-
-
-                        const editedChats = chatData.filter((row)=>row.match_id!==latestRow.match_id);
-                        const users = chatData.find((row)=>row.match_id===payload.new.match_id)
-                        const editedRow = {
-                            match_id:latestRow.match_id,
-                            user1_id:users.user1_id,
-                            user2_id:users.user2_id,
-                            user1:users.user1,
-                            user2:users.user2,
-                            last_message_content:latestRow.content,
-                            last_message_sender:latestRow.sender_id,
-                            last_message_read:latestRow.read,
-                            last_message_time:latestRow.created_at,
-                            is_unread_for_me:isUnreadforme
-                        }
-
-                        setChats([editedRow, ...editedChats])
-                       
-                    })
-                .subscribe();
-
-
         const fetchChats = async () => {
             //get chat summaries along with match data
             const {data, error } = await supabase
@@ -77,12 +39,9 @@ export default function chatquery () {
                 }
             })
 
-
             //set formattedChats to chat state
             setChats(formattedChats);
             
-            //set chatData so that realtime can use it
-            chatData = formattedChats;
 
              //take the formattedChats and create list of matched users with matchID
              const matchList = formattedChats.map((row)=>{
@@ -99,11 +58,48 @@ export default function chatquery () {
         }
 
         fetchChats()
+    },[])
+    
+    useEffect (()=>{
+        if(!chats.length) return;
+        const channel = supabase
+                .channel(`chat:${activeChatId}`)
+                .on('postgres_changes',
+                    { event: 'INSERT', schema: 'public', table: 'messages'},
+                     (payload) => {
+                        const latestRow = payload.new;
+
+                        const isFromMe = latestRow.sender_id === session.user.id;
+
+                        const isChatOpen = latestRow.match_id === activeChatId;
+                        
+                        //is it from them and is the chat closed. only case to be unread
+                        const isUnreadforme = !isFromMe && !isChatOpen;
+
+                        const editedChats = chats.filter((row)=>row.match_id!==latestRow.match_id);
+                        const users = chats.find((row)=>row.match_id===payload.new.match_id)
+                        const editedRow = {
+                            match_id:latestRow.match_id,
+                            user1_id:users.user1_id,
+                            user2_id:users.user2_id,
+                            user1:users.user1,
+                            user2:users.user2,
+                            last_message_content:latestRow.content,
+                            last_message_sender:latestRow.sender_id,
+                            last_message_read:latestRow.read,
+                            last_message_time:latestRow.created_at,
+                            is_unread_for_me:isUnreadforme
+                        }
+
+                        setChats([editedRow, ...editedChats])
+                       
+                    })
+                .subscribe();
 
         
                 return () => supabase.removeChannel(channel);
 
-    },[])
+    },[activeChatId,chats])
 
     if(loading) return <div>fetching users...</div>
 
