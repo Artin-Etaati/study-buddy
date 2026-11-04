@@ -142,6 +142,12 @@
 .profileDetails p {
   font-weight: 700;
 }
+.aboutMe{
+  display:flex;
+}
+.profileClasses{
+  display:flex
+}
 .closeButton{
   position: absolute;
   top: 15px;
@@ -160,8 +166,16 @@
 }
 .profileLine {
   width: 100%;
-  margin: 70px auto;
+  margin-top : auto;
   margin-bottom: 10px;
+}
+.requestName {
+  font:inherit;
+  font-weight: bold;
+  border: none;
+  background:none;
+  cursor:pointer;
+  padding: 0;
 }
 .requestsModal {
   position: fixed;

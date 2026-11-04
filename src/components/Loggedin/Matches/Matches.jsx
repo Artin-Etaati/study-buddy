@@ -4,8 +4,10 @@ import classes from '@/css/Loggedin/Matches.module.css'
 import { UserAuth } from '@/AuthContext'
 import MatchCard from '@/components/Loggedin/Matches/MatchCard.jsx'
 import defaultAvatar from '@/assets/default-avatar.png';
+import ProfileModal from  '@/components/Loggedin/Matches/ProfileModal.jsx'
 
 const Matches = () => {
+  const [requestProfile, setRequestsProfile] = useState(null);
   const [matches, setMatches] = useState([]);
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [requests, setRequests] = useState([]);
@@ -224,9 +226,10 @@ const Matches = () => {
                      </div>
                      <div className={classes.requestInfo}>
                        <div className={classes.requestDetails}>
-                         <p>
-                           {request.first_name} {request.last_name}
-                         </p>
+                         <button className = {classes.requestName}
+                          onClick={() => setRequestsProfile(request)}>
+                          {request.first_name} {request.last_name} 
+                          </button>
                          <p>Major: {request.major}</p>
                        </div>
                        <div className={classes.requestActions}>
@@ -268,8 +271,9 @@ const Matches = () => {
             match = {match}
             onRemove = {removeMatch}
            />
-          ))
-        )}
+          )))}
+          {requestProfile && (
+            <ProfileModal match = {requestProfile} setIsOpen = {setRequestsProfile}/>)}
       </div>
     </div>
   );
