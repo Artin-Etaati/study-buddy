@@ -76,7 +76,7 @@ export default function Chatpage() {
             //set message to read on click locally
             setChats((prevChats) => {
               return prevChats.map((chat) => {
-                return chat.match_id === matchInfo.matchId ? { ...chat, is_unread_for_me: false } : chat
+                return chat.match_id === matchInfo.matchId ? { ...chat, is_unread_for_me: false, my_unread_count:0} : chat
               })
             });
 

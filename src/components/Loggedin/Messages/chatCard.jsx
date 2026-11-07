@@ -50,7 +50,10 @@ export default function chatCard ({row}) {
           <span className={classes.Username}>{matchedUser.first_name}</span>
           <span className={classes.Username}>{time}</span>
         </div>
-        <p className={classes.message}>{isSenderSelf ? 'You' : matchedUser.first_name}:{row.last_message_content}</p>
+        <div className={classes.messagecount}>
+          <p className={classes.message}>{isSenderSelf ? 'You' : matchedUser.first_name}:{row.last_message_content}</p>
+          {row.my_unread_count > 0 && <span className={classes.unreadCount}>{row.my_unread_count}</span>}
+        </div>
       </div>
     </div>
     )

@@ -124,3 +124,16 @@
 .dropdownItem:hover {
   background-color:#c8c5c5;
 }
+
+.messagecount {
+  display: flex;
+  justify-content: space-between;
+}
+
+.unreadCount {
+  padding: 5px 10px;
+  color:white;
+  font-size: 20px;
+  border-radius: 30px;
+  background-color: rgb(0, 76, 255);
+}

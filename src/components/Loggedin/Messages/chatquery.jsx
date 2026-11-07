@@ -25,7 +25,9 @@ export default function chatquery () {
                 last_message_content,
                 last_message_sender,
                 last_message_read,
-                last_message_time`
+                last_message_time,
+                user1_unread_count,
+                user2_unread_count`
                 )
                 .order('last_message_time', { ascending: false, nullsFirst: false });
             if(error) return console.error(error);
@@ -36,7 +38,8 @@ export default function chatquery () {
 
                 return {
                     ...row, 
-                    is_unread_for_me: isFromMe ? false : !row.last_message_read
+                    is_unread_for_me: isFromMe ? false : !row.last_message_read,
+                    my_unread_count: row.user1_id === session.user.id ? row.user1_unread_count : row.user2_unread_count
                 }
             })
 
@@ -78,18 +81,19 @@ export default function chatquery () {
                         const isUnreadforme = !isFromMe && !isChatOpen;
 
                         const editedChats = chats.filter((row)=>row.match_id!==latestRow.match_id);
-                        const users = chats.find((row)=>row.match_id===payload.new.match_id)
+                        const chatDetails = chats.find((row)=>row.match_id===payload.new.match_id)
                         const editedRow = {
                             match_id:latestRow.match_id,
-                            user1_id:users.user1_id,
-                            user2_id:users.user2_id,
-                            user1:users.user1,
-                            user2:users.user2,
+                            user1_id:chatDetails.user1_id,
+                            user2_id:chatDetails.user2_id,
+                            user1:chatDetails.user1,
+                            user2:chatDetails.user2,
                             last_message_content:latestRow.content,
                             last_message_sender:latestRow.sender_id,
                             last_message_read:latestRow.read,
                             last_message_time:latestRow.created_at,
-                            is_unread_for_me:isUnreadforme
+                            is_unread_for_me:isUnreadforme,
+                            my_unread_count: isUnreadforme ? chatDetails.my_unread_count + 1 : chatDetails.my_unread_count
                         }
 
                         setChats([editedRow, ...editedChats])
