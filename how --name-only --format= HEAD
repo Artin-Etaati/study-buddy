@@ -1,0 +1,12 @@
+[33mcommit 9482585967d12705c4a10dc1a27b29e7daaa7dd1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmatch-page[m[33m)[m
+Author: Angel Diaz <angel.diaz.182@my.csun.edu>
+Date:   Wed Nov 4 14:01:56 2026 -0800
+
+    Added view profile for incoming requests
+
+ src/components/Loggedin/Matches/MatchCard.jsx    | 37 [32m++[m[31m--------------------[m
+ src/components/Loggedin/Matches/Matches.jsx      | 14 [32m++++++[m[31m---[m
+ src/components/Loggedin/Matches/ProfileModal.jsx | 39 [32m++++++++++++++++++++++++[m
+ src/components/Loggedin/Matches/RequestModal.jsx |  0
+ src/css/LoggedIn/Matches.module.css              | 16 [32m+++++++++[m[31m-[m
+ 5 files changed, 66 insertions(+), 40 deletions(-)

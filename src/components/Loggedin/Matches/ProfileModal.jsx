@@ -6,11 +6,7 @@ const ProfileModal = ({match, setIsOpen}) => {
 <div className={classes.profileModal}>
 <div className={classes.profileContent}>
 <div className={classes.modalAvatar}>
-<img src={match.profile_picture_url ||defaultAvatar} alt="User Avatar" 
- onError ={(e) => {
-e.currentTarget.oneError = null;
-e.currentTarget.src = defaultAvatar;
- }}/>
+<img src={match.profile_picture_url ||defaultAvatar} alt="User Avatar" />
 </div>
 
 <div className={classes.profileHeader}>

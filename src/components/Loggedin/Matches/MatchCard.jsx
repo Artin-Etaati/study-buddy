@@ -7,12 +7,7 @@ const MatchCard =({match, removeMatch}) => {
     return(
 <div className={classes.matchCard} key={match.id}>
 <div className={classes.avatar}>
-<img src={match.profile_picture_url || defaultAvatar} alt="User Avatar" 
-onError ={(e) => {
- e.currentTarget.oneError = null;
- e.currentTarget.src = defaultAvatar;
-  }}
-/>
+<img src={match.profile_picture_url || defaultAvatar} alt="User Avatar" />
 </div>
 <div className={classes.matchinfo}>
 <h2> {match.first_name} {match.last_name}</h2>

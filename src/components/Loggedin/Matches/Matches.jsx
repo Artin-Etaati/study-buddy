@@ -3,15 +3,16 @@ import { supabase } from '@/services/supabase'
 import classes from '@/css/Loggedin/Matches.module.css'
 import { UserAuth } from '@/AuthContext'
 import MatchCard from '@/components/Loggedin/Matches/MatchCard.jsx'
-import defaultAvatar from '@/assets/default-avatar.png';
 import ProfileModal from  '@/components/Loggedin/Matches/ProfileModal.jsx'
+import RequestsModal from  '@/components/Loggedin/Matches/RequestsModal.jsx'
 
 const Matches = () => {
   const [requestProfile, setRequestsProfile] = useState(null);
+  const [incomingRequests, setIncomingRequests] = useState(false);
   const [matches, setMatches] = useState([]);
-  const [selectedProfile, setSelectedProfile] = useState(null);
   const [requests, setRequests] = useState([]);
   const { userId } = UserAuth()
+  
   const approvedRequest = async (id) => {
     if(!userId) return;
 
@@ -34,12 +35,11 @@ const Matches = () => {
       prevRequests.filter((request) => request.id !== id),
     );
   };
-  const denyedRequest = async (id) => {
+  const denyRequest = async (id) => {
     if(!userId) return;
-
     const { data: removeDeny, error: denyrequestError } = await supabase
       .from("swipes")
-      .delete()
+      .update({ action: false })
       .eq("id", id)
        .eq("swiped_id", userId)
       .select("id");
@@ -55,6 +55,7 @@ const Matches = () => {
       prevRequests.filter((request) => request.id !== id)
     );
   };
+
   const removeMatch = async (matchId) => {
     const windowConfirm = window.confirm(
       "Are you sure you want to remove this match?",
@@ -64,13 +65,13 @@ const Matches = () => {
     }
    if(!userId) return;
 
-    const { data: removeData, error: removeError } = await supabase
+    const { data, error } = await supabase
       .from("matches")
       .delete()
       .or("and(user1_id.eq." + userId + ",user2_id.eq." + matchId + "),and(user1_id.eq." + matchId + ",user2_id.eq." + userId + ")")
       .select("id");
-    if (removeError) {
-      console.error("Error removing match:", removeError);
+    if (error) {
+      console.error("Error removing match:", error);
       return;
     }
     const {error: swipeError } = await supabase
@@ -84,7 +85,7 @@ const Matches = () => {
           return;
          }
         
-    if (!removeData || removeData.length ===0){
+    if (!data ||data.length ===0){
       console.error("No match was deleted", swipeError);
       return;
     }
@@ -131,21 +132,17 @@ const Matches = () => {
   }, []);
   useEffect(() => {
     const fetchRequests = async () => {
-      const { data: userData, error: userError } =
-        await supabase.auth.getUser();
-      if (userError) {
-        console.error("Error fetching session:", userError);
-        return;
-      }
-      const userId = userData.user.id;
-      const { data: existingMatches, error: existingmatchesError } =
+      if(!userId) return;
+
+      const { data: existingMatches, error: existingmatchesError } = //fetches the existing matches so that user doesnt show up in incoming requests
         await supabase
           .from("matches")
           .select("user1_id, user2_id")
           .or("user1_id.eq." + userId + ",user2_id.eq." + userId);
       if (existingmatchesError) {
         console.error("Error fetching existing matches", existingmatchesError);
-        return;
+        return; //combine both of the useEffects into one useEffect to avoid duplicate code and improve performance
+        //use the first data for existingMatches 
       }
       const { data, error } = await supabase
         .from("swipes")
@@ -156,32 +153,31 @@ const Matches = () => {
         console.error("Error fetching user data:", error);
         return;
       }
-
-      const unmatchedLikes = data.filter(
-        (swipe) =>
+      //filters out requests that are already in matches
+      const duplicateRequests = data.filter((swipe) =>
           !existingMatches.some(
             (match) =>
               match.user1_id === swipe.swiper_id ||
               match.user2_id === swipe.swiper_id,
           ),
       );
-
-      const senderIds = unmatchedLikes.map((swipe) => swipe.swiper_id);
+      //creates an array of the new requests that are not in matches
+      const senderIds = duplicateRequests.map((swipe) => swipe.swiper_id); 
 
       if (senderIds.length == 0) {
         setRequests([]);
         return;
       }
-      const { data: profiles, error: profileError } = await supabase
+      const { data: profiles, error: profileError} = await supabase
         .from("profiles")
         .select("*")
-        .in("id", senderIds);
+        .in("id", senderIds); //gets the profile info for everyone from senderIds
       if (profileError) {
         console.error("Error fetching profiles", profileError);
         return;
       }
-      const incomingRequests = unmatchedLikes
-        .map((swipe) => {
+      //Combine the swipe data with the profile data to create a new array of incoming requests with the profile information
+      const incomingRequests = duplicateRequests.map((swipe) => {
           const profile = profiles.find(
             (person) => person.id === swipe.swiper_id,
           );
@@ -192,6 +188,7 @@ const Matches = () => {
             sender_id: swipe.swiper_id,
           };
         })
+        //any profiles that were null are filtered out of the incoming requests
         .filter((request) => request != null);
       setRequests(incomingRequests);
     };
@@ -199,62 +196,22 @@ const Matches = () => {
   }, []);
   return (
     <div className={classes.localbody}>
+      
       <div className={classes.header}>
-        <h1>Matches</h1>
-        <div className={classes.incomingRequests}>
-          <button onClick={() => setSelectedProfile(true)}>
-            Incoming Requests
-          </button>
-        </div>
-      </div>
-{selectedProfile && (
-           <div className={classes.requestsModal}>
-             <div className={classes.requestsContent}>
-               <h2>Incoming Requests</h2>
-               {requests.length == 0 ? (
-                 <p>No incoming requests at the moment.</p>
-               ) : (
-                 requests.map((request) => (
-                   <div className={classes.requestCard} key={request.id}>
-                     <div className={classes.requestAvatar}>
-                       <img src={ request.profile_picture_url || defaultAvatar} alt="User Avatar" 
-                       onError ={(e) => {
-                         e.currentTarget.oneError = null;
-                         e.currentTarget.src = defaultAvatar;
-                       }}
-                       />
-                     </div>
-                     <div className={classes.requestInfo}>
-                       <div className={classes.requestDetails}>
-                         <button className = {classes.requestName}
-                          onClick={() => setRequestsProfile(request)}>
-                          {request.first_name} {request.last_name} 
-                          </button>
-                         <p>Major: {request.major}</p>
-                       </div>
-                       <div className={classes.requestActions}>
-                         <button
-                           className={classes.approveButton}
-                           onClick={() => approvedRequest(request.id)}
-                           aria-label="Approve Request"
-                         >
-                           ✓
-                         </button>
-                         <button
-                           className={classes.denyButton}
-                           onClick={() => denyedRequest(request.id)}
-                           aria-label="Deny Request"
-                         >
-                           ✕
-                         </button>
-                       </div>
-                     </div>
-                   </div>
-                 ))
-               )}
-               <button onClick={() => setSelectedProfile(false)}>Close</button>
-             </div>
-           </div>
+      <h1>Matches</h1>
+      <div className={classes.incomingRequests}>
+      <button onClick={() => setIncomingRequests(true)}>
+      Incoming Requests
+     </button>
+     </div>
+    </div>
+           {incomingRequests && (
+           <RequestsModal 
+           requests = {requests}
+           approvedRequest = {approvedRequest}
+           denyRequest = {denyRequest}
+           isClose = {()=> setIncomingRequests(false)}
+           />
          )}
       <div className={classes.matchCount}>
         <p>Total Matches: {matches.length}</p>
