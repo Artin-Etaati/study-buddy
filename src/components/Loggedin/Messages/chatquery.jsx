@@ -9,6 +9,7 @@ export default function chatquery () {
     const {session} = UserAuth();
     const [chats,setChats] = useState([]);
     const [activeChatId, setactiveChatId] = useState(null);
+    const [preview, setPreview] = useState([]);
 
     useEffect (()=>{
         const fetchChats = async () => {
@@ -92,6 +93,7 @@ export default function chatquery () {
                         }
 
                         setChats([editedRow, ...editedChats])
+                        if(editedRow.match_id!==activeChatId && activeChatId!==null) setPreview((prev)=>[...prev,editedRow])
                        
                     })
                 .subscribe();
@@ -104,6 +106,6 @@ export default function chatquery () {
     if(loading) return <div>fetching users...</div>
 
     return (
-        <Outlet context={{matchList, chats, setactiveChatId, setChats}}/>
+        <Outlet context={{matchList, chats, setactiveChatId, setChats, preview, setPreview}}/>
     )
 }

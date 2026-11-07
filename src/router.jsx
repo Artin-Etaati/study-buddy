@@ -13,6 +13,7 @@ import Login from "./components/Frontpage/Login/Login";
 import ProfileRoute from "./components/ProfileRoute";
 import Chatpage from "./components/Loggedin/Messages/chatpage";
 import Chatquery from "./components/Loggedin/Messages/chatquery";
+import ChatNotification from "./components/Loggedin/Messages/notification";
 
 export const Router = createBrowserRouter ([
     {path: "/", element: <Navigate to = "/about"/>},
@@ -25,7 +26,8 @@ export const Router = createBrowserRouter ([
                 {path: "/matches", element:<Matches />},
                 {element:<Chatquery/>, children:[
                         {path: "/messages/:profilenum", element:<Chatpage/>},
-                        {path: "/messages", element:<ChatList />}
+                        {path: "/messages", element:<ChatList />},
+                        {element:<ChatNotification/>}
                 ]}
         ]}
     ]},

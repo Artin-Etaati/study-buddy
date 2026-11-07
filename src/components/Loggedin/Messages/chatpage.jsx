@@ -3,7 +3,7 @@ import {Navigate, useOutletContext, useParams } from "react-router-dom";
 import { supabase } from "../../../services/supabase";
 import styles from "./chatpage.module.css"
 import { UserAuth } from "../../../AuthContext";
-
+import ChatNotification from "./notification";
 
 const formatTimestamp = (timestamp) => {
   const date = new Date(timestamp);
@@ -124,8 +124,8 @@ export default function Chatpage() {
 
   return (
     <div className={styles.container}>
+      <ChatNotification></ChatNotification>
       <h2>{(matchInfo.name)}</h2>
-      
       <div ref={containerRef} className={styles.chatList}>
         {messages.map((msg) => {
             const self = msg.sender_id === userID;
