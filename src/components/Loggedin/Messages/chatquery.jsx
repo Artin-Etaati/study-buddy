@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom"
+import { Outlet, useOutletContext } from "react-router-dom"
 import { supabase } from "../../../services/supabase";
 import { UserAuth } from "../../../AuthContext";
 
@@ -10,8 +10,10 @@ export default function chatquery () {
     const [chats,setChats] = useState([]);
     const [activeChatId, setactiveChatId] = useState(null);
     const [preview, setPreview] = useState([]);
+    const {setchatMounted} = useOutletContext();
 
     useEffect (()=>{
+        setchatMounted(true);
         const fetchChats = async () => {
             //get chat summaries along with match data
             const {data, error } = await supabase
@@ -62,12 +64,13 @@ export default function chatquery () {
         }
 
         fetchChats()
+        return () => setchatMounted(false);
     },[])
     
     useEffect (()=>{
         if(!chats.length) return;
         const channel = supabase
-                .channel(`globalChats`)
+                .channel(`globalChatsChatQuery`)
                 .on('postgres_changes',
                     { event: 'INSERT', schema: 'public', table: 'messages'},
                      (payload) => {

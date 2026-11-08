@@ -13,7 +13,7 @@ import Login from "./components/Frontpage/Login/Login";
 import ProfileRoute from "./components/ProfileRoute";
 import Chatpage from "./components/Loggedin/Messages/chatpage";
 import Chatquery from "./components/Loggedin/Messages/chatquery";
-import ChatNotification from "./components/Loggedin/Messages/notification";
+import ChatNotification from "./components/Loggedin/Messages/ChatNotification";
 
 export const Router = createBrowserRouter ([
     {path: "/", element: <Navigate to = "/about"/>},

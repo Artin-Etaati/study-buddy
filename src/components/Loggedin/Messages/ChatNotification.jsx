@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
-import classes from './notification.module.css';
+import classes from './ChatNotification.module.css';
 import y from "@/assets/y.png"
 import { UserAuth } from '../../../AuthContext';
-import { useOutletContext } from 'react-router-dom';
 
-export default function ChatNotification() {
+export default function ChatNotification({preview, setPreview}) {
   const [isVisible, setIsVisible] = useState(false);
   const {session} = UserAuth();
-  const {preview, setPreview} = useOutletContext();
   const currentPreview = preview[0];
 
   useEffect(() => {

@@ -3,7 +3,7 @@ import {Navigate, useOutletContext, useParams } from "react-router-dom";
 import { supabase } from "../../../services/supabase";
 import styles from "./chatpage.module.css"
 import { UserAuth } from "../../../AuthContext";
-import ChatNotification from "./notification";
+import ChatNotification from "./ChatNotification";
 
 const formatTimestamp = (timestamp) => {
   const date = new Date(timestamp);
@@ -21,6 +21,7 @@ export default function Chatpage() {
     const matchInfo = useOutletContext().matchList.find((user)=>user.id===profilenum);
     const containerRef = useRef(null);
     const {setactiveChatId, setChats} = useOutletContext();
+    const {preview, setPreview} = useOutletContext();
     const viewingStatus = useRef(false);
 
   
@@ -124,7 +125,7 @@ export default function Chatpage() {
 
   return (
     <div className={styles.container}>
-      <ChatNotification></ChatNotification>
+      <ChatNotification preview={preview} setPreview={setPreview}></ChatNotification>
       <h2>{(matchInfo.name)}</h2>
       <div ref={containerRef} className={styles.chatList}>
         {messages.map((msg) => {
