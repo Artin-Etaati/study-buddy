@@ -20,7 +20,7 @@ Remove Match
 </button>
 </div>
 {isOpen && 
-( <ProfileModal match={match} setIsOpen={setIsOpen}/>)} 
+( <ProfileModal profile={match} setIsOpen={setIsOpen}/>)} 
 </div>
 )}
 export default MatchCard;

@@ -15,13 +15,11 @@ const Matches = () => {
   
   const approvedRequest = async (id) => {
     if(!userId) return;
-
     const acceptedPerson = requests.find((requests) => requests.id === id);
     if (!acceptedPerson) return;
-  
-    const { error: matchError } = await supabase.from("matches").insert({
-      user1_id: userId,
-      user2_id: acceptedPerson.sender_id,
+    const { error: matchError } = await supabase.
+    from("matches")
+    .insert({user1_id: userId, user2_id: acceptedPerson.sender_id,
     });
     if (matchError) {
       console.error("Error getting match", matchError);
@@ -55,7 +53,6 @@ const Matches = () => {
       prevRequests.filter((request) => request.id !== id)
     );
   };
-
   const removeMatch = async (matchId) => {
     const windowConfirm = window.confirm(
       "Are you sure you want to remove this match?",
@@ -64,7 +61,6 @@ const Matches = () => {
       return;
     }
    if(!userId) return;
-
     const { data, error } = await supabase
       .from("matches")
       .delete()
@@ -76,7 +72,7 @@ const Matches = () => {
     }
     const {error: swipeError } = await supabase
       .from("swipes")
-      .delete()
+      .delete() //instead of delete should i update to false?
       .eq("swiper_id", matchId)
       .eq("swiped_id", userId)
       .select("id");
@@ -84,7 +80,6 @@ const Matches = () => {
           console.error("Error removing the swipe", swipeError)
           return;
          }
-        
     if (!data ||data.length ===0){
       console.error("No match was deleted", swipeError);
       return;
@@ -133,17 +128,6 @@ const Matches = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       if(!userId) return;
-
-      const { data: existingMatches, error: existingmatchesError } = //fetches the existing matches so that user doesnt show up in incoming requests
-        await supabase
-          .from("matches")
-          .select("user1_id, user2_id")
-          .or("user1_id.eq." + userId + ",user2_id.eq." + userId);
-      if (existingmatchesError) {
-        console.error("Error fetching existing matches", existingmatchesError);
-        return; //combine both of the useEffects into one useEffect to avoid duplicate code and improve performance
-        //use the first data for existingMatches 
-      }
       const { data, error } = await supabase
         .from("swipes")
         .select("*")
@@ -153,8 +137,18 @@ const Matches = () => {
         console.error("Error fetching user data:", error);
         return;
       }
+      //fetches the existing matches so we can use it to filter out the requests that are alread matched
+      const { data: existingMatches, error: existingmatchesError } = await supabase
+          .from("matches")
+          .select("user1_id, user2_id")
+          .or("user1_id.eq." + userId + ",user2_id.eq." + userId);
+      if (existingmatchesError) {
+        console.error("Error fetching existing matches", existingmatchesError);
+        return; //combine both of the useEffects into one useEffect to avoid duplicate code and improve performance
+        //use the first data for existingMatches 
+      }
       //filters out requests that are already in matches
-      const duplicateRequests = data.filter((swipe) =>
+      const filteredLikes = data.filter((swipe) =>
           !existingMatches.some(
             (match) =>
               match.user1_id === swipe.swiper_id ||
@@ -162,7 +156,7 @@ const Matches = () => {
           ),
       );
       //creates an array of the new requests that are not in matches
-      const senderIds = duplicateRequests.map((swipe) => swipe.swiper_id); 
+      const senderIds = filteredLikes.map((swipe) => swipe.swiper_id); 
 
       if (senderIds.length == 0) {
         setRequests([]);
@@ -177,9 +171,9 @@ const Matches = () => {
         return;
       }
       //Combine the swipe data with the profile data to create a new array of incoming requests with the profile information
-      const incomingRequests = duplicateRequests.map((swipe) => {
+      const incomingRequests = filteredLikes.map((swipe) => {
           const profile = profiles.find(
-            (person) => person.id === swipe.swiper_id,
+            (person) => person.id === swipe.swiper_id, //matches id to swiper id
           );
           if (!profile) return null;
           return {
@@ -213,9 +207,9 @@ const Matches = () => {
            isClose = {()=> setIncomingRequests(false)}
            />
          )}
-      <div className={classes.matchCount}>
+       <div className={classes.matchCount}>
         <p>Total Matches: {matches.length}</p>
-      </div>
+       </div>
       <div className={classes.matchesList}>
         {matches.length === 0 ? (
           <div className={classes.matchEmpty}>
@@ -230,7 +224,7 @@ const Matches = () => {
            />
           )))}
           {requestProfile && (
-            <ProfileModal match = {requestProfile} setIsOpen = {setRequestsProfile}/>)}
+            <ProfileModal  profile = {requestProfile} setIsOpen = {setRequestsProfile}/>)}
       </div>
     </div>
   );
