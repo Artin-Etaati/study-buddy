@@ -9,8 +9,7 @@ export default function chatquery () {
     const {session} = UserAuth();
     const [chats,setChats] = useState([]);
     const [activeChatId, setactiveChatId] = useState(null);
-    const [preview, setPreview] = useState([]);
-    const {setchatMounted} = useOutletContext();
+    const {setchatMounted,preview, setPreview} = useOutletContext();
 
     useEffect (()=>{
         setchatMounted(true);

@@ -58,7 +58,7 @@ const Layout = () => {
     <div className={layout.main}>
         <ChatNotification preview={preview} setPreview={setPreview}/>
         <Navbar/>
-        <Outlet context={{setchatMounted}}/>
+        <Outlet context={{setchatMounted,preview,setPreview}}/>
     </div>
     )
 }
