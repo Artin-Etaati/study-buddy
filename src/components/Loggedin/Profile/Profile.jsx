@@ -4,6 +4,7 @@ import { UserAuth } from '@/AuthContext';
 import { getProfile } from '@/services/profileService';
 import { supabase } from '@/services/supabase';
 import defaultAvatar from '@/assets/default-avatar.png';
+import Edit from './Edit';
 
 const Profile = () => {
   const { userId } = UserAuth();
@@ -12,6 +13,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [profilePhoto, setProfilePhoto] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     if (!userId) return;
@@ -65,11 +67,24 @@ const Profile = () => {
   if (loading) return <h2>Loading profile...</h2>;
   if (error) return <h2>Error: {error}</h2>;
 
+  if (isEditing) {
+    return (
+      <Edit
+        profile={profile}
+        onCancel={() => setIsEditing(false)}
+      />
+    );
+  }
+
 
   return (
     <div>
       <h1>My Profile</h1>
-      
+
+      <button onClick={() => setIsEditing(true)}>
+        Edit Profile
+      </button>
+
       <img
         src={profilePhoto || defaultAvatar}
         alt="Profile"
