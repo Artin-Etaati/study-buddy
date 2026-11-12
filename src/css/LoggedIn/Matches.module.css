@@ -9,12 +9,14 @@
 
 .matchCard {
   display: flex;
+  width: 95%;
   align-items: center;
   border: 1px solid #ccc;
   padding: 20px;
   margin: 5px 0;
   border-radius: 10px;
   background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .matchCard h2 {
@@ -51,13 +53,12 @@
 }
 .matchCard button {
   margin-right: 10px;
-  padding: 5px 10px;
+  padding: 10px 15px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   background-color: #667eea;
   color: white;
-  transition: background-color 0.3s ease;
 }
 .header {
   display: block;
@@ -72,17 +73,39 @@
   margin-bottom: 10px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
-.incomingRequests {
+.incomingRequests{
   display: flex;
   justify-content: flex-end;
   margin-right: 30px;
+}
+.requestCount{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: red;
+  color: white;
+  font-size: 12px;
+}
+.incomingRequests button {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #667eea;
+  color: white;
+  gap: 5px;
 }
 .avatar {
   display: flex;
   margin-bottom: 20px;
   margin-right: 20px;
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   overflow: hidden;
 }
@@ -106,6 +129,10 @@
 }
 .profileHeader h2 {
   font-size: 24px;
+}
+.profileHeader p{
+  font-size: 18px;
+  margin-top:auto;
 }
 .profileContent {
   position:relative;
@@ -136,7 +163,10 @@
   margin-top: 0;
 }
 .profileDetails h3{
-  font-size: 18px;
+  background-color: #f0edff;
+  border-radius: 10px;
+  padding:10px;
+  font-size: 16px;
   font-weight: normal;
 }
 .profileDetails p {
@@ -144,16 +174,33 @@
 }
 .aboutMe{
   display:flex;
+  flex-direction:column;
+  text-align:left;
+}
+.aboutMe p{
+  margin-top:auto;
 }
 .profileClasses{
   display:flex
 }
-.closeButton{
+.closeButton button {
   position: absolute;
   top: 15px;
   right: 15px;
   cursor:pointer;
   background: transparent;
+  box-shadow: none;
+  border: none;
+  font-size: 24px;
+}
+.requestCloseButton button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor:pointer;
+  background: transparent;
+  box-shadow: none;
+  border: none;
   font-size: 24px;
 }
 .modalAvatar {
@@ -189,12 +236,12 @@
   align-items: center;
 }
 .requestsContent {
+  position:relative;
   background-color: white;
   padding: 20px;
-  width: 300px;
+  width: 450px;
   max-width: 90%;
   border-radius: 10px;
-  width: 300px;
   text-align: center;
 }
 .requestCard {

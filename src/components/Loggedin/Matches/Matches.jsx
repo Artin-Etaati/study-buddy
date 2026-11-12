@@ -7,6 +7,7 @@ import ProfileModal from  '@/components/Loggedin/Matches/ProfileModal.jsx'
 import RequestsModal from  '@/components/Loggedin/Matches/RequestsModal.jsx'
 
 const Matches = () => {
+   const [profilePhoto, setProfilePhoto] = useState(null);
   const [requestProfile, setRequestsProfile] = useState(null);
   const [incomingRequests, setIncomingRequests] = useState(false);
   const [matches, setMatches] = useState([]);
@@ -72,7 +73,7 @@ const Matches = () => {
     }
     const {error: swipeError } = await supabase
       .from("swipes")
-      .delete() //instead of delete should i update to false?
+      .update({action:false}) //instead of delete should i update to false?
       .eq("swiper_id", matchId)
       .eq("swiped_id", userId)
       .select("id");
@@ -89,7 +90,22 @@ const Matches = () => {
     );
     setRequests((prevRequests) =>
       prevRequests.filter((request) => request.sender_id !== matchId)
-  )
+  )}
+  //Func to update the avatar url for each profile
+  const updateAvatar = async(profiles) =>{
+  const updatedAvatars = await Promise.all(
+        profiles.map(async(profile) => {
+          if (!profile.profile_picture_name) return profile;
+        const { data: photoData, error: photoError } = await supabase.storage
+          .from('Profile_Picture')
+          .createSignedUrl(profile.profile_picture_name, 3600);
+
+        if (photoError) {
+          console.error('Error loading profile photo:', photoError);
+          return profile;
+        }
+        return { ...profile, profile_picture_url: photoData.signedUrl,};}));     
+      return updatedAvatars;
   };
   useEffect(() => {
     const fetchMatches = async () => {
@@ -104,6 +120,7 @@ const Matches = () => {
         console.error("Error fetching matches:", matchesError);
         return;
       }
+      
       const userIds = matchesData.map((match) =>
         match.user1_id === userId ? match.user2_id : match.user1_id,
       );
@@ -114,15 +131,16 @@ const Matches = () => {
 
       const { data: userData, error: userError } = await supabase
         .from("profiles")
-        .select("*")
+        .select("*,majors(name)")
         .in("id", userIds);
 
       if (userError) {
         console.error("Error fetching user data:", userError);
         return;
-      }
-      setMatches(userData);
-    };
+      };
+      const updatedAvatars = await updateAvatar(userData);
+      setMatches(updatedAvatars);
+    };  
     fetchMatches();
   }, []);
   useEffect(() => {
@@ -164,15 +182,16 @@ const Matches = () => {
       }
       const { data: profiles, error: profileError} = await supabase
         .from("profiles")
-        .select("*")
+        .select("*,majors(name)")
         .in("id", senderIds); //gets the profile info for everyone from senderIds
       if (profileError) {
         console.error("Error fetching profiles", profileError);
         return;
       }
+      const updatedAvatars = await updateAvatar(profiles);
       //Combine the swipe data with the profile data to create a new array of incoming requests with the profile information
       const incomingRequests = filteredLikes.map((swipe) => {
-          const profile = profiles.find(
+          const profile = updatedAvatars.find(
             (person) => person.id === swipe.swiper_id, //matches id to swiper id
           );
           if (!profile) return null;
@@ -194,8 +213,10 @@ const Matches = () => {
       <div className={classes.header}>
       <h1>Matches</h1>
       <div className={classes.incomingRequests}>
-      <button onClick={() => setIncomingRequests(true)}>
-      Incoming Requests
+      <button onClick={() =>setIncomingRequests(true)}>
+      Incoming Requests{requests.length > 0 && (
+        <span className={classes.requestCount}>{requests.length}</span>
+        )}
      </button>
      </div>
     </div>
@@ -205,6 +226,7 @@ const Matches = () => {
            approvedRequest = {approvedRequest}
            denyRequest = {denyRequest}
            isClose = {()=> setIncomingRequests(false)}
+           setRequestsProfile = {setRequestsProfile}
            />
          )}
        <div className={classes.matchCount}>
@@ -220,7 +242,7 @@ const Matches = () => {
             <MatchCard
             key = {match.id}
             match = {match}
-            onRemove = {removeMatch}
+            removeMatch = {removeMatch}
            />
           )))}
           {requestProfile && (

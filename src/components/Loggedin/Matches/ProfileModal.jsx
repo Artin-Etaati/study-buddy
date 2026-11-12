@@ -33,7 +33,7 @@ const ProfileModal = ({profile, setIsOpen}) => {
 
 <div className={classes.profileHeader}>
 <h2>{profile.first_name} {profile.last_name}</h2>
-<p>Major: {profile.major}</p>
+<p>Major: {profile.majors?.name}</p>
 </div>
 
 <hr className={classes.profileLine} />
@@ -42,7 +42,8 @@ const ProfileModal = ({profile, setIsOpen}) => {
 <h3><strong>Gender:</strong> {profile.gender}</h3> <h3><strong>Study Style:</strong> {profile.study_style}</h3>
 </div>
 <div className = {classes.aboutMe}>
-<p>About Me: {profile.bio || "No bio is avaliable " }</p>
+  <h3>About Me</h3>
+<p>{profile.bio || "No bio is avaliable " }</p>
 </div>
 <div className = {classes.profileClasses}>
 <p>Courses: {courses.length > 0 ? courses.join(", ") : "No courses listed"}</p>

@@ -2,7 +2,7 @@ import classes from '@/css/Loggedin/Matches.module.css'
 import {useState} from "react";
 import defaultAvatar from '@/assets/default-avatar.png';
 import ProfileModal from  '@/components/Loggedin/Matches/ProfileModal.jsx'
-const MatchCard =({match, removeMatch}) => {
+const MatchCard =({match, removeMatch,}) => {
     const [isOpen, setIsOpen] = useState(false);
     return(
 <div className={classes.matchCard} key={match.id}>
@@ -11,11 +11,11 @@ const MatchCard =({match, removeMatch}) => {
 </div>
 <div className={classes.matchinfo}>
 <h2> {match.first_name} {match.last_name}</h2>
-<p>Major: {match.major}</p>
+<p>Major: {match.majors?.name}</p>
 </div>
 <div className={classes.matchProfile}>
 <button onClick={() => setIsOpen(match)}>View Profile</button>
-<button onClick={() => removeMatch(match.id)}>
+<button onClick={() => removeMatch(match.id)}> 
 Remove Match
 </button>
 </div>

@@ -1,7 +1,7 @@
 import classes from '@/css/Loggedin/Matches.module.css'
 import defaultAvatar from '@/assets/default-avatar.png';
 
-const RequestsModal =({requests,approvedRequest,denyRequest,isClose}) => {
+const RequestsModal =({requests,approvedRequest,denyRequest,isClose,setRequestsProfile}) => {
     return (   
      <div className={classes.requestsModal}>
     <div className={classes.requestsContent}>
@@ -20,7 +20,7 @@ const RequestsModal =({requests,approvedRequest,denyRequest,isClose}) => {
                           onClick={() => setRequestsProfile(request)}>
                           {request.first_name} {request.last_name} 
                           </button>
-                         <p>Major: {request.major}</p>
+                         <p>Major: {request.majors?.name}</p>
                        </div>
                        <div className={classes.requestActions}>
                          <button
@@ -42,7 +42,9 @@ const RequestsModal =({requests,approvedRequest,denyRequest,isClose}) => {
                    </div>
                  ))
                )}
-               <button onClick={() => isClose()}>Close</button>
+               <div className = {classes.requestCloseButton}>
+               <button onClick={() => isClose()}> ✕ </button>
+               </div>
              </div>
            </div>
 )}
