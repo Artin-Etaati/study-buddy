@@ -3,7 +3,7 @@ import SearchableSelect from '@/components/Frontpage/Setup/SearchableSelect';
 
 
 
-const Edit = ({ profile, majors, onCancel }) => {
+const Edit = ({ profile, majors, onCancel, onSave, isSaving  }) => {
   const [firstName, setFirstName] = useState(profile.first_name);
   const [lastName, setLastName] = useState(profile.last_name);
   const [birthday, setBirthday] = useState(profile.birthday || '');
@@ -11,6 +11,18 @@ const Edit = ({ profile, majors, onCancel }) => {
   const [studyStyle, setStudyStyle] = useState(profile.study_style || '');
   const [major, setMajor] = useState(profile.major_id);
 
+  const handleSave = () => {
+    const formData = {
+      firstName,
+      lastName,
+      birthday,
+      gender,
+      studyStyle,
+      major
+    };
+
+    onSave(formData);
+  };
 
 
 
@@ -68,9 +80,14 @@ const Edit = ({ profile, majors, onCancel }) => {
         <option value="Either">Either</option>
       </select>
 
-      <button onClick={onCancel}>
-        Cancel
-      </button>
+    <button onClick={handleSave} disabled={isSaving}>
+      {isSaving ? 'Saving...' : 'Save'}
+    </button>
+
+    <button onClick={onCancel} disabled={isSaving}>
+      Cancel
+    </button>
+    
     </div>
   );
 };

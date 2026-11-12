@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { UserAuth } from '@/AuthContext';
-import { getProfile, getMajors } from '@/services/profileService';
+import { getProfile, getMajors, updateProfile } from '@/services/profileService';
 import { supabase } from '@/services/supabase';
 import defaultAvatar from '@/assets/default-avatar.png';
 import Edit from './Edit';
@@ -15,6 +15,7 @@ const Profile = () => {
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [majors, setMajors] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
 
 
 
@@ -82,6 +83,37 @@ const Profile = () => {
     };
   }, [userId]);
 
+
+  const handleSave = async (formData) => {
+    if (isSaving) return;
+
+    setIsSaving(true);
+
+    try {
+      const updatedProfile = await updateProfile(userId, formData);
+
+      const selectedMajor = majors.find(
+        (item) => item.id === updatedProfile.major_id
+      );
+
+      setProfile((prev) => ({
+        ...prev,
+        ...updatedProfile,
+        majors: selectedMajor
+          ? { name: selectedMajor.name }
+          : prev.majors
+      }));
+
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert('Failed to save profile changes.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+
   if (loading) return <h2>Loading profile...</h2>;
   if (error) return <h2>Error: {error}</h2>;
 
@@ -90,7 +122,9 @@ const Profile = () => {
       <Edit
         profile={profile}
         majors={majors}
+        onSave={handleSave}
         onCancel={() => setIsEditing(false)}
+        isSaving={isSaving}
       />
     );
   }

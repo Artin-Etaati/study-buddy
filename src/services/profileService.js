@@ -27,9 +27,6 @@ export const getMajors = async () => {
 };
 
 
-
-
-
 export async function saveProfile(formData, courses, userId) {
 
   // 1. Create profile
@@ -123,6 +120,29 @@ export async function getProfile(userId) {
       )
     `)
     .eq('id', userId)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+
+export async function updateProfile(userId, formData) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({
+      first_name: formData.firstName.trim(),
+      last_name: formData.lastName.trim(),
+      birthday: formData.birthday,
+      gender: formData.gender,
+      study_style: formData.studyStyle,
+      major_id: formData.major
+    })
+    .eq('id', userId)
+    .select()
     .single();
 
   if (error) {
