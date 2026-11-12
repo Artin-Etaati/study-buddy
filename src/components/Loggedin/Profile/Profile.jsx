@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { UserAuth } from '@/AuthContext';
-import { getProfile } from '@/services/profileService';
+import { getProfile, getMajors } from '@/services/profileService';
 import { supabase } from '@/services/supabase';
 import defaultAvatar from '@/assets/default-avatar.png';
 import Edit from './Edit';
@@ -14,6 +14,24 @@ const Profile = () => {
   const [error, setError] = useState(null);
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [majors, setMajors] = useState([]);
+
+
+
+  useEffect(() => {
+    const loadMajors = async () => {
+      try {
+        const data = await getMajors();
+        setMajors(data);
+      } catch (error) {
+        console.error('Error loading majors:', error);
+      }
+    };
+
+    if (userId) {
+      loadMajors();
+    }
+  }, [userId]);
 
   useEffect(() => {
     if (!userId) return;
@@ -71,6 +89,7 @@ const Profile = () => {
     return (
       <Edit
         profile={profile}
+        majors={majors}
         onCancel={() => setIsEditing(false)}
       />
     );
