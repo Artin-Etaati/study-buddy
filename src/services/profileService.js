@@ -100,3 +100,34 @@ export async function saveProfile(formData, courses, userId) {
     throw userCourseError;
   }
 }
+
+
+
+export async function getProfile(userId) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select(`
+      first_name,
+      last_name,
+      birthday,
+      gender,
+      study_style,
+      university_id,
+      major_id,
+      profile_picture_name,
+      universities(name),
+      majors(name),
+      user_courses(
+        course_id,
+        courses(id, course_code)
+      )
+    `)
+    .eq('id', userId)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
