@@ -45,8 +45,10 @@ const ProfileModal = ({profile, setIsOpen}) => {
   <h3>About Me</h3>
 <p>{profile.bio || "No bio is avaliable " }</p>
 </div>
-<div className = {classes.profileClasses}>
-<p>Courses: {courses.length > 0 ? courses.join(", ") : "No courses listed"}</p>
+<div className = {classes.profileCourses}>
+  <h3>Courses</h3>
+<p>{courses.length > 0 ? courses.map((course) => (
+  <span key={course} className ={classes.courseBubble}>{course}</span>)) : "No courses listed"}</p>
 </div>
 <div className = {classes.closeButton}>
 <button onClick={() => setIsOpen(false)}> ✕ </button>

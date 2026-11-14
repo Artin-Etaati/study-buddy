@@ -7,7 +7,6 @@ import ProfileModal from  '@/components/Loggedin/Matches/ProfileModal.jsx'
 import RequestsModal from  '@/components/Loggedin/Matches/RequestsModal.jsx'
 
 const Matches = () => {
-   const [profilePhoto, setProfilePhoto] = useState(null);
   const [requestProfile, setRequestsProfile] = useState(null);
   const [incomingRequests, setIncomingRequests] = useState(false);
   const [matches, setMatches] = useState([]);
@@ -36,7 +35,7 @@ const Matches = () => {
   };
   const denyRequest = async (id) => {
     if(!userId) return;
-    const { data: removeDeny, error: denyrequestError } = await supabase
+    const { data: removeRequest, error: denyrequestError } = await supabase
       .from("swipes")
       .update({ action: false })
       .eq("id", id)
@@ -46,7 +45,7 @@ const Matches = () => {
       console.error("Error removing match:", denyrequestError);
       return;
     }
-    if (!removeDeny || removeDeny.length === 0){
+    if (!removeRequest|| removeRequest.length === 0){
       console.error("No request was deleted");
       return;
     }
@@ -73,7 +72,7 @@ const Matches = () => {
     }
     const {error: swipeError } = await supabase
       .from("swipes")
-      .update({action:false}) //instead of delete should i update to false?
+      .update({action:false}) 
       .eq("swiper_id", matchId)
       .eq("swiped_id", userId)
       .select("id");
@@ -167,8 +166,7 @@ const Matches = () => {
       }
       //filters out requests that are already in matches
       const filteredLikes = data.filter((swipe) =>
-          !existingMatches.some(
-            (match) =>
+          !existingMatches.some((match) =>
               match.user1_id === swipe.swiper_id ||
               match.user2_id === swipe.swiper_id,
           ),
@@ -188,6 +186,7 @@ const Matches = () => {
         console.error("Error fetching profiles", profileError);
         return;
       }
+      //updates the avatar url for each profile and returns the profile info with the updated avatar url
       const updatedAvatars = await updateAvatar(profiles);
       //Combine the swipe data with the profile data to create a new array of incoming requests with the profile information
       const incomingRequests = filteredLikes.map((swipe) => {
@@ -209,7 +208,6 @@ const Matches = () => {
   }, []);
   return (
     <div className={classes.localbody}>
-      
       <div className={classes.header}>
       <h1>Matches</h1>
       <div className={classes.incomingRequests}>
@@ -233,13 +231,12 @@ const Matches = () => {
         <p>Total Matches: {matches.length}</p>
        </div>
       <div className={classes.matchesList}>
-        {matches.length === 0 ? (
-          <div className={classes.matchEmpty}>
-            <p>Match with people to find them here!</p>
+        {matches.length === 0 ? ( <div className={classes.matchEmpty}>
+          <p>Match with people to find them here!</p>
           </div>
         ) : (
           matches.map((match) => (
-            <MatchCard
+            <MatchCard 
             key = {match.id}
             match = {match}
             removeMatch = {removeMatch}

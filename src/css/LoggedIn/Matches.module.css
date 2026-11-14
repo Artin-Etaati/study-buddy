@@ -169,19 +169,30 @@
   font-size: 16px;
   font-weight: normal;
 }
-.profileDetails p {
-  font-weight: 700;
-}
 .aboutMe{
   display:flex;
   flex-direction:column;
   text-align:left;
 }
 .aboutMe p{
+  margin: 0;
+}
+.profileCourses{
+  display:flex;
+  flex-direction:column;
+  text-align:left;
   margin-top:auto;
 }
-.profileClasses{
-  display:flex
+.profileCourses p {
+  margin-top:auto;
+}
+.courseBubble {
+  display: inline-block;
+  background-color: #f0edff;
+  border-radius: 15px;
+  padding: 5px 10px;
+  margin: 2px;
+  font-size: 14px;
 }
 .closeButton button {
   position: absolute;
@@ -204,8 +215,8 @@
   font-size: 24px;
 }
 .modalAvatar {
-  width: 75px;
-  height: 75px;
+  width: 85px;
+  height: 85px;
   border-radius: 50%;
   display: flex;
   margin: 0 auto 10px auto;
