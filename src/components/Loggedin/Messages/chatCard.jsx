@@ -3,14 +3,17 @@ import classes from "./Chats.module.css"
 import { useNavigate } from "react-router-dom"
 import { UserAuth } from "../../../AuthContext";
 
+//creates each preview of a chat in chatlist
 export default function chatCard ({row}) {
         const navigate = useNavigate();
         const {session} = UserAuth();
 
+        //checks if user is user1 or user2 in the prop data
         const matchedUser = session.user.id===row.user1_id ? row.user2 : row.user1;
+        //checks if user is the last sender of the message
         const isSenderSelf = session.user.id === row.last_message_sender;
 
-        
+        //manages date of the most recent message
         const date = new Date(row.last_message_time);
         const now = new Date();
         const isToday = date.toDateString() === now.toDateString();

@@ -4,10 +4,14 @@ import y from "@/assets/y.png"
 import { UserAuth } from '../../../AuthContext';
 
 export default function ChatNotification({preview, setPreview}) {
+  //takes props as thats the only way to pass down the preview data from layout
+
   const [isVisible, setIsVisible] = useState(false);
   const {session} = UserAuth();
   const currentPreview = preview[0];
 
+  //this useeffect is to check if a notification needs to be shown
+  //if yes it will take the preview array and display the most recent one as a notification for 4 seconds
   useEffect(() => {
     if (!currentPreview) {
       setIsVisible(false);
@@ -26,9 +30,11 @@ export default function ChatNotification({preview, setPreview}) {
 
   if(!currentPreview) {return}
 
-   const matchedUser = session.user.id===currentPreview.user1_id ? currentPreview.user2 : currentPreview.user1; //for profile pic and name
+  //for profile pic and name
+   const matchedUser = session.user.id===currentPreview.user1_id ? currentPreview.user2 : currentPreview.user1; 
    const content = currentPreview.last_message_content;
 
+  //if visible show the notification
   return (isVisible && (
     <div
       className={classes.notification + " " + (isVisible ? classes.visible : '')}>
@@ -46,7 +52,7 @@ export default function ChatNotification({preview, setPreview}) {
           {content}
         </p>
       </div>
-
+      {/*button for dismissing the notification */}
       <button
         onClick={() => {setIsVisible(false); setPreview((prev)=>prev.slice(1))}}
         className={classes.closeButton}>

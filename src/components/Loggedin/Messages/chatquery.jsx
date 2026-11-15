@@ -8,11 +8,15 @@ export default function chatquery () {
     const [loading, setLoading] = useState(true);
     const {session} = UserAuth();
     const [chats,setChats] = useState([]);
-    const [activeChatId, setactiveChatId] = useState(null);
-    const {setchatMounted,preview, setPreview} = useOutletContext();
+    const [activeChatId, setactiveChatId] = useState(null); //activeChat used to determine what chat is currently open. equal to a matchID or NULL
+    const {setchatMounted,preview, setPreview} = useOutletContext(); //used for notifications. passed down from layout.
 
+    //this useeffect fetches chat previews and sets matchlist
     useEffect (()=>{
+        //on chat mount setchatmounted to true to signify the chatList is mounted.
         setchatMounted(true);
+
+        //from the view called chat_summaries fetch all data about last message with each match
         const fetchChats = async () => {
             //get chat summaries along with match data
             const {data, error } = await supabase
@@ -33,7 +37,7 @@ export default function chatquery () {
                 .order('last_message_time', { ascending: false, nullsFirst: false });
             if(error) return console.error(error);
             
-            //take the chat data and manually add a local isunread attribute
+            //take the chat data and manually add a local isunread attribute and unread count attribute
             const formattedChats = data.map((row)=> {
                 const isFromMe = row.last_message_sender === session.user.id;
 
@@ -48,7 +52,7 @@ export default function chatquery () {
             setChats(formattedChats);
             
 
-             //take the formattedChats and create list of matched users with matchID
+             //take the formattedChats and create simple list of matched users and their info
              const matchList = formattedChats.map((row)=>{
                 const matchedProfile = row.user1_id===session.user.id ? row.user2 : row.user1
                 return {
@@ -63,11 +67,13 @@ export default function chatquery () {
         }
 
         fetchChats()
-        return () => setchatMounted(false);
+        return () => setchatMounted(false); //when leaving the chat components make sure to signfiy its unmounted
     },[])
     
+    //this useEffect manages all global messages for a user
     useEffect (()=>{
         if(!chats.length) return;
+        //creates a realtime channel for global messages on an insert into the message table
         const channel = supabase
                 .channel(`globalChatsChatQuery`)
                 .on('postgres_changes',
@@ -82,8 +88,12 @@ export default function chatquery () {
                         //is it from them and is the chat closed. only case to be unread
                         const isUnreadforme = !isFromMe && !isChatOpen;
 
+                        //editedChats is the list of recent chats without the one that just sent you a message
                         const editedChats = chats.filter((row)=>row.match_id!==latestRow.match_id);
-                        const chatDetails = chats.find((row)=>row.match_id===payload.new.match_id)
+                        //chat details is the info needed about who just sent you a message
+                        const chatDetails = chats.find((row)=>row.match_id===latestRow.match_id)
+
+                        //create an entire custom Chat row that includes extra local attributes based on latest message recieved
                         const editedRow = {
                             match_id:latestRow.match_id,
                             user1_id:chatDetails.user1_id,
@@ -98,16 +108,18 @@ export default function chatquery () {
                             my_unread_count: isUnreadforme ? chatDetails.my_unread_count + 1 : chatDetails.my_unread_count
                         }
 
+                        //set the chats to the new row first to signify new message and puts the editedchats behind it
                         setChats([editedRow, ...editedChats])
+                        //only sets the preview for notification to work if you are in someone elses chat. Not in the current chat or main chatlistpage.
                         if(editedRow.match_id!==activeChatId && activeChatId!==null) setPreview((prev)=>[...prev,editedRow])
                        
                     })
                 .subscribe();
 
         
-                return () => supabase.removeChannel(channel);
+                return () => supabase.removeChannel(channel); //remove channel on unmount
 
-    },[activeChatId,chats])
+    },[activeChatId,chats]) //reupdate listeners on chat or activechat change
 
     if(loading) return <div>fetching users...</div>
 
