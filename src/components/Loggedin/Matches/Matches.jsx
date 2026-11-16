@@ -11,6 +11,8 @@ const Matches = () => {
   const [incomingRequests, setIncomingRequests] = useState(false);
   const [matches, setMatches] = useState([]);
   const [requests, setRequests] = useState([]);
+  const [existingMatches, setExistingMatches] = useState([]);
+  const [matchesLoaded, setMatchesLoaded] = useState(false);
   const { userId } = UserAuth()
   
   const approvedRequest = async (id) => {
@@ -32,6 +34,10 @@ const Matches = () => {
     setRequests((prevRequests) =>
       prevRequests.filter((request) => request.id !== id),
     );
+    setExistingMatches((prevMatches) => [
+      ...prevMatches,
+      { user1_id: userId, user2_id: acceptedPerson.sender_id },
+    ]);
   };
   const denyRequest = async (id) => {
     if(!userId) return;
@@ -89,7 +95,14 @@ const Matches = () => {
     );
     setRequests((prevRequests) =>
       prevRequests.filter((request) => request.sender_id !== matchId)
-  )}
+  )
+  //this function is removing the match from the existingMatches state so that it can be used to filter out requests that are already matched
+  setExistingMatches((prevMatches) =>prevMatches.filter((match) =>
+        !((match.user1_id === userId && match.user2_id === matchId) || (match.user1_id === matchId && match.user2_id === userId)
+        ),
+    ),
+  );
+}
   //Func to update the avatar url for each profile
   const updateAvatar = async(profiles) =>{
   const updatedAvatars = await Promise.all(
@@ -119,7 +132,8 @@ const Matches = () => {
         console.error("Error fetching matches:", matchesError);
         return;
       }
-      
+      setExistingMatches(matchesData);
+      setMatchesLoaded(true);
       const userIds = matchesData.map((match) =>
         match.user1_id === userId ? match.user2_id : match.user1_id,
       );
@@ -141,10 +155,11 @@ const Matches = () => {
       setMatches(updatedAvatars);
     };  
     fetchMatches();
-  }, []);
+  }, [userId]);
+  
   useEffect(() => {
     const fetchRequests = async () => {
-      if(!userId) return;
+      if(!userId|| !matchesLoaded) return;
       const { data, error } = await supabase
         .from("swipes")
         .select("*")
@@ -154,26 +169,15 @@ const Matches = () => {
         console.error("Error fetching user data:", error);
         return;
       }
-      //fetches the existing matches so we can use it to filter out the requests that are alread matched
-      const { data: existingMatches, error: existingmatchesError } = await supabase
-          .from("matches")
-          .select("user1_id, user2_id")
-          .or("user1_id.eq." + userId + ",user2_id.eq." + userId);
-      if (existingmatchesError) {
-        console.error("Error fetching existing matches", existingmatchesError);
-        return; //combine both of the useEffects into one useEffect to avoid duplicate code and improve performance
-        //use the first data for existingMatches 
-      }
       //filters out requests that are already in matches
       const filteredLikes = data.filter((swipe) =>
           !existingMatches.some((match) =>
-              match.user1_id === swipe.swiper_id ||
+              match.user1_id === swipe.swiper_id || //checks the match in either column
               match.user2_id === swipe.swiper_id,
           ),
       );
-      //creates an array of the new requests that are not in matches
+      //creates an array of the new request IDs that are not in matches
       const senderIds = filteredLikes.map((swipe) => swipe.swiper_id); 
-
       if (senderIds.length == 0) {
         setRequests([]);
         return;
@@ -205,7 +209,7 @@ const Matches = () => {
       setRequests(incomingRequests);
     };
     fetchRequests();
-  }, []);
+  }, [userId, matchesLoaded, existingMatches]);
   return (
     <div className={classes.localbody}>
       <div className={classes.header}>
