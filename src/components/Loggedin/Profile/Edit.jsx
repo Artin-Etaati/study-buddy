@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import SearchableSelect from '@/components/Frontpage/Setup/SearchableSelect';
+import CourseSelector from '@/components/Frontpage/Setup/CourseSelector';
 
 
 
@@ -11,12 +12,65 @@ const Edit = ({ profile, majors, onCancel, onSave, isSaving  }) => {
   const [studyStyle, setStudyStyle] = useState(profile.study_style || '');
   const [major, setMajor] = useState(profile.major_id);
   const [errors, setErrors] = useState({});
+  const originalCourses = (profile.user_courses || [])
+  .map((item) => item.courses?.course_code)
+  .filter(Boolean);
+  const [courses, setCourses] = useState(originalCourses);
+  const [courseInput, setCourseInput] = useState('');
+  const [courseError, setCourseError] = useState('');
 
 
+
+  const coursesChanged =
+    [...courses].sort().join('|') !==
+    [...originalCourses].sort().join('|');
+    
+
+  const hasChanges =
+    firstName.trim() !== profile.first_name.trim() ||
+    lastName.trim() !== profile.last_name.trim() ||
+    birthday !== (profile.birthday || '') ||
+    gender.trim() !== (profile.gender || '') ||
+    studyStyle !== (profile.study_style || '') ||
+    String(major) !== String(profile.major_id) ||
+    coursesChanged;
+
+
+
+  const handleAddCourse = () => {
+    if (isSaving) return;
+
+    const newCourse = courseInput.trim().toUpperCase();
+
+    if (!newCourse) return;
+
+    if (courses.includes(newCourse)) {
+      setCourseError('This course has already been added.');
+      return;
+    }
+
+    setCourses((prev) => [...prev, newCourse]);
+    setCourseInput('');
+    setCourseError('');
+  };
+
+const handleRemoveCourse = (indexToRemove) => {
+  if (isSaving) return;
+
+  setCourses((prev) =>
+    prev.filter((_, index) => index !== indexToRemove)
+  );
+
+  setCourseError('');
+};
 
 
   const handleSave = () => {
     const newErrors = {};
+
+    if (courses.length === 0) {
+      newErrors.courses = 'Please add at least one course.';
+    }
 
     const trimmedFirstName = firstName.trim();
     const trimmedLastName = lastName.trim();
@@ -88,7 +142,8 @@ const Edit = ({ profile, majors, onCancel, onSave, isSaving  }) => {
       birthday,
       gender: gender.trim(),
       studyStyle,
-      major: selectedMajor.id
+      major: selectedMajor.id,
+      courses
     };
 
     // Send information to Profile.jsx
@@ -152,14 +207,31 @@ const Edit = ({ profile, majors, onCancel, onSave, isSaving  }) => {
 
       <div>
         <label>Major:</label>
+
         <SearchableSelect
+          name="major"
           options={majors}
           value={major}
-          onChange={setMajor}
+          onChange={(e) => setMajor(e.target.value)}
           placeholder="Select your major"
         />
+
         {errors.major && <p>{errors.major}</p>}
       </div>
+
+      <div>
+        <CourseSelector
+          courseInput={courseInput}
+          setCourseInput={setCourseInput}
+          courses={courses}
+          handleAddCourse={handleAddCourse}
+          handleRemoveCourse={handleRemoveCourse}
+        />
+
+        {courseError && <p>{courseError}</p>}
+        {errors.courses && <p>{errors.courses}</p>}
+      </div>
+
 
       <div>
         <label>Study Style:</label>
@@ -174,9 +246,14 @@ const Edit = ({ profile, majors, onCancel, onSave, isSaving  }) => {
         {errors.studyStyle && <p>{errors.studyStyle}</p>}
       </div>
 
-      <button onClick={handleSave} disabled={isSaving}>
+
+      <button
+        onClick={handleSave}
+        disabled={isSaving || !hasChanges}
+      >
         {isSaving ? 'Saving...' : 'Save'}
       </button>
+
 
       <button onClick={onCancel} disabled={isSaving}>
         Cancel

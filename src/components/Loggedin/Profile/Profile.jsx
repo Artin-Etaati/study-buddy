@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { UserAuth } from '@/AuthContext';
 import { getProfile, getMajors, updateProfile } from '@/services/profileService';
 import { supabase } from '@/services/supabase';
@@ -16,6 +16,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [majors, setMajors] = useState([]);
   const [isSaving, setIsSaving] = useState(false);
+  const savingRef = useRef(false);
 
 
 
@@ -85,8 +86,10 @@ const Profile = () => {
 
 
   const handleSave = async (formData) => {
-    if (isSaving) return;
 
+    if (savingRef.current) return;
+
+    savingRef.current = true;
     setIsSaving(true);
 
     try {
@@ -109,6 +112,7 @@ const Profile = () => {
       console.error('Error updating profile:', error);
       alert('Failed to save profile changes.');
     } finally {
+      savingRef.current = false;
       setIsSaving(false);
     }
   };
