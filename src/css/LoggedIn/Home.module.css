@@ -4,6 +4,14 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+    padding-top: 1rem;
+}
+
+.title_container {
+    display: flex;
+    gap: 1rem;
+    align-self: start;
+    padding-bottom: 2rem;
 }
 
 .title {
@@ -16,13 +24,13 @@
     justify-self: center;
 }
 
-.profilePhoto {
-  position: absolute;
-  top: 29px;
-  left: 190px;
+.subtitle {
+    text-align: center;
+}
 
+.profilePhoto {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-}
+ }

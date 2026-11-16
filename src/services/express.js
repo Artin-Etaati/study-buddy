@@ -24,17 +24,20 @@ app.post("/createURL", async (request, response) => {
             // check if timestamp actually expired
             if (!profilePictureExpired(profileImageData.profile_picture_expiration)) {
                 // not expired, reuse same url
-                response.send(JSON.stringify({url: profileImageData.profile_picture_url}))
+                response.send(JSON.stringify({url: profileImageData.profile_picture_url, status: 200}))
             } else {
                 // expired, create new signed url
                 const newURL = await createNewSignedURL(id, profileImageData.profile_picture_name)
                 if(newURL != null){
-                    response.send(JSON.stringify({url: newURL}));
+                    response.send(JSON.stringify({url: newURL, status: 200}));
+                } else {
+                    response.send(JSON.stringify({status: 500}))
                 }
 
             }
         } else {
             // error occured
+            response.send(JSON.stringify({status: 500}))
         }
     }
 })
