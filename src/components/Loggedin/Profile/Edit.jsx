@@ -143,7 +143,8 @@ const handleRemoveCourse = (indexToRemove) => {
       gender: gender.trim(),
       studyStyle,
       major: selectedMajor.id,
-      courses
+      courses,
+      coursesChanged
     };
 
     // Send information to Profile.jsx

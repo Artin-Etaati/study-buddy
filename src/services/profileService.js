@@ -130,7 +130,10 @@ export async function getProfile(userId) {
 }
 
 
+
+
 export async function updateProfile(userId, formData) {
+  // 1. Update personal information
   const { data, error } = await supabase
     .from('profiles')
     .update({
@@ -145,9 +148,107 @@ export async function updateProfile(userId, formData) {
     .select()
     .single();
 
-  if (error) {
-    throw error;
+  if (error) throw error;
+
+  // 2. Update courses only if they changed
+  if (formData.coursesChanged) {
+    const courseCodes = [
+      ...new Set(
+        formData.courses.map((course) =>
+          course.trim().toUpperCase()
+        )
+      )
+    ];
+
+    if (
+      courseCodes.length === 0 ||
+      courseCodes.some((code) => !code)
+    ) {
+      throw new Error('At least one course is required.');
+    }
+
+    // 3. Make sure selected courses exist
+    const courseRows = courseCodes.map((course_code) => ({
+      university_id: data.university_id,
+      course_code
+    }));
+
+    const { error: courseError } = await supabase
+      .from('courses')
+      .upsert(courseRows, {
+        onConflict: 'university_id,course_code',
+        ignoreDuplicates: true
+      });
+
+    if (courseError) throw courseError;
+
+    // 4. Get selected course IDs
+    const { data: selectedCourses, error: fetchError } = await supabase
+      .from('courses')
+      .select('id')
+      .eq('university_id', data.university_id)
+      .in('course_code', courseCodes);
+
+    if (fetchError) throw fetchError;
+
+    if (selectedCourses.length !== courseCodes.length) {
+      throw new Error('Could not find all selected courses.');
+    }
+
+    const selectedIds = selectedCourses.map(
+      (course) => course.id
+    );
+
+    // 5. Get user's existing course IDs
+    const { data: existingCourses, error: existingError } = await supabase
+      .from('user_courses')
+      .select('course_id')
+      .eq('user_id', userId);
+
+    if (existingError) throw existingError;
+
+    const existingIds = existingCourses.map(
+      (course) => course.course_id
+    );
+
+    // 6. Find courses to add and remove
+    const idsToAdd = selectedIds.filter(
+      (id) => !existingIds.includes(id)
+    );
+
+    const idsToRemove = existingIds.filter(
+      (id) => !selectedIds.includes(id)
+    );
+
+    // 7. Add new course relationships
+    if (idsToAdd.length > 0) {
+      const rows = idsToAdd.map((course_id) => ({
+        user_id: userId,
+        course_id
+      }));
+
+      const { error: insertError } = await supabase
+        .from('user_courses')
+        .upsert(rows, {
+          onConflict: 'user_id,course_id',
+          ignoreDuplicates: true
+        });
+
+      if (insertError) throw insertError;
+    }
+
+    // 8. Remove deselected course relationships
+    if (idsToRemove.length > 0) {
+      const { error: deleteError } = await supabase
+        .from('user_courses')
+        .delete()
+        .eq('user_id', userId)
+        .in('course_id', idsToRemove);
+
+      if (deleteError) throw deleteError;
+    }
   }
 
   return data;
 }
+

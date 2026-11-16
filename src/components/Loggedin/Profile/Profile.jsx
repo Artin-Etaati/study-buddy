@@ -85,6 +85,7 @@ const Profile = () => {
   }, [userId]);
 
 
+
   const handleSave = async (formData) => {
 
     if (savingRef.current) return;
@@ -93,29 +94,28 @@ const Profile = () => {
     setIsSaving(true);
 
     try {
-      const updatedProfile = await updateProfile(userId, formData);
+      // Update personal information and courses
+      await updateProfile(userId, formData);
 
-      const selectedMajor = majors.find(
-        (item) => item.id === updatedProfile.major_id
-      );
+      // Fetch the updated profile, including courses and major
+      const refreshedProfile = await getProfile(userId);
 
-      setProfile((prev) => ({
-        ...prev,
-        ...updatedProfile,
-        majors: selectedMajor
-          ? { name: selectedMajor.name }
-          : prev.majors
-      }));
+      // Update React state
+      setProfile(refreshedProfile);
 
+      // Exit edit mode
       setIsEditing(false);
+
     } catch (error) {
       console.error('Error updating profile:', error);
       alert('Failed to save profile changes.');
+
     } finally {
       savingRef.current = false;
       setIsSaving(false);
     }
   };
+
 
 
   if (loading) return <h2>Loading profile...</h2>;
