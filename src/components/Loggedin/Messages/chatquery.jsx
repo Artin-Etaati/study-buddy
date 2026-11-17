@@ -10,6 +10,7 @@ export default function chatquery () {
     const [chats,setChats] = useState([]);
     const [activeChatId, setactiveChatId] = useState(null); //activeChat used to determine what chat is currently open. equal to a matchID or NULL
     const {setchatMounted,preview, setPreview} = useOutletContext(); //used for notifications. passed down from layout.
+    const {profileURLS} = useOutletContext(); //for profile URLS
 
     //this useeffect fetches chat previews and sets matchlist
     useEffect (()=>{
@@ -40,11 +41,13 @@ export default function chatquery () {
             //take the chat data and manually add a local isunread attribute and unread count attribute
             const formattedChats = data.map((row)=> {
                 const isFromMe = row.last_message_sender === session.user.id;
-
+                const matchedProfileId = row.user1_id === session.user.id ? row.user2_id : row.user1_id;
                 return {
                     ...row, 
                     is_unread_for_me: isFromMe ? false : !row.last_message_read,
-                    my_unread_count: row.user1_id === session.user.id ? row.user1_unread_count : row.user2_unread_count
+                    my_unread_count: row.user1_id === session.user.id ? row.user1_unread_count : row.user2_unread_count,
+                    matchPicture: profileURLS.current.find((profile)=>profile.id===matchedProfileId).profileLink
+
                 }
             })
 
@@ -61,6 +64,7 @@ export default function chatquery () {
                     id:matchedProfile.id
                 }
             })
+
              //set the new data to matchlist
              setMatchlist(matchList);
              setLoading(false);
@@ -105,7 +109,8 @@ export default function chatquery () {
                             last_message_read:latestRow.read,
                             last_message_time:latestRow.created_at,
                             is_unread_for_me:isUnreadforme,
-                            my_unread_count: isUnreadforme ? chatDetails.my_unread_count + 1 : chatDetails.my_unread_count
+                            my_unread_count: isUnreadforme ? chatDetails.my_unread_count + 1 : chatDetails.my_unread_count,
+                            matchPicture:chatDetails.matchPicture
                         }
 
                         //set the chats to the new row first to signify new message and puts the editedchats behind it

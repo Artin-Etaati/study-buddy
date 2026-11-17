@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import classes from './ChatNotification.module.css';
-import y from "@/assets/y.png"
 import { UserAuth } from '../../../AuthContext';
+import defaultAvatar from '@/assets/default-avatar.png';
 
 export default function ChatNotification({preview, setPreview}) {
   //takes props as thats the only way to pass down the preview data from layout
@@ -39,7 +39,7 @@ export default function ChatNotification({preview, setPreview}) {
     <div
       className={classes.notification + " " + (isVisible ? classes.visible : '')}>
       <img
-        src={y}
+        src={preview.matchPicture || defaultAvatar}
         alt={`${matchedUser.first_name}'s picture`}
         className={classes.picture}
       />

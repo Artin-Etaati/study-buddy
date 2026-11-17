@@ -1,7 +1,8 @@
-import y from "@/assets/y.png"
 import classes from "./Chats.module.css"
 import { useNavigate } from "react-router-dom"
 import { UserAuth } from "../../../AuthContext";
+import defaultAvatar from '@/assets/default-avatar.png';
+
 
 //creates each preview of a chat in chatlist
 export default function chatCard ({row}) {
@@ -42,7 +43,7 @@ export default function chatCard ({row}) {
     <div className={classes.card + " " + (row.is_unread_for_me ? classes.unread : "")} onClick={()=>navigate(`/messages/${matchedUser.id}`)} key={matchedUser.id}>
       <div className={classes.pictureContainer}>
         <img 
-          src={y} 
+          src={row.matchPicture || defaultAvatar} 
           alt="temp" 
           className={classes.picture}
         />
