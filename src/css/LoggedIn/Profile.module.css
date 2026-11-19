@@ -117,3 +117,9 @@
     height: 110px;
   }
 }
+
+.headerButtons {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}

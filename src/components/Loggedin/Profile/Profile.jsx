@@ -7,6 +7,7 @@ import defaultAvatar from '@/assets/default-avatar.png';
 import Edit from './Edit';
 import { updateProfilePhoto } from '@/services/profilePhotoService';
 import styles from '@/css/LoggedIn/Profile.module.css';
+import ChangePassword from './ChangePassword';
 
 const Profile = () => {
   const { userId } = UserAuth();
@@ -19,6 +20,7 @@ const Profile = () => {
   const [majors, setMajors] = useState([]);
   const [isSaving, setIsSaving] = useState(false);
   const savingRef = useRef(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
 
 
@@ -164,6 +166,15 @@ const handleSave = async (formData) => {
     );
   }
 
+  if (isChangingPassword) {
+  return (
+    <ChangePassword
+      onCancel={() => setIsChangingPassword(false)}
+    />
+  );
+}
+
+
 
   return (
     <div className={styles.profilePage}>
@@ -183,12 +194,21 @@ const handleSave = async (formData) => {
             {profile.universities?.name} | {profile.majors?.name}
           </p>
 
-          <button
-            className={styles.editButton}
-            onClick={() => setIsEditing(true)}
-          >
-            Edit Profile
-          </button>
+          <div className={styles.headerButtons}>
+            <button
+              className={styles.editButton}
+              onClick={() => setIsEditing(true)}
+            >
+              Edit Profile
+            </button>
+
+            <button
+              className={styles.editButton}
+              onClick={() => setIsChangingPassword(true)}
+            >
+              Change Password
+            </button>
+          </div>
         </div>
       </div>
 
@@ -263,6 +283,7 @@ const handleSave = async (formData) => {
 
     </div>
   );
+
 
 };
 
