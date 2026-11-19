@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import SearchableSelect from '@/components/Frontpage/Setup/SearchableSelect';
 import CourseSelector from '@/components/Frontpage/Setup/CourseSelector';
 import EditPhoto from './EditPhoto';
+import styles from '@/css/LoggedIn/EditProfile.module.css';
 
 
 
@@ -165,115 +166,159 @@ const handleRemoveCourse = (indexToRemove) => {
 
 
   return (
-    <div>
-      <h1>Edit Profile</h1>
+    <div className={styles.editPage}>
+      <div className={styles.editCard}>
+        <h1 className={styles.pageTitle}>Edit Profile</h1>
 
-      <EditPhoto
-        currentPhoto={currentPhoto}
-        photo={photo}
-        setPhoto={setPhoto}
-        removePhoto={removePhoto}
-        setRemovePhoto={setRemovePhoto}
-      />
+        {/* Profile Photo */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Profile Photo</h2>
 
-      <div>
-        <label>First Name:</label>
-        <input
-          type="text"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-        />
-        {errors.firstName && <p>{errors.firstName}</p>}
+          <EditPhoto
+            currentPhoto={currentPhoto}
+            photo={photo}
+            setPhoto={setPhoto}
+            removePhoto={removePhoto}
+            setRemovePhoto={setRemovePhoto}
+          />
+        </section>
+
+        {/* Personal Information */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Personal Information</h2>
+
+          <div className={styles.formGrid}>
+            <div className={styles.formGroup}>
+              <label>First Name</label>
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+              {errors.firstName && (
+                <p className={styles.error}>{errors.firstName}</p>
+              )}
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Last Name</label>
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+              {errors.lastName && (
+                <p className={styles.error}>{errors.lastName}</p>
+              )}
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Birthday</label>
+              <input
+                type="date"
+                value={birthday}
+                onChange={(e) => setBirthday(e.target.value)}
+              />
+              {errors.birthday && (
+                <p className={styles.error}>{errors.birthday}</p>
+              )}
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Gender</label>
+              <input
+                type="text"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+              />
+              {errors.gender && (
+                <p className={styles.error}>{errors.gender}</p>
+              )}
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>University</label>
+              <p>{profile.universities?.name}</p>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Major</label>
+              <SearchableSelect
+                name="major"
+                options={majors}
+                value={major}
+                onChange={(e) => setMajor(e.target.value)}
+                placeholder="Select your major"
+              />
+              {errors.major && (
+                <p className={styles.error}>{errors.major}</p>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* Current Courses */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Current Courses</h2>
+
+          <CourseSelector
+            courseInput={courseInput}
+            setCourseInput={setCourseInput}
+            courses={courses}
+            handleAddCourse={handleAddCourse}
+            handleRemoveCourse={handleRemoveCourse}
+          />
+
+          {courseError && (
+            <p className={styles.error}>{courseError}</p>
+          )}
+
+          {errors.courses && (
+            <p className={styles.error}>{errors.courses}</p>
+          )}
+        </section>
+
+        {/* Study Preferences */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Study Preferences</h2>
+
+          <div className={styles.formGroup}>
+            <label>Study Style</label>
+
+            <select
+              value={studyStyle}
+              onChange={(e) => setStudyStyle(e.target.value)}
+            >
+              <option value="In Person">In Person</option>
+              <option value="Online">Online</option>
+              <option value="Either">Either</option>
+            </select>
+
+            {errors.studyStyle && (
+              <p className={styles.error}>{errors.studyStyle}</p>
+            )}
+          </div>
+        </section>
+
+        {/* Save and Cancel */}
+        <div className={styles.buttonGroup}>
+          <button
+            className={styles.cancelButton}
+            onClick={onCancel}
+            disabled={isSaving}
+          >
+            Cancel
+          </button>
+
+          <button
+            className={styles.saveButton}
+            onClick={handleSave}
+            disabled={isSaving || !hasChanges}
+          >
+            {isSaving ? 'Saving...' : 'Save'}
+          </button>
+        </div>
       </div>
-
-      <div>
-        <label>Last Name:</label>
-        <input
-          type="text"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        />
-        {errors.lastName && <p>{errors.lastName}</p>}
-      </div>
-
-      <div>
-        <label>Birthday:</label>
-        <input
-          type="date"
-          value={birthday}
-          onChange={(e) => setBirthday(e.target.value)}
-        />
-        {errors.birthday && <p>{errors.birthday}</p>}
-      </div>
-
-      <div>
-        <label>Gender:</label>
-        <input
-          type="text"
-          value={gender}
-          onChange={(e) => setGender(e.target.value)}
-        />
-        {errors.gender && <p>{errors.gender}</p>}
-      </div>
-
-      <div>
-        <label>University:</label>
-        <p>{profile.universities?.name}</p>
-      </div>
-
-      <div>
-        <label>Major:</label>
-
-        <SearchableSelect
-          name="major"
-          options={majors}
-          value={major}
-          onChange={(e) => setMajor(e.target.value)}
-          placeholder="Select your major"
-        />
-
-        {errors.major && <p>{errors.major}</p>}
-      </div>
-
-      <div>
-        <CourseSelector
-          courseInput={courseInput}
-          setCourseInput={setCourseInput}
-          courses={courses}
-          handleAddCourse={handleAddCourse}
-          handleRemoveCourse={handleRemoveCourse}
-        />
-
-        {courseError && <p>{courseError}</p>}
-        {errors.courses && <p>{errors.courses}</p>}
-      </div>
-
-
-      <div>
-        <label>Study Style:</label>
-        <select
-          value={studyStyle}
-          onChange={(e) => setStudyStyle(e.target.value)}
-        >
-          <option value="In Person">In Person</option>
-          <option value="Online">Online</option>
-          <option value="Either">Either</option>
-        </select>
-        {errors.studyStyle && <p>{errors.studyStyle}</p>}
-      </div>
-
-
-      <button
-        onClick={handleSave}
-        disabled={isSaving || !hasChanges}
-      >
-        {isSaving ? 'Saving...' : 'Save'}
-      </button>
-
-
-      <button onClick={onCancel} disabled={isSaving}>
-        Cancel
-      </button>
     </div>
   );
 

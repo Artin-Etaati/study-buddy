@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import defaultAvatar from '@/assets/default-avatar.png';
+import styles from '@/css/LoggedIn/EditProfile.module.css';
 
 const EditPhoto = ({ currentPhoto, photo, setPhoto, removePhoto, setRemovePhoto }) => {
   const [preview, setPreview] = useState(null);
@@ -58,40 +59,51 @@ const EditPhoto = ({ currentPhoto, photo, setPhoto, removePhoto, setRemovePhoto 
     : preview || currentPhoto || defaultAvatar;
 
   return (
-    <div>
-      <h3>Profile Photo</h3>
-
+    <div className={styles.photoContainer}>
       <img
         src={displayedPhoto}
         alt="Profile preview"
-        width="150"
-        height="150"
+        className={styles.photoPreview}
       />
 
-      <div>
-        <label htmlFor="editProfilePhoto">
-          Choose Photo
-        </label>
+      <div className={styles.photoControls}>
+        <div className={styles.photoButtons}>
+          <label
+            htmlFor="editProfilePhoto"
+            className={styles.choosePhotoButton}
+          >
+            Choose Photo
+          </label>
 
-        <input
-          id="editProfilePhoto"
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          onChange={handlePhotoChange}
-        />
+          <input
+            id="editProfilePhoto"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handlePhotoChange}
+            className={styles.hiddenInput}
+          />
 
-        {(photo || (!removePhoto && currentPhoto)) && (
-          <button type="button" onClick={handleRemovePhoto}>
-            Remove Photo
-          </button>
+          {(photo || (!removePhoto && currentPhoto)) && (
+            <button
+              type="button"
+              className={styles.removePhotoButton}
+              onClick={handleRemovePhoto}
+            >
+              Remove Photo
+            </button>
+          )}
+        </div>
+
+        <p className={styles.photoHint}>
+          JPG, PNG, or WebP (Max 5 MB)
+        </p>
+
+        {error && (
+          <p className={styles.photoError}>{error}</p>
         )}
       </div>
-
-      <p>JPG, PNG, or WebP (Max 5 MB)</p>
-
-      {error && <p>{error}</p>}
     </div>
   );
-};
+}
 
 export default EditPhoto;

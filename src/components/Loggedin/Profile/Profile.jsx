@@ -6,6 +6,7 @@ import { supabase } from '@/services/supabase';
 import defaultAvatar from '@/assets/default-avatar.png';
 import Edit from './Edit';
 import { updateProfilePhoto } from '@/services/profilePhotoService';
+import styles from '@/css/LoggedIn/Profile.module.css';
 
 const Profile = () => {
   const { userId } = UserAuth();
@@ -165,50 +166,101 @@ const handleSave = async (formData) => {
 
 
   return (
-    <div>
-      <h1>My Profile</h1>
+    <div className={styles.profilePage}>
 
-      <button onClick={() => setIsEditing(true)}>
-        Edit Profile
-      </button>
+      {/* Profile Header */}
+      <div className={styles.profileHeader}>
+        <img
+          src={profilePhoto || defaultAvatar}
+          alt="Profile"
+          className={styles.profilePhoto}
+        />
 
-      <img
-        src={profilePhoto || defaultAvatar}
-        alt="Profile"
-        style={{
-          width: '150px',
-          height: '150px',
-          borderRadius: '50%',
-          objectFit: 'cover'
-        }}
-      />
+        <div className={styles.headerInfo}>
+          <h1>{profile.first_name} {profile.last_name}</h1>
 
-      <section>
+          <p>
+            {profile.universities?.name} | {profile.majors?.name}
+          </p>
+
+          <button
+            className={styles.editButton}
+            onClick={() => setIsEditing(true)}
+          >
+            Edit Profile
+          </button>
+        </div>
+      </div>
+
+      {/* Personal Information */}
+      <section className={styles.section}>
         <h2>Personal Information</h2>
 
-        <p>First Name: {profile.first_name}</p>
-        <p>Last Name: {profile.last_name}</p>
-        <p>Birthday: {profile.birthday}</p>
-        <p>Gender: {profile.gender}</p>
-        <p>University: {profile.universities?.name}</p>
-        <p>Major: {profile.majors?.name}</p>
+        <div className={styles.infoGrid}>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>First Name</span>
+            <span className={styles.infoValue}>{profile.first_name}</span>
+          </div>
+
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Last Name</span>
+            <span className={styles.infoValue}>{profile.last_name}</span>
+          </div>
+
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Birthday</span>
+            <span className={styles.infoValue}>{profile.birthday}</span>
+          </div>
+
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Gender</span>
+            <span className={styles.infoValue}>{profile.gender}</span>
+          </div>
+
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>University</span>
+            <span className={styles.infoValue}>
+              {profile.universities?.name}
+            </span>
+          </div>
+
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Major</span>
+            <span className={styles.infoValue}>
+              {profile.majors?.name}
+            </span>
+          </div>
+        </div>
       </section>
 
-      <section>
+      {/* Current Courses */}
+      <section className={styles.section}>
         <h2>Current Courses</h2>
 
-        {profile.user_courses?.map((item) => (
-          <p key={item.course_id}>
-            {item.courses?.course_code}
-          </p>
-        ))}
+        <div className={styles.courseList}>
+          {profile.user_courses?.map((item) => (
+            <span
+              key={item.course_id}
+              className={styles.courseBadge}
+            >
+              {item.courses?.course_code}
+            </span>
+          ))}
+        </div>
       </section>
 
-      <section>
+      {/* Study Preferences */}
+      <section className={styles.section}>
         <h2>Study Preferences</h2>
 
-        <p>Study Style: {profile.study_style}</p>
+        <div className={styles.infoItem}>
+          <span className={styles.infoLabel}>Study Style</span>
+          <span className={styles.infoValue}>
+            {profile.study_style}
+          </span>
+        </div>
       </section>
+
     </div>
   );
 
