@@ -32,7 +32,7 @@ const ProfileRoute = ({ requireProfile = true }) => {
     return () => {
       cancelled = true;
     };
-  }, [session?.user?.id, requireProfile]);
+  }, [session, requireProfile]);
 
   if (loading) {
     return <p>Checking authentication...</p>;
