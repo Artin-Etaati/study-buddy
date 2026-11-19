@@ -251,4 +251,3 @@ export async function updateProfile(userId, formData) {
 
   return data;
 }
-

@@ -5,6 +5,7 @@ import { getProfile, getMajors, updateProfile } from '@/services/profileService'
 import { supabase } from '@/services/supabase';
 import defaultAvatar from '@/assets/default-avatar.png';
 import Edit from './Edit';
+import { updateProfilePhoto } from '@/services/profilePhotoService';
 
 const Profile = () => {
   const { userId } = UserAuth();
@@ -86,35 +87,63 @@ const Profile = () => {
 
 
 
-  const handleSave = async (formData) => {
+const handleSave = async (formData) => {
+  if (savingRef.current) return;
 
-    if (savingRef.current) return;
+  savingRef.current = true;
+  setIsSaving(true);
 
-    savingRef.current = true;
-    setIsSaving(true);
+  try {
+    // 1. Update personal information and courses
+    await updateProfile(userId, formData);
 
-    try {
-      // Update personal information and courses
-      await updateProfile(userId, formData);
-
-      // Fetch the updated profile, including courses and major
-      const refreshedProfile = await getProfile(userId);
-
-      // Update React state
-      setProfile(refreshedProfile);
-
-      // Exit edit mode
-      setIsEditing(false);
-
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      alert('Failed to save profile changes.');
-
-    } finally {
-      savingRef.current = false;
-      setIsSaving(false);
+    // 2. Update profile picture if it changed
+    if (formData.photo || formData.removePhoto) {
+      await updateProfilePhoto(
+        userId,
+        formData.photo,
+        formData.removePhoto,
+        profile.profile_picture_name
+      );
     }
-  };
+
+    // 3. Fetch the updated profile
+    const refreshedProfile = await getProfile(userId);
+
+    // 4. Refresh the picture URL
+    let photoUrl = null;
+
+    if (refreshedProfile.profile_picture_name) {
+      const { data, error } = await supabase.storage
+        .from('Profile_Picture')
+        .createSignedUrl(
+          refreshedProfile.profile_picture_name,
+          3600
+        );
+
+      if (error) {
+        console.error('Error loading updated photo:', error);
+      } else {
+        photoUrl = data.signedUrl;
+      }
+    }
+
+    // 5. Update React state
+    setProfile(refreshedProfile);
+    setProfilePhoto(photoUrl);
+
+    // 6. Exit edit mode
+    setIsEditing(false);
+
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    alert('Failed to save profile changes.');
+
+  } finally {
+    savingRef.current = false;
+    setIsSaving(false);
+  }
+};
 
 
 
@@ -126,6 +155,7 @@ const Profile = () => {
       <Edit
         profile={profile}
         majors={majors}
+        currentPhoto={profilePhoto}
         onSave={handleSave}
         onCancel={() => setIsEditing(false)}
         isSaving={isSaving}

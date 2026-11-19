@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import SearchableSelect from '@/components/Frontpage/Setup/SearchableSelect';
 import CourseSelector from '@/components/Frontpage/Setup/CourseSelector';
+import EditPhoto from './EditPhoto';
 
 
 
-const Edit = ({ profile, majors, onCancel, onSave, isSaving  }) => {
+const Edit = ({ profile, majors, currentPhoto, onCancel, onSave, isSaving  }) => {
   const [firstName, setFirstName] = useState(profile.first_name);
   const [lastName, setLastName] = useState(profile.last_name);
   const [birthday, setBirthday] = useState(profile.birthday || '');
@@ -18,6 +19,8 @@ const Edit = ({ profile, majors, onCancel, onSave, isSaving  }) => {
   const [courses, setCourses] = useState(originalCourses);
   const [courseInput, setCourseInput] = useState('');
   const [courseError, setCourseError] = useState('');
+  const [photo, setPhoto] = useState(null);
+  const [removePhoto, setRemovePhoto] = useState(false);
 
 
 
@@ -33,7 +36,9 @@ const Edit = ({ profile, majors, onCancel, onSave, isSaving  }) => {
     gender.trim() !== (profile.gender || '') ||
     studyStyle !== (profile.study_style || '') ||
     String(major) !== String(profile.major_id) ||
-    coursesChanged;
+    coursesChanged ||
+    photo !== null ||
+    (removePhoto && !!profile.profile_picture_name);
 
 
 
@@ -144,7 +149,9 @@ const handleRemoveCourse = (indexToRemove) => {
       studyStyle,
       major: selectedMajor.id,
       courses,
-      coursesChanged
+      coursesChanged,
+      photo,
+      removePhoto: removePhoto && !!profile.profile_picture_name
     };
 
     // Send information to Profile.jsx
@@ -160,6 +167,14 @@ const handleRemoveCourse = (indexToRemove) => {
   return (
     <div>
       <h1>Edit Profile</h1>
+
+      <EditPhoto
+        currentPhoto={currentPhoto}
+        photo={photo}
+        setPhoto={setPhoto}
+        removePhoto={removePhoto}
+        setRemovePhoto={setRemovePhoto}
+      />
 
       <div>
         <label>First Name:</label>
