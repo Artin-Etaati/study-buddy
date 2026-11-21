@@ -157,7 +157,6 @@ const Matches = () => {
     fetchMatches();
   }, [userId]);
   
-  useEffect(() => {
     const fetchRequests = async () => {
       if(!userId|| !matchesLoaded) return;
       const { data, error } = await supabase
@@ -208,17 +207,30 @@ const Matches = () => {
         .filter((request) => request != null);
       setRequests(incomingRequests);
     };
+    useEffect(() => {
     fetchRequests();
   }, [userId, matchesLoaded, existingMatches]);
+
+  useEffect(() => { //useEffect to listen for changes in the swipes table and update the requests state accordingly
+    const channel = supabase.channel("swipes")
+    .on("postgres_changes", { event: "*", schema: "public", table: "swipes" }, (payload) => {
+      if((payload.eventType === "INSERT" || payload.eventType === "UPDATE") && payload.new.swiped_id === userId) {
+        fetchRequests();
+  }})
+  .subscribe(status => {
+    console.log("Realtime status:", status);
+  });
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}, [userId, matchesLoaded, existingMatches]);
   return (
     <div className={classes.localbody}>
       <div className={classes.header}>
       <h1>Matches</h1>
       <div className={classes.incomingRequests}>
       <button onClick={() =>setIncomingRequests(true)}>
-      Incoming Requests{requests.length > 0 && (
-        <span className={classes.requestCount}>{requests.length}</span>
-        )}
+      Incoming Requests<span className={classes.requestDot}></span>
      </button>
      </div>
     </div>
