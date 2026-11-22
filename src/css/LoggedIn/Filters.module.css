@@ -1,0 +1,40 @@
+
+.parentContainer {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 1rem;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.subcontainer {
+    width: 150px;
+    height: 100px;
+}
+
+.title {
+    font-size: 1.5rem;
+}
+
+.input, .searchableInput {
+    padding: 0.25rem;
+    outline: none;
+    box-shadow: none;
+    border: 1px solid gray;
+    height: 30px;
+    border-radius: 5px;
+}
+
+.input:has(option:checked:not([value=""])),
+.searchableInput:not(:placeholder-shown) {
+    background-color: rgb(165, 232, 255);
+    box-shadow: 0;
+}
+
+.input option {
+    background-color: white;
+}

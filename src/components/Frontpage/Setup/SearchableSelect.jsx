@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import classes from '@/css/Setup/Setup.module.css';
 
-const SearchableSelect = ({ name, value, options, onChange, placeholder }) => {
+const SearchableSelect = ({ name, value, options, onChange, placeholder, styleClass }) => {
   const [search, setSearch] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -60,6 +60,7 @@ const SearchableSelect = ({ name, value, options, onChange, placeholder }) => {
   return (
     <div className={classes.searchableSelect}>
       <input
+        className={styleClass ? styleClass : ""}
         type="text"
         placeholder={placeholder}
         role="combobox"
