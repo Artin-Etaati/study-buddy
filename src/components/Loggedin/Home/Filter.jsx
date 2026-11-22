@@ -77,27 +77,11 @@ function Filters({ setFilter, getFilter }) {
     }
     useEffect(() => {
 
-        // function convertAgeToDate(age) {
-        //     const convertedDate = new Date()
-        //     convertedDate.setFullYear(convertedDate.getFullYear() - parseInt(age))
-
-        //     return convertedDate.toISOString().split("T")[0];
-        // }
-
         const genderJSON = getGender != "" ? { gender: getGender } : {};
         const studyStyleJSON = getStudyStyle != "" ? { study_style: getStudyStyle } : {};
         const majorJSON = getMajor != "" ? { major: getMajor } : {}
         let birthdayMinJSON = getBirthdayMin != "" ? { birthday_min: getBirthdayMin } : {};
         let birthdayMaxJSON = getBirthdayMax != "" ? { birthday_max: getBirthdayMax } : {};
-        // if(getBirthdayMin != ""){
-        //     const date = convertAgeToDate(getBirthdayMin)
-        //     birthdayMinJSON = {birthday_min: date}
-        // }
-        // let birthdayMaxJSON = {};
-        // if(getBirthdayMax != ""){
-        //     const date = convertAgeToDate(getBirthdayMax)
-        //     birthdayMaxJSON = {birthday_max: date}
-        // }
 
         setFilter(Object.assign({}, genderJSON, studyStyleJSON, majorJSON, birthdayMinJSON, birthdayMaxJSON))
     }, [getGender, getStudyStyle, getMajor, getBirthdayMin, getBirthdayMax])
