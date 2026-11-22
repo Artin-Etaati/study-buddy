@@ -4,7 +4,7 @@ import { supabase } from '@/services/supabase'
 import { useEffect, useState } from "react";
 import { UserAuth } from '@/AuthContext'
 import defaultAvatar from '@/assets/default-avatar.png';
-import Filters from "@/components/LoggedIn/Home/Filters.jsx"
+import Filters from "@/components/Loggedin/Home/Filter.jsx"
 
 const Home = () => {
   const { userId } = UserAuth()
@@ -54,7 +54,7 @@ const Home = () => {
       </div>
       <h3 className={home.subtitle}>Checkout some people attending {university}</h3>
       <div className={home.matchContainer}>
-        <Filters setFilter={setFilter}/>
+        <Filters setFilter={setFilter} getFilter={filter}/>
         <UserPreview filter={filter}/>
       </div>
     </div>

@@ -3,7 +3,7 @@ import SearchableSelect from '@/components/Frontpage/Setup/SearchableSelect';
 import { getMajors } from '@/services/profileService';
 import filters from "@/css/LoggedIn/Filters.module.css"
 
-function Filters({ setFilter }) {
+function Filters({ setFilter, getFilter }) {
     const [listOfMajors, setListOfMajors] = useState([])
     const [listOfAges, setListOfAges] = useState([])
     const [getGender, setGender] = useState("")
@@ -67,6 +67,14 @@ function Filters({ setFilter }) {
         }
     }
 
+    function resetFilter() {
+        setGender("")
+        setStudyStyle("")
+        setMajor("")
+        setBirthdayMin("")
+        setBirthdayMax("")
+        setFilter({})
+    }
     useEffect(() => {
 
         // function convertAgeToDate(age) {
@@ -75,7 +83,6 @@ function Filters({ setFilter }) {
 
         //     return convertedDate.toISOString().split("T")[0];
         // }
-
 
         const genderJSON = getGender != "" ? { gender: getGender } : {};
         const studyStyleJSON = getStudyStyle != "" ? { study_style: getStudyStyle } : {};
@@ -105,6 +112,7 @@ function Filters({ setFilter }) {
                         name="gender"
                         onChange={(e) => { handleGenderFilter(e.target.value) }}
                         className={filters.input}
+                        value={getGender}
                     >
                         <option value="">Gender</option>
                         <option value="Male">Male</option>
@@ -116,6 +124,7 @@ function Filters({ setFilter }) {
                         name="studyStyle"
                         onChange={(e) => { handleStudyStyleFilter(e.target.value) }}
                         className={filters.input}
+                        value={getStudyStyle}
                     >
                         <option value="">Study Style</option>
                         <option value="In Person">In Person</option>
@@ -123,7 +132,7 @@ function Filters({ setFilter }) {
                         <option value="Either">Either</option>
                     </select>
                 </div>
-                <div className={filters.subContainer}>
+                <div className={filters.subContainer + " " + filters.searchableInputContainer}>
                     <SearchableSelect
                         name="major"
                         options={listOfMajors}
@@ -132,11 +141,13 @@ function Filters({ setFilter }) {
                         placeholder="Major"
                         styleClass={filters.searchableInput}
                     />
+                    {getMajor ? <button type="button" className={filters.closeBtn} onClick={() => setMajor("")}>x</button> : <></>}
                 </div>
                 <div className={filters.subContainer}>
                     <select name="birthday_min"
                         onChange={(e) => { handleBirthdayMinFilter(e.target.value) }}
                         className={filters.input}
+                        value={getBirthdayMin}
                     >
                         <option key="" value="">Min Age</option>
                         {listOfAges.map((item) => {
@@ -150,6 +161,7 @@ function Filters({ setFilter }) {
                     <select name="birthday_max"
                         onChange={(e) => { handleBirthdayMaxFilter(e.target.value) }}
                         className={filters.input}
+                        value={getBirthdayMax}
                     >
                         <option key="" value="">Max Age</option>
                         {listOfAges.map((item) => {
@@ -157,6 +169,9 @@ function Filters({ setFilter }) {
                         })}
                     </select>
                 </div>
+                {Object.keys(getFilter).length != 0 ? <div className={filters.subContainer}>
+                    <button type="button" className={filters.reset} onClick={resetFilter}>Reset</button>
+                </div> : <></>}
                 {/* <SearchableSelect
                 name="birthday-min"
                 options={listOfAges}

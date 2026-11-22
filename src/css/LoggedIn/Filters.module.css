@@ -12,7 +12,7 @@
 }
 
 .subcontainer {
-    width: 150px;
+    min-width: 150px;
     height: 100px;
 }
 
@@ -20,21 +20,50 @@
     font-size: 1.5rem;
 }
 
-.input, .searchableInput {
+.input, .searchableInput, .reset {
     padding: 0.25rem;
     outline: none;
-    box-shadow: none;
     border: 1px solid gray;
     height: 30px;
     border-radius: 5px;
 }
 
+.searchableInput {
+    field-sizing: content;
+    min-width: 150px;
+    padding-right: 25px;
+}
+
 .input:has(option:checked:not([value=""])),
 .searchableInput:not(:placeholder-shown) {
     background-color: rgb(165, 232, 255);
-    box-shadow: 0;
 }
 
 .input option {
     background-color: white;
+}
+
+.searchableInputContainer {
+    display: flex;
+    position: relative;
+}
+
+.closeBtn {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.reset {
+    background-color: rgb(183, 237, 255);
+    
+}
+
+.reset:hover {
+    cursor: pointer;
+    background-color: rgb(147, 228, 255);
 }
