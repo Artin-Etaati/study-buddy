@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { supabase } from '@/services/supabase'
 import Card from "./Card.jsx"
 import { UserAuth } from '@/AuthContext'
+import UserPrev from "@/css/LoggedIn/UserPrev.module.css"
 
 
-function UserPreview() {
+function UserPreview({filter}) {
     const { userId } = UserAuth()
     const [profiles, setProfiles] = useState([]);
     const [fetchLoading, setFetchLoading] = useState(true)
@@ -14,12 +15,11 @@ function UserPreview() {
     const [profileViewId, setProfileViewId] = useState(null)
     const [fetchNextBatch, setFetchNextBatch] = useState(null);
     const [currentProfile, setNextProfile] = useState(null)
-    const FETCH_LIMIT = 5;
     useEffect(() => {
-        async function fetchProfile() {
+        async function fetchProfileWithFilter() {
             setFetchLoading(true)
-            const { data, error } = await supabase.rpc('fetch_profiles_new', {
-                input_limit: FETCH_LIMIT
+            const { data, error } = await supabase.rpc('fetch_profiles_new_with_filters', {
+                filters: filter
             });
             if (error) {
                 setError("error occured")
@@ -33,9 +33,8 @@ function UserPreview() {
             setFetchLoading(false)
             setError(null)
         };
-
-        fetchProfile();
-    }, [fetchNextBatch])
+        fetchProfileWithFilter();
+    }, [fetchNextBatch, filter])
 
 
     useEffect(() => {
@@ -105,12 +104,12 @@ function UserPreview() {
 
     }
 
-    if (fetchLoading || makeLoading) return (<div>Loading</div>)
+    if (fetchLoading || makeLoading) return (<div className={UserPrev.container}>Loading...</div>)
     if (error) return (<div>{error}</div>)
     return (
         <>
             {profiles != null && currentProfile != null ?
-                <div>
+                <div className={UserPrev.container}>
                     <Card profile={currentProfile}></Card>
                     <LikeDislikeBtns profile={currentProfile} onLike={handleLike} onDislike={handleDislike} />
                 </div> :

@@ -235,12 +235,7 @@ const Matches = () => {
               requests.map((request) => (
                 <div className={classes.requestCard} key={request.id}>
                   <div className={classes.requestAvatar}>
-                    <img src={ request.profile_picture_url || defaultAvatar} alt="User Avatar" 
-                    onError ={(e) => {
-                      e.currentTarget.oneError = null;
-                      e.currentTarget.src = defaultAvatar;
-                    }}
-                    />
+                    <img src={ request.profile_picture_url || defaultAvatar} alt="User Avatar"/>
                   </div>
                   <div className={classes.requestInfo}>
                     <div className={classes.requestDetails}>
@@ -285,12 +280,7 @@ const Matches = () => {
           matches.map((match) => (
             <div className={classes.matchCard} key={match.id}>
               <div className={classes.avatar}>
-                <img src={match.profile_picture_url || defaultAvatar} alt="User Avatar" 
-                 onError ={(e) => {
-                      e.currentTarget.oneError = null;
-                      e.currentTarget.src = defaultAvatar;
-                    }}
-                    />
+                <img src={match.profile_picture_url || defaultAvatar} alt="User Avatar" />
               </div>
               <div className={classes.matchinfo}>
                 <h2>
@@ -304,12 +294,7 @@ const Matches = () => {
                   <div className={classes.profileModal}>
                     <div className={classes.profileContent}>
                       <div className={classes.modalAvatar}>
-                        <img src={match.profile_picture_url ||defaultAvatar} alt="User Avatar" 
-                         onError ={(e) => {
-                      e.currentTarget.oneError = null;
-                      e.currentTarget.src = defaultAvatar;
-                    }}
-                    />
+                        <img src={match.profile_picture_url ||defaultAvatar} alt="User Avatar" />
                       </div>
                       <div className={classes.profileHeader}>
                         <h2>
