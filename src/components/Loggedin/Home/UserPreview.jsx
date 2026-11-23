@@ -25,8 +25,6 @@ function UserPreview({filter}) {
                 setError("error occured")
                 return;
             }
-            console.log(filter)
-            console.log(data)
             if (data.length > 0) {
                 setProfiles(data);
             } else {

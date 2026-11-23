@@ -80,31 +80,3 @@ async function createNewSignedURL(id, profile_picture_name) {
     }
     return generatedUrl;
 }
-
-// async function createNewSignedURLS(id, profile_picture_names) {
-//     let profiles = [];
-//     const startTime = Date.now();
-//     const expireInt = 86400 // 1 day in seconds
-//     const bufferTime = 120000 // allocate buffer time (2 minutes in ms)
-//     const { data: makeURLData, error: makeURLError } = await supabase.storage.from("Profile_Picture").createSignedUrls(profile_picture_names, expireInt);
-//     if (makeURLError) {
-//         console.log("Unable to create profile picture url " + makeURLError)
-//         return null;
-//     }
-//     const expirationTime = new Date(startTime + (expireInt * 1000) - bufferTime).toISOString()
-
-//     makeURLData.forEach(async (profile) => {
-//         const generatedUrl = makeURLData.signedUrl;
-//         // update database for each user
-//         const { error: updateURLError } = await supabase.from("profiles")
-//             .update({ profile_picture_url: generatedUrl, profile_picture_expiration: expirationTime})
-//             .eq('id', id)
-//         if (updateURLError) {
-//             console.log("Unable to update profile picture url")
-//             return null;
-//         }
-//     })
-    
-    
-//     return generatedUrl;
-// }
