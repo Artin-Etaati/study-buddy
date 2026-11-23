@@ -37,33 +37,11 @@ const ChangePassword = ({ onCancel }) => {
     setIsUpdating(true);
 
     try {
-      const { data: userData, error: userError } =
-        await supabase.auth.getUser();
-
-      if (userError) throw userError;
-
-      const email = userData.user?.email;
-
-      if (!email) {
-        throw new Error('Unable to find your account email.');
-      }
-
-      // Verify current password
-      const { error: signInError } =
-        await supabase.auth.signInWithPassword({
-          email,
-          password: currentPassword
-        });
-
-      if (signInError) {
-        setError('Current password is incorrect.');
-        return;
-      }
-
-      // Update password
+      // Verify current password and update password
       const { error: updateError } =
         await supabase.auth.updateUser({
-          password: newPassword
+          password: newPassword,
+          current_password: currentPassword
         });
 
       if (updateError) throw updateError;
