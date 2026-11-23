@@ -156,24 +156,6 @@ function Filters({ setFilter, getFilter }) {
                 {Object.keys(getFilter).length != 0 ? <div className={filters.subContainer}>
                     <button type="button" className={filters.reset} onClick={resetFilter}>Reset</button>
                 </div> : <></>}
-                {/* <SearchableSelect
-                name="birthday-min"
-                options={listOfAges}
-                value={getBirthdayMin}
-                onChange={(e) => handleBirthdayMinFilter(e.target.value)}
-                placeholder="Min Age"
-            /> */}
-
-                {/* <SearchableSelect
-                name="birthday-max"
-                options={listOfAges}
-                value={getBirthdayMax}
-                onChange={(e) => handleBirthdayMaxFilter(e.target.value)}
-                placeholder="Max Age"
-            /> */}
-
-                {/* <button onClick={onApply}>Apply</button> */}
-
             </div>
         </div>
     )
