@@ -1,8 +1,24 @@
+
+/* Student preview area */
+
 .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  min-width: 0;
+  padding: 32px 0 16px;
+
+  color: var(--color-text-secondary);
 }
 
+
+/* Smaller screens */
+
+@media (max-width: 768px) {
+  .container {
+    padding: 24px 0 12px;
+  }
+}
