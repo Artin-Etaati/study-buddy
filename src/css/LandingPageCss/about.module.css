@@ -8,9 +8,6 @@
   text-align: center;
   font-family: var(--font-family);
   color: var(--color-text);
-
-  background-image: var(--background-waves);
-  background-repeat: no-repeat;
 }
 
 
