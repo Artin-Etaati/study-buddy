@@ -1,0 +1,129 @@
+
+:root {
+  /* Typography */
+  --font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Primary colors */
+  --color-primary: #2563eb;
+  --color-primary-light: #3b82f6;
+  --color-primary-hover: #1d4ed8;
+  --color-accent: #60a5fa;
+  --color-primary-soft: #dbeafe;
+  --color-on-primary: #ffffff;
+
+  /* Backgrounds */
+  --color-background: #f0f6ff;
+  --color-surface: #ffffff;
+  --color-surface-hover: #eff6ff;
+  --color-input: #f8fafc;
+
+  /* Text */
+  --color-text: #0f172a;
+  --color-text-secondary: #64748b;
+
+  /* Borders */
+  --color-border: #d5e2f2;
+  --color-border-focus: #3b82f6;
+
+  /* Functional colors */
+  --color-success: #15803d;
+  --color-success-soft: #dcfce7;
+  --color-danger: #dc2626;
+  --color-danger-hover: #b91c1c;
+  --color-danger-soft: #fee2e2;
+  --color-warning: #b45309;
+
+  /* Decorative backgrounds */
+  --color-wave-light: #dbeafe;
+  --color-wave-dark: #bfdbfe;
+  --color-overlay: rgba(15, 23, 42, 0.5);
+
+  --background-waves:
+    radial-gradient(
+      ellipse at 10% 130%,
+      var(--color-wave-dark) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 90% 120%,
+      var(--color-wave-light) 0%,
+      transparent 60%
+    );
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* Border radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 6px rgba(37, 99, 235, 0.06);
+  --shadow-md: 0 4px 16px rgba(37, 99, 235, 0.08);
+  --shadow-lg: 0 8px 32px rgba(37, 99, 235, 0.12);
+
+  /* Focus */
+  --focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.18);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 300ms ease;
+
+  /* Layout */
+  --sidebar-width: 220px;
+  --content-max-width: 1200px;
+  --form-max-width: 700px;
+
+  color-scheme: light;
+}
+
+
+/* Future dark theme */
+
+:root[data-theme='dark'] {
+  --color-primary: #60a5fa;
+  --color-primary-light: #93c5fd;
+  --color-primary-hover: #93c5fd;
+  --color-accent: #93c5fd;
+  --color-primary-soft: #1e3a5f;
+  --color-on-primary: #0f172a;
+
+  --color-background: #0f172a;
+  --color-surface: #1e293b;
+  --color-surface-hover: #263449;
+  --color-input: #172033;
+
+  --color-text: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+
+  --color-border: #334155;
+  --color-border-focus: #60a5fa;
+
+  --color-success: #4ade80;
+  --color-success-soft: #14532d;
+  --color-danger: #f87171;
+  --color-danger-hover: #fca5a5;
+  --color-danger-soft: #450a0a;
+  --color-warning: #fbbf24;
+
+  --color-wave-light: #172554;
+  --color-wave-dark: #1e3a5f;
+  --color-overlay: rgba(0, 0, 0, 0.65);
+
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+  --focus-ring: 0 0 0 3px rgba(96, 165, 250, 0.25);
+
+  color-scheme: dark;
+}
