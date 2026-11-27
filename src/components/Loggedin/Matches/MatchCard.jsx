@@ -1,4 +1,4 @@
-import classes from '@/css/Loggedin/Matches.module.css'
+import classes from '@/css/LoggedIn/Matches.module.css'
 import {useState} from "react";
 import defaultAvatar from '@/assets/default-avatar.png';
 import ProfileModal from  '@/components/LoggedIn/Matches/ProfileModal.jsx'
