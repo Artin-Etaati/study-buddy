@@ -242,9 +242,12 @@ const Matches = () => {
       <div className={classes.header}>
       <h1>Matches</h1>
       <div className={classes.incomingRequests}>
-      <button onClick={() =>setIncomingRequests(true)}>
-      Incoming Requests<span className={classes.requestDot}></span>
-     </button>
+      <button onClick={() => setIncomingRequests(true)}>
+        Incoming Requests
+        {requests.length > 0 && (
+          <span className={classes.requestDot}></span>
+        )}
+      </button>
      </div>
     </div>
            {incomingRequests && (
