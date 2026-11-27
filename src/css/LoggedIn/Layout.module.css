@@ -1,4 +1,20 @@
+
+/* Shared logged-in layout */
+
 .main {
-    display: flex;
-    min-height: 100vh;
+  display: flex;
+  align-items: stretch;
+
+  width: 100%;
+  min-height: 100vh;
+
+  font-family: var(--font-family);
+  color: var(--color-text);
+}
+
+
+/* Prevent content from overflowing the flex layout */
+
+.main > * {
+  min-width: 0;
 }
