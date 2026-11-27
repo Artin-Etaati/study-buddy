@@ -9,12 +9,14 @@
 
 .matchCard {
   display: flex;
+  width: 95%;
   align-items: center;
   border: 1px solid #ccc;
   padding: 20px;
   margin: 5px 0;
   border-radius: 10px;
   background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .matchCard h2 {
@@ -51,13 +53,12 @@
 }
 .matchCard button {
   margin-right: 10px;
-  padding: 5px 10px;
+  padding: 10px 15px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   background-color: #667eea;
   color: white;
-  transition: background-color 0.3s ease;
 }
 .header {
   display: block;
@@ -72,17 +73,38 @@
   margin-bottom: 10px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
-.incomingRequests {
+.incomingRequests{
   display: flex;
   justify-content: flex-end;
   margin-right: 30px;
+}
+.requestDot{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: red;
+  font-size: 12px;
+}
+.incomingRequests button {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #667eea;
+  color: white;
+  gap: 5px;
 }
 .avatar {
   display: flex;
   margin-bottom: 20px;
   margin-right: 20px;
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   overflow: hidden;
 }
@@ -104,7 +126,15 @@
   align-items: center;
   width: 100%;
 }
+.profileHeader h2 {
+  font-size: 24px;
+}
+.profileHeader p{
+  font-size: 18px;
+  margin-top:auto;
+}
 .profileContent {
+  position:relative;
   background-color: white;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
@@ -123,19 +153,69 @@
 .removeMatch {
   margin-bottom: 5px;
 }
-.profileDetails {
-  margin-top: -50px;
+.profileDetails{
+  display: flex;
+  flex-direction: row;
+  justify-content:space-between;
+  gap: 30px;
+  text-align: center;
+  margin-top: 0;
 }
-.profileDetails p {
-  font-weight: 700;
+.profileDetails h3{
+  background-color: #f0edff;
+  border-radius: 10px;
+  padding:10px;
+  font-size: 16px;
+  font-weight: normal;
 }
-.profileContent button {
-  align-self: center;
-  margin-top: 200px;
+.aboutMe{
+  display:flex;
+  flex-direction:column;
+  text-align:left;
+}
+.aboutMe p{
+  margin: 0;
+}
+.profileCourses{
+  display:flex;
+  flex-direction:column;
+  text-align:left;
+  margin-top:auto;
+}
+.profileCourses p {
+  margin-top:auto;
+}
+.courseBubble {
+  display: inline-block;
+  background-color: #f0edff;
+  border-radius: 15px;
+  padding: 5px 10px;
+  margin: 2px;
+  font-size: 14px;
+}
+.closeButton button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor:pointer;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  font-size: 24px;
+}
+.requestCloseButton button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor:pointer;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  font-size: 24px;
 }
 .modalAvatar {
-  width: 75px;
-  height: 75px;
+  width: 85px;
+  height: 85px;
   border-radius: 50%;
   display: flex;
   margin: 0 auto 10px auto;
@@ -143,7 +223,16 @@
 }
 .profileLine {
   width: 100%;
-  margin: 70px auto;
+  margin-top : auto;
+  margin-bottom: 10px;
+}
+.requestName {
+  font:inherit;
+  font-weight: bold;
+  border: none;
+  background:none;
+  cursor:pointer;
+  padding: 0;
 }
 .requestsModal {
   position: fixed;
@@ -157,12 +246,14 @@
   align-items: center;
 }
 .requestsContent {
+  position:relative;
+  max-height: 80%;
+  overflow-y: auto;
   background-color: white;
   padding: 20px;
-  width: 300px;
+  width: 450px;
   max-width: 90%;
   border-radius: 10px;
-  width: 300px;
   text-align: center;
 }
 .requestCard {
