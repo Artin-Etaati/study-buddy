@@ -227,23 +227,57 @@ const Matches = () => {
   return (
     <div className={classes.localbody}>
       <div className={classes.header}>
-      <h1>Matches</h1>
-      <div className={classes.incomingRequests}>
-      <button onClick={() =>setIncomingRequests(true)}>
-      Incoming Requests<span className={classes.requestDot}></span>
-     </button>
-     </div>
-    </div>
-           {incomingRequests && (
-           <RequestsModal 
-           requests = {requests}
-           approvedRequest = {approvedRequest}
-           denyRequest = {denyRequest}
-           isClose = {()=> setIncomingRequests(false)}
-           setRequestsProfile = {setRequestsProfile}
-           />
-         )}
-       <div className={classes.matchCount}>
+        <h1>Matches</h1>
+        <div className={classes.incomingRequests}>
+          <button onClick={() => setSelectedProfile(true)}>
+            Incoming Requests
+          </button>
+        </div>
+      </div>
+      {selectedProfile && (
+        <div className={classes.requestsModal}>
+          <div className={classes.requestsContent}>
+            <h2>Incoming Requests</h2>
+            {requests.length == 0 ? (
+              <p>No incoming requests at the moment.</p>
+            ) : (
+              requests.map((request) => (
+                <div className={classes.requestCard} key={request.id}>
+                  <div className={classes.requestAvatar}>
+                    <img src={ request.profile_picture_url || defaultAvatar} alt="User Avatar"/>
+                  </div>
+                  <div className={classes.requestInfo}>
+                    <div className={classes.requestDetails}>
+                      <p>
+                        {request.first_name} {request.last_name}
+                      </p>
+                      <p>Major: {request.major}</p>
+                    </div>
+                    <div className={classes.requestActions}>
+                      <button
+                        className={classes.approveButton}
+                        onClick={() => approvedRequest(request.id)}
+                        aria-label="Approve Request"
+                      >
+                        ✓
+                      </button>
+                      <button
+                        className={classes.denyButton}
+                        onClick={() => denyedRequest(request.id)}
+                        aria-label="Deny Request"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+            <button onClick={() => setSelectedProfile(false)}>Close</button>
+          </div>
+        </div>
+      )}
+      <div className={classes.matchCount}>
         <p>Total Matches: {matches.length}</p>
        </div>
       <div className={classes.matchesList}>
@@ -252,14 +286,47 @@ const Matches = () => {
           </div>
         ) : (
           matches.map((match) => (
-            <MatchCard 
-            key = {match.id}
-            match = {match}
-            removeMatch = {removeMatch}
-           />
-          )))}
-          {requestProfile && (
-            <ProfileModal  profile = {requestProfile} setIsOpen = {setRequestsProfile}/>)}
+            <div className={classes.matchCard} key={match.id}>
+              <div className={classes.avatar}>
+                <img src={match.profile_picture_url || defaultAvatar} alt="User Avatar" />
+              </div>
+              <div className={classes.matchinfo}>
+                <h2>
+                  {match.first_name} {match.last_name}
+                </h2>
+                <p>Major: {match.major}</p>
+              </div>
+              <div className={classes.matchProfile}>
+                <button onClick={() => setIsOpen(match)}>View Profile</button>
+                {isOpen?.id == match.id && (
+                  <div className={classes.profileModal}>
+                    <div className={classes.profileContent}>
+                      <div className={classes.modalAvatar}>
+                        <img src={match.profile_picture_url ||defaultAvatar} alt="User Avatar" />
+                      </div>
+                      <div className={classes.profileHeader}>
+                        <h2>
+                          {match.first_name} {match.last_name}
+                        </h2>
+                        <p>Major: {match.major}</p>
+                      </div>
+
+                      <hr className={classes.profileLine} />
+
+                      <div className={classes.profileDetails}>
+                        <p>About Me: {match.bio}</p>
+                      </div>
+                      <button onClick={() => setIsOpen(false)}>Close</button>
+                    </div>
+                  </div>
+                )}
+                <button onClick={() => removeMatch(match.id)}>
+                  Remove Match
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
