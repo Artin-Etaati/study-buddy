@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { supabase } from '@/services/supabase'
 import classes from '@/css/LoggedIn/Matches.module.css'
 import { UserAuth } from '@/AuthContext'
-import MatchCard from '@/components/Loggedin/Matches/MatchCard.jsx'
-import ProfileModal from  '@/components/Loggedin/Matches/ProfileModal.jsx'
-import RequestsModal from  '@/components/Loggedin/Matches/RequestsModal.jsx'
+import MatchCard from '@/components/LoggedIn/Matches/MatchCard.jsx'
+import ProfileModal from  '@/components/LoggedIn/Matches/ProfileModal.jsx'
+import RequestsModal from  '@/components/LoggedIn/Matches/RequestsModal.jsx'
 
 const Matches = () => {
   const [requestProfile, setRequestsProfile] = useState(null);
