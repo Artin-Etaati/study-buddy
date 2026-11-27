@@ -1,55 +1,66 @@
+
+/* Shared edit page layout */
+
 .editPage {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 0 20px;
+  flex: 1;
+  width: 100%;
+  max-width: 1000px;
+  min-width: 0;
+
+  margin: 32px auto;
+  padding: 0 32px 32px;
+
+  font-family: var(--font-family);
+  color: var(--color-text);
 }
+
+
+/* Main form card */
 
 .editCard {
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 30px;
+  width: 100%;
+  padding: 32px;
+
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
 }
+
+
+/* Page heading */
 
 .pageTitle {
-  font-size: 26px;
-  margin: 0 0 25px;
-  color: #1f2937;
+  margin: 0 0 28px;
+
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.5px;
+
+  color: var(--color-text);
 }
 
-.formGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
+
+/* Form sections */
+
+.section {
+  margin-top: 28px;
+  padding-top: 24px;
+
+  border-top: 1px solid var(--color-border);
 }
 
-.formGroup label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
+.sectionTitle {
+  margin: 0 0 20px;
+
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-text);
 }
 
-.formGroup input,
-.formGroup select {
-  width: 100%;
-  padding: 11px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 15px;
-  box-sizing: border-box;
-  background-color: white;
-}
 
-.formGroup input:focus,
-.formGroup select:focus {
-  outline: none;
-  border-color: #667eea;
-}
-
-.formGroup p {
-  margin: 5px 0;
-}
+/* Form grid */
 
 .formGrid {
   display: grid;
@@ -57,74 +68,434 @@
   gap: 0 20px;
 }
 
-.section {
-  border-top: 1px solid #e5e7eb;
-  padding-top: 25px;
-  margin-top: 25px;
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  min-width: 0;
+  margin-bottom: 20px;
 }
 
-.sectionTitle {
-  font-size: 20px;
-  margin: 0 0 20px;
-  color: #1f2937;
+.formGroup label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
 }
+
+
+/* Input fields */
+
+.formGroup input,
+.formGroup select {
+  box-sizing: border-box;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 12px 14px;
+
+  background-color: var(--color-input);
+  color: var(--color-text);
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  font-family: var(--font-family);
+  font-size: 0.95rem;
+
+  transition:
+    background-color var(--transition-normal),
+    border-color var(--transition-normal),
+    box-shadow var(--transition-normal);
+}
+
+.formGroup input::placeholder {
+  color: var(--color-text-secondary);
+}
+
+.formGroup input:hover,
+.formGroup select:hover {
+  border-color: var(--color-accent);
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+  outline: none;
+
+  background-color: var(--color-surface);
+  border-color: var(--color-border-focus);
+  box-shadow: var(--focus-ring);
+}
+
+.formGroup select {
+  cursor: pointer;
+}
+
+.formGroup select option {
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+
+
+/* Read-only university information */
+
+.formGroup > p:not(.error) {
+  min-height: 46px;
+  margin: 0;
+  padding: 12px 14px;
+
+  background-color: var(--color-background);
+  color: var(--color-text-secondary);
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  font-size: 0.9rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+
+/* Validation errors */
 
 .error {
-  color: #dc2626;
-  font-size: 13px;
+  margin: 4px 0 0;
+  padding: 10px 12px;
+
+  background-color: var(--color-danger-soft);
+  color: var(--color-danger);
+
+  border-radius: var(--radius-md);
+
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
+
+
+/* Save and cancel button group */
 
 .buttonGroup {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
+  flex-wrap: wrap;
   gap: 12px;
-  margin-top: 30px;
+
+  margin-top: 32px;
+  padding-top: 24px;
+
+  border-top: 1px solid var(--color-border);
 }
 
-.saveButton {
-  padding: 11px 24px;
-  background-color: #667eea;
-  color: white;
-  border: none;
-  border-radius: 8px;
+
+/* Shared button styling */
+
+.saveButton,
+.cancelButton {
+  min-height: 44px;
+  padding: 12px 24px;
+
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+
+  font-family: var(--font-family);
+  font-size: 0.95rem;
+  font-weight: 600;
+
   cursor: pointer;
-  font-size: 15px;
+
+  transition:
+    background-color var(--transition-normal),
+    color var(--transition-normal),
+    box-shadow var(--transition-normal),
+    transform var(--transition-normal);
+}
+
+
+/* Save button */
+
+.saveButton {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border-color: var(--color-primary);
+
+  box-shadow: var(--shadow-sm);
 }
 
 .saveButton:hover:not(:disabled) {
-  background-color: #5568d8;
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
-.saveButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+
+/* Cancel button */
 
 .cancelButton {
-  padding: 11px 24px;
-  background-color: white;
-  color: #374151;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 15px;
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+  border-color: var(--color-border);
 }
 
 .cancelButton:hover:not(:disabled) {
-  background-color: #f3f4f6;
+  background-color: var(--color-surface-hover);
 }
 
-@media (max-width: 600px) {
+
+/* Button interaction states */
+
+.saveButton:active:not(:disabled),
+.cancelButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.saveButton:disabled,
+.cancelButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+
+/* Profile photo editing */
+
+.photoContainer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+
+  padding: 24px;
+
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+
+/* Photo preview */
+
+.photoPreview {
+  flex-shrink: 0;
+
+  width: 130px;
+  height: 130px;
+
+  object-fit: cover;
+  background-color: var(--color-surface);
+
+  border: 4px solid var(--color-primary-soft);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+}
+
+
+/* Photo controls */
+
+.photoControls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  flex: 1;
+  min-width: 0;
+}
+
+.photoButtons {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+
+/* Shared photo button styling */
+
+.choosePhotoButton,
+.removePhotoButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 42px;
+  padding: 10px 18px;
+
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+
+  font-family: var(--font-family);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition-normal),
+    color var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+
+/* Choose photo button */
+
+.choosePhotoButton {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border-color: var(--color-primary);
+}
+
+.choosePhotoButton:hover {
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+
+
+/* Remove photo button */
+
+.removePhotoButton {
+  background-color: var(--color-surface);
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.removePhotoButton:hover {
+  background-color: var(--color-danger-soft);
+}
+
+
+/* Hidden but keyboard-accessible file input */
+
+.hiddenInput {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.photoButtons:focus-within .choosePhotoButton {
+  box-shadow: var(--focus-ring);
+}
+
+
+/* Photo instructions */
+
+.photoHint {
+  margin: 0;
+
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.photoError {
+  margin: 0;
+  padding: 10px 12px;
+
+  background-color: var(--color-danger-soft);
+  color: var(--color-danger);
+
+  border-radius: var(--radius-md);
+
+  font-size: 0.85rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+
+/* Change Password page */
+
+/* Password form has no section elements */
+
+.editPage:has(input[type="password"]) {
+  max-width: 620px;
+}
+
+.editCard:has(input[type="password"]) {
+  padding: 36px;
+}
+
+.editCard:has(input[type="password"]) .pageTitle {
+  margin-bottom: 32px;
+}
+
+
+/* Tablet */
+
+@media (max-width: 1024px) {
+  .editPage {
+    margin: 24px auto;
+    padding: 0 20px 24px;
+  }
+
   .editCard {
-    padding: 20px;
+    padding: 28px;
+  }
+
+  .formGrid {
+    gap: 0 16px;
+  }
+}
+
+
+/* Smaller screens */
+
+@media (max-width: 768px) {
+  .editPage {
+    margin: 20px auto;
+    padding: 0 12px 20px;
+  }
+
+  .editCard,
+  .editCard:has(input[type="password"]) {
+    padding: 24px;
   }
 
   .formGrid {
     grid-template-columns: 1fr;
   }
 
+  .formGroup input,
+  .formGroup select {
+    font-size: 16px;
+  }
+
+  .photoContainer {
+    flex-direction: column;
+    padding: 20px 16px;
+    text-align: center;
+  }
+
+  .photoControls {
+    width: 100%;
+    align-items: center;
+  }
+
+  .photoButtons {
+    justify-content: center;
+  }
+
+  .photoPreview {
+    width: 110px;
+    height: 110px;
+  }
+
   .buttonGroup {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .saveButton,
@@ -134,89 +505,21 @@
 }
 
 
+/* Narrow screens */
 
-.photoContainer {
-  display: flex;
-  align-items: center;
-  gap: 25px;
-  flex-wrap: wrap;
-}
-
-.photoPreview {
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #e5e7eb;
-}
-
-.photoControls {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.photoButtons {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.choosePhotoButton {
-  padding: 10px 18px;
-  background-color: #667eea;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  text-align: center;
-}
-
-.choosePhotoButton:hover {
-  background-color: #5568d8;
-}
-
-.removePhotoButton {
-  padding: 10px 18px;
-  background-color: white;
-  color: #dc2626;
-  border: 1px solid #dc2626;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.removePhotoButton:hover {
-  background-color: #fef2f2;
-}
-
-.hiddenInput {
-  display: none;
-}
-
-.photoHint {
-  color: #6b7280;
-  font-size: 13px;
-  margin: 0;
-}
-
-.photoError {
-  color: #dc2626;
-  font-size: 13px;
-  margin: 0;
-}
-
-@media (max-width: 600px) {
-  .photoContainer {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .photoControls {
-    align-items: center;
+@media (max-width: 480px) {
+  .editCard,
+  .editCard:has(input[type="password"]) {
+    padding: 18px;
   }
 
   .photoButtons {
-    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .choosePhotoButton,
+  .removePhotoButton {
+    width: 100%;
   }
 }
