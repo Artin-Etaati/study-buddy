@@ -1,7 +1,7 @@
 import classes from '@/css/Loggedin/Matches.module.css'
 import {useState} from "react";
 import defaultAvatar from '@/assets/default-avatar.png';
-import ProfileModal from  '@/components/Loggedin/Matches/ProfileModal.jsx'
+import ProfileModal from  '@/components/LoggedIn/Matches/ProfileModal.jsx'
 const MatchCard =({match, removeMatch,}) => {
     const [isOpen, setIsOpen] = useState(false);
     return(

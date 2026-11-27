@@ -1,4 +1,4 @@
-import classes from '@/css/Loggedin/Matches.module.css'
+import classes from '@/css/LoggedIn/Matches.module.css'
 import defaultAvatar from '@/assets/default-avatar.png';
 import {createPortal} from "react-dom";
 import {useEffect, useState} from "react";

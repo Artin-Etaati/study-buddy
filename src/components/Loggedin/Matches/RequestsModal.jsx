@@ -1,4 +1,4 @@
-import classes from '@/css/Loggedin/Matches.module.css'
+import classes from '@/css/LoggedIn/Matches.module.css'
 import defaultAvatar from '@/assets/default-avatar.png';
 
 const RequestsModal =({requests,approvedRequest,denyRequest,isClose,setRequestsProfile}) => {
