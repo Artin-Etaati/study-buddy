@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from '@/services/supabase'
-import classes from '@/css/Loggedin/Matches.module.css'
+import classes from '@/css/LoggedIn/Matches.module.css'
 import { UserAuth } from '@/AuthContext'
 import MatchCard from '@/components/Loggedin/Matches/MatchCard.jsx'
 import ProfileModal from  '@/components/Loggedin/Matches/ProfileModal.jsx'
@@ -63,46 +63,59 @@ const Matches = () => {
     const windowConfirm = window.confirm(
       "Are you sure you want to remove this match?",
     );
+
     if (!windowConfirm) {
       return;
     }
-   if(!userId) return;
+
+    if (!userId) return;
+
     const { data, error } = await supabase
       .from("matches")
       .delete()
       .or("and(user1_id.eq." + userId + ",user2_id.eq." + matchId + "),and(user1_id.eq." + matchId + ",user2_id.eq." + userId + ")")
       .select("id");
+
     if (error) {
       console.error("Error removing match:", error);
       return;
     }
-    const {error: swipeError } = await supabase
+
+    // FIX 1: Check deletion before updating the swipe
+    if (!data || data.length === 0) {
+      console.error("No match was deleted");
+      return;
+    }
+
+    const { error: swipeError } = await supabase
       .from("swipes")
-      .update({action:false}) 
+      .update({ action: false })
       .eq("swiper_id", matchId)
       .eq("swiped_id", userId)
       .select("id");
-         if(swipeError){
-          console.error("Error removing the swipe", swipeError)
-          return;
-         }
-    if (!data ||data.length ===0){
-      console.error("No match was deleted", swipeError);
-      return;
+
+    // FIX 2: Removed the return statement
+    if (swipeError) {
+      console.error("Error removing the swipe", swipeError);
     }
+
     setMatches((prevMatches) =>
       prevMatches.filter((match) => match.id !== matchId),
     );
+
     setRequests((prevRequests) =>
       prevRequests.filter((request) => request.sender_id !== matchId)
-  )
-  //this function is removing the match from the existingMatches state so that it can be used to filter out requests that are already matched
-  setExistingMatches((prevMatches) =>prevMatches.filter((match) =>
-        !((match.user1_id === userId && match.user2_id === matchId) || (match.user1_id === matchId && match.user2_id === userId)
+    );
+
+    setExistingMatches((prevMatches) =>
+      prevMatches.filter((match) =>
+        !(
+          (match.user1_id === userId && match.user2_id === matchId) ||
+          (match.user1_id === matchId && match.user2_id === userId)
         ),
-    ),
-  );
-}
+      ),
+    );
+  };
   //Func to update the avatar url for each profile
   const updateAvatar = async(profiles) =>{
   const updatedAvatars = await Promise.all(
